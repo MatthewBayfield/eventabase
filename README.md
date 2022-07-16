@@ -20,7 +20,7 @@ to invite, and can communicate further information with those invited to attend.
 #### User stories
 
 <!--table styling-->
-<style>
+<style type="text/css">
     table,th,td,tr {
         border: 1px solid;
     }
