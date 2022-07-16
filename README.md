@@ -149,12 +149,12 @@ to invite, and can communicate further information with those invited to attend.
 ### Scope
 
 #### Requirements
-Considering the strategic goals and user needs of the site as expressed in the previous section, the following table dictates a concise set of requirements for the eventabase site:
+Considering the strategic goals and user needs of the site as expressed in the previous section, the following table dictates a core set of requirements --- each assigned with an importance rating --- for the eventabase site. Time constraints along with the relative importance and feasibility of requirements will determine which requirements are prioritised, and thus fulfilled in the minimal viable product.
 <table>
     <thead>
         <tr>
             <th id="requirement_type" scope="col">Requirement type</th>
-            <th id="requirement" scope="col">Requirements</th>
+            <th id="requirement" scope="col">Requirements (importance 1-5)</th>
         </tr>
     </thead>
     <tbody>
@@ -163,12 +163,11 @@ Considering the strategic goals and user needs of the site as expressed in the p
             <td headers="requirement type">Objective</td>
             <td>
                 <ul>
-                    <li>A site user needs to be able to register an account on the landing page, or sign in if already registered.</li>
-                    <li>A registered user needs to be able to advertise events and activities, in order to find other people to participate in them with.</li>
-                    <li>A registered user needs to be able to discover events/activities to do with other people in their selected area.</li>
-                    <li>A registered user needs to be able to communicate with other users information about hosting/attending an activity/event.</li>
-                    <li>One or more site administrators need administrator accounts in order to delete accounts, remove malicious reviews, edit database search filters,
-                    remove invalid events and acitivities.</li>
+                    <li>A site user needs to be able to register an account on the landing page, or sign in if already registered. <strong>(5)</strong></li>
+                    <li>A registered user needs to be able to advertise events and activities, in order to find other people to participate in them with. <strong>(5)</strong></li>
+                    <li>A registered user needs to be able to discover events/activities to do with other people in their selected area. <strong>(5)</strong></li>
+                    <li>A registered user needs to be able to communicate with other users information about hosting/attending an activity/event. <strong>(5)</strong></li>
+                    <li>Site administrators need administrator accounts to perform administrative duties. <strong>(3)</strong></li>
                 </ul>
             </td>
         </tr>
@@ -177,13 +176,15 @@ Considering the strategic goals and user needs of the site as expressed in the p
             <td headers="requirement type">Content</td>
             <td>
                 <ul>
-                    <li>The site must contain a searchable database of user-hosted advertised events and activities.</li>
-                    <li>Registered users must have an editable profile with information including their personal details, their location, the events/activity types they prefer, specified using keywords; and the distance they are willing to travel.</li>
-                    <li>A user in their profile should have an optional 'bio' section to describe a bit about themselves.</li>
-                    <li>The site must contain 'Terms and Conditions.</li>
+                    <li>The site must present entries from a searchable backend database of user-hosted advertised events and activities. <strong>(5)</strong></li>
+                    <li>Expired events/activities are removed from the displayed database entries automatically, either when their closing date has past or when they are cancelled. <strong>(5)</strong></li>
+                    <li>Registered users must have an editable profile with information including their personal details, their location, the events/activity types they prefer, specified using either provided or possibly custom keywords; and the distance they are willing to travel. These details will define the default search filters. <strong>(4)</strong></li>
+                    <li>A user in their profile should have an optional 'bio' section to describe a bit about themselves. <strong>(1)</strong></li>
+                    <li>The site must contain viewable 'Terms and Conditions. <strong>(3)</strong></li>
                     <li>Advertised events/activites must have an event description, and a set of summary keywords to act as filters. In addition they must specify
-                    their location, a date or date range for their occurence, and a date to register interest by.</li>
-                    <li>Advertised events/activites need to have the option of having a user uploaded image.</li>
+                    their location, a date or date range for their occurence, and a date to register interest by. <strong>(5)</strong></li>
+                    <li>Events/activities, users, and reviews should have a displayed unique identifier primarily for admin purposes. <strong>(3)</strong></li>                    <li>Advertised events/activites need to have the option of having a user uploaded image. <strong>(2)</strong></li>
+                    <li> The site must contain observable ratings/reviews of other users indicating their quality as a host or participant. <strong>(4)</strong></li>
                 </ul>
             </td>
         </tr>
@@ -192,23 +193,31 @@ Considering the strategic goals and user needs of the site as expressed in the p
             <td headers="requirement type">Functional</td>
             <td>
                 <ul>
-                    <li>A user must be able to sign up for an account using a unique username, password, and email; the email should be verified.</li>
+                    <li>Users that are not registered or not signed in should only be able to view a landing page. <strong>(5)</strong></li>
+                    <li>A user must be able to sign up for an account using a unique username, password, and email; the email should be verified. <strong>(5)</strong></li>
+                    <li> A user must be able to delete their account. <strong>(1)</strong> </li>
                     <li>A user must be able to reset their password when trying to sign in. They must also have the option of changing their password, username and email when
-                    signed in.
-                    <li>A user when searching for events/activities must be able to have the option of using default filters based on their profile, as well as optional filters that categorise the events/activities of the database.</li>
+                    signed in. <strong>(2)</strong></li>
+                    <li>A user when searching for events/activities must be able to have the option of using togglable default filters based on their profile, as well as optional filters that categorise the events/activities of the database. <strong>(4)</strong></li>
                     <li>A user must be able to view more information about a displayed event/activity in the search query results. The initial information dislayed should be
-                    the title, location, date, closing date, distance away, summary keywords.</li>
-                    <li>A user must be able to create a shortlist of events/activities they can view later, before registering their interest.</li>
-                    <li>A user must be able to provide a review and rating out of 5 for a user as a participant, or a user as a host.</li>
-                    <li>A host user of an event/activity must be able to select which users to invite, out of those interested in attending their event or activity. The host should be able to rank users by their participant rating, as well as view the profiles of other users.</li>
-                    <li>A user should receive notifications both on the site and by email: when new events/activites of interest to them are posted; when a user registers their interest in their activity/event.</li>
-                    <li>A user needs a message dashboard to communicate with other users when invited to an attend an event/activity.</li>
-                    <li>A user needs to be able to view a list of events/activites they have registered their interest in, and be able to an event/activity from this list.</li>
-                    <li>Site administrators need to be able to create other administrator accounts.</li>
-                    <li>Site administrators need to be able to have a message dashboard to receive reported user issues, and to interact with users.</li>
+                    the title, location, date, closing date, distance away, summary keywords. <strong>(4)</strong></li>
+                    <li>A user must be able to register their interest in an advertised event/activity. <strong>(5)</strong></li>
+                    <li>A user needs to be able to view a list of events/activites they have registered their interest in, and be able to remove an event/activity from this list. <strong>(4)</strong></li>
+                    <li>A user must be able to create a shortlist of events/activities they can view later, before registering their interest. <strong>(2)</strong></li>
+                    <li>A user must be able to provide a review and rating out of 5 for a user as a participant, or a user as a host. <strong>(4)</strong></li>
+                    <li>A host user of an event/activity must be able to cancel their event or activity. <strong>(5)</strong></li>
+                    <li>A host user of an event/activity must be able to select which users to invite, out of those interested in attending their event or activity. <strong>(5)</strong></li>
+                    <li>The host should be able to rank users by their participant rating, as well as view the profiles of other users. <strong>(3)</strong></li>
+                    <li>A user needs a way of reporting issues with another user, a review, or an issue with their account. <strong>(3)</strong></li>
+                    <li>A user has a favourite user list or friends list, and a way of adding, removing users to this list. <strong>(1)</strong></li>
+                    <li>A user should receive notifications both on the site and or by email: when new events/activites of interest to them are posted; when a user registers their interest in their activity/event. <strong>(3)</strong></li>
+                    <li>A user needs a message dashboard to communicate with other users when invited to an attend an event/activity. <strong>(4)</strong></li>
+                    <li>Site admins need to be able to create other administrator accounts. <strong>(2)</strong></li>
+                    <li>Site admins need to be able to view and delete accounts, remove malicious user reviews, edit database search filters,
+                    remove invalid events and acitivities. <strong>(3)</strong></li>
+                    <li>Site admins need to be able to have a message dashboard to receive reported user issues, and to interact with users. <strong>(3)</strong></li>
                 </ul>
             </td>
         </tr>
     </tbody>
 </table>
-
