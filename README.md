@@ -1,6 +1,6 @@
 # Eventabase
 
-## Design Process
+## UX Design Process
 
 ### Strategy
 
@@ -39,7 +39,7 @@ to invite, and can communicate further information with those invited to attend.
             <td headers="user_stories theme1_epic1">As a <strong>site user</strong> I can <strong>delete my account</strong>, so that <strong>I no longer have one.</strong></td>
         </tr>
         <tr>
-            <td headers="user_stories theme1_epic1">As a <strong>site admin</strong> I can <strong>delete accounts that breach T & C's</strong>, so that <strong>they can no longer use the site.</strong></td>
+            <td headers="user_stories theme1_epic1">As a <strong>site admin</strong> I can <strong>delete accounts that breach T & C</strong>, so that <strong>they can no longer use the site.</strong></td>
         </tr>
         <tr>
             <td headers="user_stories theme1_epic1">As a <strong>site user</strong> I can <strong>reset my password if I forget it</strong>, so that <strong>I can still use my account .</strong></td>
@@ -105,7 +105,7 @@ to invite, and can communicate further information with those invited to attend.
         <!--user interaction and feedback theme-->
         <!--user selection epic-->
         <tr>
-            <th id="theme3" rowspan="11" headers="themes" scope="row">User Interaction and feedback</th>
+            <th id="theme3" rowspan="13" headers="themes" scope="row">User Interaction and feedback</th>
             <th id=theme3_epic1 headers="epics theme3" scope="row" rowspan="4">user selection</th>
             <td headers="user_stories theme3_epic1">As a <strong>site user</strong> I can <strong>for my event/activity select who to invite out of those interested, by viewing their profiles and other metrics</strong>, so that <strong>I can choose the people I prefer.</strong></td>
         </tr>
@@ -120,7 +120,7 @@ to invite, and can communicate further information with those invited to attend.
         </tr>
         <!--notifications epic-->
         <tr>
-            <th id=theme3_epic2 headers="epics theme3" scope="row" rowspan="4">notifications</th>
+            <th id=theme3_epic2 headers="epics theme3" scope="row" rowspan="6">notifications</th>
             <td headers="user_stories theme3_epic2">As a <strong>site user</strong> I can <strong>receive notifications when new activities/events I like are posted</strong>, so that <strong>I am informed about events/activities that may be of interest.</strong></td>    
         </tr>
         <tr>
@@ -131,6 +131,12 @@ to invite, and can communicate further information with those invited to attend.
         </tr>
         <tr>
             <td headers="user_stories theme3_epic2">As a <strong>site user</strong> I can <strong>receive notifications about events/activites I have been invited to attend</strong>, so that <strong>I am aware of any important information.</strong></td>    
+        </tr>
+        <tr>
+            <td headers="user_stories theme3_epic2">As a <strong>site user</strong> I can <strong>view a calender of my upcoming events and activities</strong>, so that <strong> I am aware of my schedule.</strong></td>    
+        </tr>
+        <tr>
+            <td headers="user_stories theme3_epic2">As a <strong>site user</strong> I can <strong>receive notifications about an upcoming event/activity I am attending</strong>, so that <strong>I don't forget to attend.</strong></td>    
         </tr>
         <!--review/ratings epic-->
         <tr>
@@ -184,7 +190,8 @@ Considering the strategic goals and user needs of the site as expressed in the p
                     <li>Advertised events/activites must have an event description, and a set of summary keywords to act as filters. In addition they must specify
                     their location, a date or date range for their occurence, and a date to register interest by. <strong>(5)</strong></li>
                     <li>Events/activities, users, and reviews should have a displayed unique identifier primarily for admin purposes. <strong>(3)</strong></li>                    <li>Advertised events/activites need to have the option of having a user uploaded image. <strong>(2)</strong></li>
-                    <li> The site must contain observable ratings/reviews of other users indicating their quality as a host or participant. <strong>(4)</strong></li>
+                    <li>The site must contain observable ratings/reviews of other users indicating their quality as a host or participant. <strong>(4)</strong></li>
+                    <li>A viewable, potentially interactive, calendar of upcoming events/activities for a user exits. <strong>(3)</strong></li>
                 </ul>
             </td>
         </tr>
@@ -210,7 +217,7 @@ Considering the strategic goals and user needs of the site as expressed in the p
                     <li>The host should be able to rank users by their participant rating, as well as view the profiles of other users. <strong>(3)</strong></li>
                     <li>A user needs a way of reporting issues with another user, a review, or an issue with their account. <strong>(3)</strong></li>
                     <li>A user has a favourite user list or friends list, and a way of adding, removing users to this list. <strong>(1)</strong></li>
-                    <li>A user should receive notifications both on the site and or by email: when new events/activites of interest to them are posted; when a user registers their interest in their activity/event. <strong>(3)</strong></li>
+                    <li>A user should receive notifications both on the site and or by email: when new events/activites of interest to them are posted; when a user registers their interest in their activity/event; or a reminder to attend an upcoming event/activity. <strong>(3)</strong></li>
                     <li>A user needs a message dashboard to communicate with other users when invited to an attend an event/activity. <strong>(4)</strong></li>
                     <li>Site admins need to be able to create other administrator accounts. <strong>(2)</strong></li>
                     <li>Site admins need to be able to view and delete accounts, remove malicious user reviews, edit database search filters,
@@ -221,3 +228,140 @@ Considering the strategic goals and user needs of the site as expressed in the p
         </tr>
     </tbody>
 </table>
+
+### Structure
+
+#### Information design
+
+The site will potentially consist of the following pages:
+
+Accessible to all users:
+- a generic landing/home page - will act as the first point of contact, and explain the purpose of the site as well as how to use the site. It will need to be attractive
+and fairly minimal. Must contain clearly visible sign-up and sign-in options for the user to interact with.
+- a sign-up/registration page - must enable validated form input for the user's name, username, email, and password. Upon registering and verifying their account email, the
+user should be taken to their home page.
+- a T & C page containing the terms and conditions of the site.
+
+Accessible to registered users only:
+- a registered user home page - Once registered users have signed in, they should be taken to their home page. This page will contain navigation and button elements that allow the user to view other relevant pages or modals/panels, and thus perform all of the desired functionality on the site. The page should be divided into a profile section; a search/host events and activities section. The latter section will have distinct subsections, including a section for reviewing/rating other users and activities/events.
+- search and retrieve events/activities page - This page will display a list of events/activities retrieved from the database, filtered using available filters. Each item in the list will be able to be expanded to view more information about the item.
+- registered user message/notifications dashboard page - will feature messages from admins and other users, as well as notifications about new events/activities or when someone registers their interest in an activity/event hosted by the user. Should allow communication between admins and users.
+
+
+Accessible to site admins only:
+- an administrator home page - This page will host all of the functionality necessary to perform administrative duties, such as editing the T & C, viewing user accounts and
+events/activities etc.
+- admin message dashboard - will feature messages/reports from users. Should allow communication between admins and users.
+
+Accessible to site admins and registered users:
+- an account settings page - where a user can change their account email, password, and username; as well as delete their account.
+
+#### Interaction design
+
+A navigation bar common to all registered-user-accessible pages and admin-accessible pages other than the T & C page, will feature a home button link, a sign-out link, a message/notifications indicator/link and a 'more' hamburger icon menu; the hamburger menu featuring an account settings and T & C link. The all-user-accessible landing page will feature a nav bar with only a sign-in/sign-up link, and a T & C link within a hamburger icon menu. The T & C page nav bar will feature a sign-out/sign-in/sign-up link and a home button link.
+
+Modals opened on one of the pages or expandable side panels, will be used frequently to allow functionality such as posting new events/activities, viewing more information about an event/activity etc. These modals or side panels will be opened when labelled buttons, links, or icons are clicked by the user. They will take up most of the page, and will be closable both automatically and manually by the user. 
+
+Most pages will feature content that can be expanded and collapsed, thus decluttering the page while keeping all functionality and content available when needed.
+
+For the pages/modals/panels requiring extended user input --- such as the user profile, or when writing a review --- validated form fields will be used.
+
+#### Planned site structure/connectivity diagrams
+
+The first diagram below shows the possible page, modal, and panel connectivity not using the navigation bar; it assumes all requirements/user stories are fulfilled. The 2nd diagram shows the connectivity between pages using only the navigation bars.
+
+<img src='docs/diagrams/site_structure_connectivity_no_nav.png' alt='diagram showing planned connectivity of site pages, modals and panels, not using page nav bars'>
+<img src='docs/diagrams/site_structure_connectivity_nav.png' alt='diagram showing planned connectivity of site pages using page nav bars only'>
+
+### Skeleton
+
+#### Wireframes
+Below are links to the mobile wireframes of each page, as well as for the modals; there are no separate desktop wireframes, as the intention is to keep the appearance of
+the site as a whole the same across all devices, using only a responsive design as opposed to an adaptive design; this will be achieved in part by allowing vertical scrolling on all pages, modals, and panels where needed.
+
+##### Pages
+[Landing page](docs/wireframes/wireframe_landing_page.png)
+
+[User registration page](docs/wireframes/wireframe_registration_page.png)
+
+[Home page for registered users](docs/wireframes/wireframe_home_registered_users.png)
+
+[Home page for admin users](docs/wireframes/wireframe_home_admin_users.png)
+
+[Account settings page](docs/wireframes/wireframe_account_settings.png)
+
+[Terms and conditions page](docs/wireframes/wireframe_terms_conditions.png)
+
+[Search and retrieve events and activities page](docs/wireframes/wireframe_search_events_activities_page.png)
+
+[Notifications/Messages dashboard page](docs/wireframes/wireframe_notifications_messages_page.png)
+
+
+##### Modals
+
+[Sign-in Modal](docs/wireframes/wireframe_sign_in_modal.png)
+
+[Reset password Modal](docs/wireframes/wireframe_rest_password_modal.png)
+
+[Edit profile Modal](docs/wireframes/wireframe_edit_profile_modal.png)
+
+[Post new event/activity Modal](docs/wireframes/wireframe_post_new_event_activity_modal.png)
+
+[Review user event/activity/user Modal](docs/wireframes/wireframe_review_user_event_activity.png)
+
+[View more information for event/activity Modal](docs/wireframes/wireframe_more_info_event_or_activity.png)
+
+[View interested or invited Modal](docs/wireframes/wireframe_view_interested_or_invited.png)
+
+[View event/activity shortlist Modal](docs/wireframes/wireframe_activities_or_events_shortlist.png)
+
+[Event/Activity calendar Modal](docs/wireframes/wireframe_calendar_modal.png)
+
+[View interested users Modal](docs/wireframes/wireframe_view_interested_users.png)
+
+[Message host/attendees/user Modal](docs/wireframes/wireframe_message_host_or_attendees_or_user.png)
+
+[View user's profile/reviews Modal](docs/wireframes/wireframe_view_user_profiles_reviews_modal.png)
+
+[View own reviews Modal](docs/wireframes/wireframe_own_reviews.png)
+
+[Report issue Modal](docs/wireframes/wireframe_report_issue.png)
+
+[Review user/event/activity Modal](docs/wireframes/wireframe_review_user_event_activity.png)
+
+[Create admin account Modal](docs/wireframes/wireframe_create_admin_account_modal.png)
+
+[Edit T & C Modal](docs/wireframes/wireframe_edit_t_and_c_modal.png)
+
+[Alter keywords Modal](docs/wireframes/wireframe_alter_keywords_modal.png)
+
+[View user's reviews Modal](docs/wireframes/wireframe_users_reviews_modal.png)
+
+[View reviews of user Modal](docs/wireframes/wireframe_view_reviews_of_user_modal.png)
+
+[View user's events/activities Modal](docs/wireframes/wireframe_view_users_events_or_activities.png)
+
+[View user's profile Modal](docs/wireframes/wireframe_view_user_profile_modal.png)
+
+[View review or event/activity Modal](docs/wireframes/wireframe_view_review_or_event_modal.png)
+
+
+
+### Surface
+
+'Hover for more info' icons will be used to guide the user in understanding how to use parts of the site, as well as when providing user input or interpreting displayed information. Regular feedback and helper prompts will also be provided to the user where necessary in order to maximise user experience and minimise user effort. 
+
+Icons and other visual aids will also be used where possible to further make using the site simple and more enjoyable; for example a new message/notification counter will
+be visible just above the message dashboard icon link in the nav bar. An attempt will be made to dynamically focus the user's attention where it needs to be, throughout performing a specific task; for example changes to background or font colours as well as the use of highlighting/dimming will be used where suitable.
+
+Compulsory form/input fields will be indicated, and missing or invalid inputs will be highlighted to users, with a clarifying explanation message.
+
+Images will be used on the landing page, as well on advertised events/activities where the user uploads an image. An uploaded profile image may also be available
+to the user. Likewise some animation/transitions will feature on the landing page, through a slide show of background header images, and a cycling of messages in a bar
+below the header, that motivate use of the site, and indicate its purpose to the user.
+
+Finally, in regard to the potential typography and colour schemes employed, the aim will be to maximise the readability and also attractiveness of the site content, by creating 
+a clear pattern of use that helps to distinguish content and highlight the most important content. The final choices will be decided through experimentation and manual user feedback, as well as by which fonts and color scheme combinations sufficiently satisfy accessibility requirements.
+
+
+
