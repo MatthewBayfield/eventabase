@@ -235,6 +235,7 @@ Considering the strategic goals and user needs of the site as expressed in the p
 ### Structure
 
 #### Information design
+Access to content, and the available functionality on the site will be determined based on the type of user. Users can be split into signed-in users --- which further can be split into registered user accounts and site administrator accounts --- and users not signed-in with a user account. User accounts will require passwords which will be stored in hashed form using django's default hashing algorithm; the non-admin accounts will also require email verification.
 
 The site will potentially consist of the following pages:
 
@@ -268,6 +269,9 @@ Modals opened on one of the pages or expandable side panels, will be used freque
 Most pages will feature content that can be expanded and collapsed, thus decluttering the page while keeping all functionality and content available when needed.
 
 For the pages/modals/panels requiring extended user input --- such as the user profile, or when writing a review --- validated form fields will be used.
+
+Depending on the user sign-in status, the type of user, as well as other state factors, the available buttons and other interactive elements displayed will vary, and change
+dynamically. For example if a user has registered their interest in an event/activity using the 'register interest button', the button will change to allow the user the functionality of unregistering interest.
 
 #### Planned site structure/connectivity diagrams
 
