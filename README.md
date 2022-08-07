@@ -42,7 +42,7 @@ to invite, and can communicate further information with those invited to attend.
             <td headers="user_stories theme1_epic1">As a <strong>site admin</strong> I can <strong>delete accounts that breach T & C</strong>, so that <strong>they can no longer use the site.</strong></td>
         </tr>
         <tr>
-            <td headers="user_stories theme1_epic1">As a <strong>site admin</strong> I can <strong>create new admin accounts</strong>, so that <strong>the site can have multiple adminstrators.</strong></td>
+            <td headers="user_stories theme1_epic1">As a <strong>site admin</strong> I can <strong>create new admin accounts</strong>, so that <strong>the site can have multiple administrators.</strong></td>
         </tr>
         <tr>
             <td headers="user_stories theme1_epic1">As a <strong>site user</strong> I can <strong>reset my password if I forget it</strong>, so that <strong>I can still use my account .</strong></td>
