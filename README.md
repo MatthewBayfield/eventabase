@@ -31,8 +31,8 @@ to invite, and can communicate further information with those invited to attend.
         <!-- account management theme-->
         <!--account creation/deletion epic-->
         <tr>
-            <th id="theme1" rowspan="8" headers="themes" scope="row">account management</th>
-            <th id=theme1_epic1 headers="epics theme1" scope="row" rowspan="4">account creation/deletion</th>
+            <th id="theme1" rowspan="9" headers="themes" scope="row">account management</th>
+            <th id=theme1_epic1 headers="epics theme1" scope="row" rowspan="5">account creation/deletion</th>
             <td headers="user_stories theme1_epic1">As a <strong>site user</strong> I can <strong>easily create an account</strong>, so that <strong>I can post or search for events and activities.</strong></td>    
         </tr>
         <tr>
@@ -40,6 +40,9 @@ to invite, and can communicate further information with those invited to attend.
         </tr>
         <tr>
             <td headers="user_stories theme1_epic1">As a <strong>site admin</strong> I can <strong>delete accounts that breach T & C</strong>, so that <strong>they can no longer use the site.</strong></td>
+        </tr>
+        <tr>
+            <td headers="user_stories theme1_epic1">As a <strong>site admin</strong> I can <strong>create new admin accounts</strong>, so that <strong>the site can have multiple adminstrators.</strong></td>
         </tr>
         <tr>
             <td headers="user_stories theme1_epic1">As a <strong>site user</strong> I can <strong>reset my password if I forget it</strong>, so that <strong>I can still use my account .</strong></td>
