@@ -1,1 +1,1 @@
-web:gunicorn eventabase.wsgi:application
+web: gunicorn eventabase.wsgi:application
