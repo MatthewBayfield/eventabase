@@ -1,0 +1,10 @@
+asgiref==3.5.2
+backports.zoneinfo==0.2.1
+cloudinary==1.29.0
+coverage==6.4.3
+dj-database-url==1.0.0
+dj3-cloudinary-storage==0.0.6
+Django==4.1
+gunicorn==20.1.0
+psycopg2==2.9.3
+sqlparse==0.4.2
