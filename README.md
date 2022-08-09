@@ -19,6 +19,8 @@ to invite, and can communicate further information with those invited to attend.
 
 #### User stories
 
+##### User stories derived from epics derived from themes
+
 <table>
     <thead>
         <tr>
@@ -154,6 +156,12 @@ to invite, and can communicate further information with those invited to attend.
         </tr>
     </tbody>
 </table>
+
+##### Other user stories
+
+- As a **first time site user** I can **understand the purpose of the site and how it works from viewing the landing page**, so that **I can decide whether to create an account**.
+
+
 
 ### Scope
 
