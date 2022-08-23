@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block extra_meta %}{% endblock %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <title>{% block title %} {% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>{% block h1 %}main heading{% endblock %}</h1>
+        <h2>{{slogan}}</h2>
+    </header>
+    <main>
+        {% block main %}{% endblock %}
+    </main>
+    <footer>
+    </footer>
+    <script src="https://kit.fontawesome.com/498cc55193.js" crossorigin="anonymous"></script>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
