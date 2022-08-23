@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Loved+by+the+King&family=Roboto&family=Staatliches&display=swap');
+
+/*CSS Section: General styling*/
+
+/*Removes browser padding/margin/border box sizing*/
+* {
+    padding: 0;
+    margin: 0;
+    border: none;
+}
+
+html {
+    font-size: 0.8rem;
+}
+
+body {
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+}
+
+h1 {
+    font-family: 'Staatliches', cursive;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+h2 {
+    font-family: 'Loved by the King', cursive;
+    width: fit-content;
+    margin: -0.8rem  auto 0 auto;
+    padding-bottom: 0.1rem;
+}
+
+/* CSS Section: Nav bar styling */
+
+nav {
+    display: flex;
+    justify-content: flex-end;
+    height: fit-content;
+    background-color: #d62839;
+    position: relative;
+    font-size: 0.8rem;
+}
+
+a {
+    text-decoration: none;
+    cursor: default;
+}
+
+nav > div {
+    margin: 0.1rem 0.3rem;
+    font-size: inherit;
+    padding: 0.1rem 0.5rem;
+    box-sizing: border-box;
+}
+
+.nav_icon {
+    --fa-display: block;
+    display: var(--fa-display,block);
+    margin: 0 auto;
+    width: fit-content;
+    color: #fff;
+    cursor: pointer;
+}

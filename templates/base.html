@@ -13,6 +13,26 @@
     <header>
         <h1>{% block h1 %}main heading{% endblock %}</h1>
         <h2>{{slogan}}</h2>
+        <nav>
+            <div>
+                {% url "landing_page:landing_page_url" as landing_page_url%}
+                <a href="{{landing_page_url}}" type="text/html">
+                    <div>
+                        <i class="fa-solid fa-house nav_icon" ></i>
+                        <div class="nav_icon">
+                            Home
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% block nav_options %}{% endblock %}
+            <div>
+                <i class="fa-solid fa-arrow-right-to-bracket nav_icon"></i>
+                <div class="nav_icon">
+                    Sign-in
+                </div>
+            </div>
+        </nav>
     </header>
     <main>
         {% block main %}{% endblock %}
