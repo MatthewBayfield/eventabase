@@ -51,3 +51,6 @@ function closeMenu() {
     moreMenuContainer.style.removeProperty('display');
     moreMenu.blur();   
 }
+
+// uncommented during testing
+//module.exports = {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu};
