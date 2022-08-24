@@ -4,6 +4,24 @@ const moreMenuContainer = document.getElementById('more_menu_container');
 const moreMenu = document.getElementById('more_menu');
 const moreMenuButtons = document.getElementsByClassName('more_menu_button');
 
+// JS Section: Event listeners:
+
+function createMoreMenuButtonsListeners() {
+    for (let button of moreMenuButtons) {
+        button.addEventListener('click', function() {
+            let moreMenuContainerStyles = window.getComputedStyle(moreMenuContainer);
+            let moreMenuContainerDisplay = moreMenuContainerStyles.getPropertyValue('display');
+            if (moreMenuContainerDisplay === 'none') {
+                openMenu();
+            } else {
+                closeMenu();
+            }
+        })
+    }
+}
+
+createMoreMenuButtonsListeners();
+
 // JS Section: Functions:
 
 function openMenu() {
