@@ -22,6 +22,20 @@ function createMoreMenuButtonsListeners() {
 
 createMoreMenuButtonsListeners();
 
+function createMoreMenuContainerListener() {
+    moreMenuContainer.addEventListener('click', function(event) {
+        let moreMenuContainerStyles = window.getComputedStyle(moreMenuContainer);
+        let moreMenuContainerDisplay = moreMenuContainerStyles.getPropertyValue('display');
+        if (moreMenuContainerDisplay != 'none') {
+            if (event.target === moreMenuContainer) {
+                closeMenu();
+            }
+        }
+    })
+}
+
+createMoreMenuContainerListener();
+
 // JS Section: Functions:
 
 function openMenu() {
