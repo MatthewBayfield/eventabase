@@ -32,6 +32,25 @@
                     Sign-in
                 </div>
             </div>
+            <div class="more_menu_button" aria-role="button" aria-haspopup="menu" aria-expanded="false" aria-controls="more_menu">
+                <i class="fa-solid fa-bars nav_icon"></i>
+                <div class="nav_icon">
+                    More
+                </div>
+            </div>
+            <div id="more_menu_container">
+                <div id="more_menu" aria-role="menu" tabindex="-1">
+                    <div>
+                        <span class="more_menu_button" aria-label="close menu" aria-role="button"><i class="fa-solid fa-xmark"></i> </span> 
+                    </div>
+                    <div id="menu_items">
+                        {% block more_menu_items%}{% endblock %}
+                        <div aria-role="menuitem">
+                            <a href="" type="text/html">T & C</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </nav>
     </header>
     <main>

@@ -62,3 +62,40 @@ nav > div {
     color: #fff;
     cursor: pointer;
 }
+	
+span.more_menu_button {
+    cursor: pointer;
+    padding: 0.6rem;
+}
+
+#more_menu_container {
+    z-index: 2;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+#more_menu {
+    position: fixed;
+    right: 0;
+    top: 4.4rem;
+    width: 25vw;
+    min-height: 10vh;
+    background-color: #ffffff;
+    border: 2px solid black;
+    visibility: hidden;
+}
+
+#menu_items {
+    margin: 0 auto;
+    width: fit-content;
+}
+
+#more_menu > :first-child {
+    font-size: 1rem;
+    text-align: right;
+    margin-bottom: 0.7rem;
+}
