@@ -2,6 +2,7 @@
 * @jest-environment jsdom
 */
 
+// Adds rendered landing_page template HTML content to the JSDOM
 let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/html_content_for_js_tests/rendered_landing_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
