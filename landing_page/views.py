@@ -3,8 +3,10 @@ from django.views.generic.base import TemplateView
 
 # Create your views here.
 
-class landing_page(TemplateView):
+
+class LandingPage(TemplateView):
     """
+    View that serves the landing_page template
     """
     template_name = "landing_page/landing_page.html"
 
