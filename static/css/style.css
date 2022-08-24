@@ -47,6 +47,10 @@ a {
     cursor: default;
 }
 
+:focus {
+    outline: #fcfc62 solid 2px;
+}
+
 nav > div {
     margin: 0.1rem 0.3rem;
     font-size: inherit;
