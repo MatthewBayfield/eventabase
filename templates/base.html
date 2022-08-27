@@ -7,9 +7,9 @@
     {% block extra_meta %}{% endblock %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    <title>{% block title %} {% endblock %}</title>
+    <title>{% block title %}{% endblock %}</title>
 </head>
-<body>
+<body id="{{page_id}}">
     <header>
         <h1>{% block h1 %}main heading{% endblock %}</h1>
         <h2>{{slogan}}</h2>

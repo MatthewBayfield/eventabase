@@ -27,3 +27,4 @@ class TestViews(SimpleTestCase):
         self.assertTemplateUsed(response, 'landing_page/landing_page.html')
         self.assertEqual(response.context['slogan'],
                          'Events & Activities Organised by You for You')
+        self.assertEqual(response.context['page_id'], 'landing_page')
