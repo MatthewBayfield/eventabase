@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <meta name="description" content="Eventabase is a user-hosted group-based events/activity advertiser and organiser, that allows registered users to either search for
-                                      events/activities to participate in; or advertise their own events/activities for others to partake.">
+    <meta name="description" content="Eventabase is a user-hosted group-based events/activity advertiser and organiser,
+                                        that allows registered users to either search for
+                                        events/activities to participate in; or advertise their own events/activities
+                                        for others to partake.">
     <meta name="keywords" content="events/activities organiser, events/activities advertiser, group-based">
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
     <title>Landing page</title>
 </head>
-<body>
+<body id="landing_page">
     <header>
         <h1>Eventabase</h1>
         <h2>Events &amp; Activities Organised by You for You</h2>
@@ -51,7 +53,7 @@
             <div id="more_menu_container">
                 <div id="more_menu" aria-role="menu" tabindex="-1">
                     <div>
-                        <span class="more_menu_button" aria-label="close menu" aria-role="button" aria-controls="more_menu"><i class="fa-solid fa-xmark"></i> </span> 
+                        <span class="more_menu_button" aria-label="close menu" aria-role="button"><i class="fa-solid fa-xmark"></i> </span> 
                     </div>
                     <div id="menu_items">
                         
@@ -65,11 +67,69 @@
     </header>
     <main>
         
+    <!-- Image container with the images that feature in the automated fade-in/fade-out image slideshow-->
+    <div>
+        
+        <picture>
+            <source media="(max-width: 640px)" srcset="/static/images/group_playing_pool_small.jpg">
+            <source media="(max-width: 1280px)" srcset="/static/images/group_playing_pool_medium.jpg">
+            <source srcset="/static/images/group_playing_pool_large.jpg">
+            <img class="slideshow_images current_image" src="/static/images/group_playing_pool_small.jpg" alt="group of people playing pool">
+        </picture>
+        <picture>
+            <source media="(max-width: 640px)" srcset="/static/images/cyclists_small.jpg">
+            <source media="(max-width: 1280px)" srcset="/static/images/cyclists_medium.jpg">
+            <source srcset="/static/images/cyclists_large.jpg">
+            <img class="slideshow_images" src="/static/images/cyclists_small.jpg" alt="three men cycling side-by-side on the road">
+        </picture>
+        <picture>
+            <source media="(max-width: 640px)" srcset="/static/images/people_bowling_small.jpg">
+            <source media="(max-width: 1280px)" srcset="/static/images/people_bowling_medium.jpg">
+            <source srcset="/static/images/people_bowling_large.jpg">
+            <img class="slideshow_images" src="/static/images/people_bowling_small.jpg" alt="four people posing for a photograph whilst at a bowling alley, and holding bowling balls">
+        </picture>
+        <picture>
+            <source media="(max-width: 640px)" srcset="/static/images/karting_small.jpg">
+            <source media="(max-width: 1280px)" srcset="/static/images/karting_medium.jpg">
+            <source srcset="/static/images/karting_large.jpg">
+            <img class="slideshow_images" src="/static/images/karting_small.jpg" alt="three go-karts waiting to race on the start line">
+        </picture>
+        <picture>
+            <source media="(max-width: 640px)" srcset="/static/images/group_in_pub_small.jpg">
+            <source media="(max-width: 1280px)" srcset="/static/images/group_in_pub_medium.jpg">
+            <source srcset="/static/images/group_in_pub_large.jpg">
+            <img class="slideshow_images" src="/static/images/group_in_pub_small.jpg" alt="group of people sitting side-by-side in pub">
+        </picture>
+        <picture>
+            <source media="(max-width: 640px)" srcset="/static/images/climbing_small.jpg">
+            <source media="(max-width: 1280px)" srcset="/static/images/climbing_medium.jpg">
+            <source srcset="/static/images/climbing_large.jpg">
+            <img class="slideshow_images" src="/static/images/climbing_small.jpg" alt="two climbers on climbing wall in climbing gym">
+        </picture>
+        <picture>
+            <source media="(max-width: 640px)" srcset="/static/images/concert_small.jpg">
+            <source media="(max-width: 1280px)" srcset="/static/images/concert_medium.jpg">
+            <source srcset="/static/images/concert_large.jpg">
+            <img class="slideshow_images" src="/static/images/concert_small.jpg" alt="people in a crowd at a concert, with the band in the background on stage">
+        </picture>
+        <picture>
+            <source media="(max-width: 640px)" srcset="/static/images/swimming_small.jpg">
+            <source media="(max-width: 1280px)" srcset="/static/images/swimming_medium.jpg">
+            <source srcset="/static/images/swimming_large.jpg">
+            <img class="slideshow_images" src="/static/images/swimming_small.jpg" alt="aerial photo of people in a swimming race in the sea">
+        </picture>
+        <picture>
+            <source media="(max-width: 640px)" srcset="/static/images/tennis_small.jpg">
+            <source media="(max-width: 1280px)" srcset="/static/images/tennis_medium.jpg">
+            <source srcset="/static/images/tennis_large.jpg">
+            <img class="slideshow_images" src="/static/images/tennis_small.jpg" alt="three men playing tennis">
+        </picture>
+    </div>
+
     </main>
     <footer>
     </footer>
     <script src="https://kit.fontawesome.com/498cc55193.js" crossorigin="anonymous"></script>
     <script src="/static/js/script.js"></script>
-
 </body>
 </html>

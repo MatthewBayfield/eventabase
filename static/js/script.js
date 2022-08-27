@@ -67,5 +67,51 @@ function closeMenu() {
     moreMenu.blur();   
 }
 
+/** Adds the current_image class atrribute to the nextImage parameter element.
+ * Passes the currentImage parameter to the imageFadeOut function.
+ * @param {Object} currentImage - The image element with the current_image class attribute
+ * @param {Object} nextImage - The image element to feature next in the slideshow
+ * @summary Fades in the next slideshow image due to be displayed.
+*/
+function imageFadeIn(nextImage, currentImage) {
+    nextImage.className += " current_image"
+    imageFadeOut(currentImage);
+}
+
+/** Removes the current_image class attribute from the currentImage parameter element.
+ *  Queues a recursive call to the slideshowHandler function to continue the slideshow
+ *  operation.
+ * @param {Object} currentImage - The image element to be faded out, as passed from the imageFadeOut function.
+ * @summary Fades out the currently displayed image.
+ */
+function imageFadeOut(currentImage) {
+    currentImage.classList.remove('current_image');
+    setTimeout(slideshowHandler, 8000);
+}
+
+
+/** Determines the currently displayed image, and the image due to be displayed next. Passes
+ *  these image vars on to the imageFadeOut function.
+ * @summary Operates the image slideshow. 
+ */
+function slideshowHandler() {
+    const slideshowImages = [...document.getElementsByClassName('slideshow_images')];
+    // current_image class image elements have opacity of 1, slideshow image elements have default opacity 0
+    let currentImage = document.getElementsByClassName('current_image')[0];
+    let currentImageIndex = slideshowImages.indexOf(currentImage);
+    let nextImage;
+    if (currentImageIndex === slideshowImages.length - 1) {
+        nextImage = slideshowImages[0];
+    } else {
+        nextImage = slideshowImages[currentImageIndex + 1]
+    }
+    imageFadeIn(nextImage, currentImage);
+}
+
+if (document.getElementsByTagName('title')[0].textContent === 'Landing page') {
+    // Initial delay so that initally displayed image does not fade out immediately
+    setTimeout(slideshowHandler, 8000);
+}
+
 // uncommented during testing
-//module.exports = {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu};
+//module.exports = {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, imageFadeIn, imageFadeOut};

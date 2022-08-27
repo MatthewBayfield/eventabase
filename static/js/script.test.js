@@ -2,6 +2,7 @@
 * @jest-environment jsdom
 */
 
+jest.useFakeTimers();
 // Adds rendered landing_page template HTML content to the JSDOM
 let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/html_content_for_js_tests/rendered_landing_page.html', 'utf-8');
@@ -68,4 +69,24 @@ describe('test more menu functionality', () => {
             expect(document.activeElement).not.toBe(moreMenu);
         })
     })    
+})
+
+describe('Test that the image slideshow functions as expected', () => {
+    afterEach(() => {
+       jest.runOnlyPendingTimers();
+    })
+
+    const slideshowImages = [...document.getElementsByClassName('slideshow_images')];
+    let image_number;
+    for (let index = 0; index < slideshowImages.length; index++) {
+        image_number = index + 1;
+        test((`check image ${image_number} is now the visible image`), () => {
+            expect(document.getElementsByClassName('current_image')[0]).toBe(slideshowImages[index]);
+            expect(document.getElementsByClassName('current_image').length).toBe(1);
+        })
+    }
+    test((`check image 1 is now the visible image again`), () => {
+        expect(document.getElementsByClassName('current_image')[0]).toBe(slideshowImages[0]);
+        expect(document.getElementsByClassName('current_image').length).toBe(1);
+    })
 })
