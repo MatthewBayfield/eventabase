@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Loved+by+the+King&family=Roboto&family=Staatliches&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@600&family=Loved+by+the+King&family=Staatliches&display=swap');
 
 /*CSS Section: General styling*/
 
@@ -16,21 +16,47 @@ html {
 body {
     scroll-behavior: smooth;
     overflow-y: scroll;
+    font-family: 'Josefin Slab', serif;
 }
 
 h1 {
     font-family: 'Staatliches', cursive;
     width: fit-content;
-    margin: 0 auto;
+    margin: 0.1rem auto;
 }
 
-h2 {
+h2,h3 {
     font-family: 'Loved by the King', cursive;
     width: fit-content;
-    margin: -0.8rem  auto 0 auto;
-    padding-bottom: 0.1rem;
+    margin: 0.5rem auto;
 }
 
+p {
+    padding: 0 1rem;
+    margin: 1rem auto;
+    word-spacing: 0.2rem;
+}
+
+ol {
+    padding: 0 0 0 1.5rem;
+}
+
+li {
+    margin: 1rem 0;
+}
+
+button {
+    display: block;
+    margin: 3rem auto;
+    padding: 1rem;
+    background-color: #fcfc62;
+    border: 2px solid #d62839;
+    border-radius: 25px;
+    width: 90%;
+    height: fit-content;
+    box-sizing: border-box;
+    font-size: inherit;
+}
 /* CSS Section: Nav bar styling */
 
 nav {
@@ -106,7 +132,12 @@ span.more_menu_button {
 
 /* CSS Section: Landing_page only styling */
 
-#landing_page main > div:first-child {
+#landing_page header > h2 {
+    margin: -0.8rem  auto 0 auto;
+    padding-bottom: 0.1rem;
+}
+
+#landing_page main > :first-child {
     height: 25vh;
     position: relative;
 }
@@ -127,4 +158,16 @@ span.more_menu_button {
 
 .current_image {
     opacity: 1;
+}
+
+#how_it_works > div{
+    display: flex;
+}
+
+#how_it_works > div > div:nth-child(1) {
+    flex: 6 4 0;
+}
+
+#how_it_works > div > div:nth-child(2) {
+    flex: 4 6 0%;
 }
