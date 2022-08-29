@@ -92,10 +92,32 @@ nav > div {
     color: #fff;
     cursor: pointer;
 }
+
+.menu_item {
+    margin: 0 auto 1.5rem;
+    width: 100%;
+}
+
+.active {
+    background-color: #fcfc62;
+}
+
+.clicked {
+    background-color: #fa8334;
+}
+
+.clicked > a {
+    color: #fff;
+}
 	
 span.more_menu_button {
     cursor: pointer;
-    padding: 0.6rem;
+    padding: 0 0.6rem;
+}
+
+.menu_item > a {
+    display: inline-block;
+    width: 100%;
 }
 
 #more_menu_container {
@@ -119,9 +141,10 @@ span.more_menu_button {
     visibility: hidden;
 }
 
-#menu_items {
+#menu_items_container {
     margin: 0 auto;
-    width: fit-content;
+    width: 100%;
+    text-align: center;
 }
 
 #more_menu > :first-child {

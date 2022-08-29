@@ -67,6 +67,43 @@ function closeMenu() {
     moreMenu.blur();   
 }
 
+/** Adds mousenter and mouseleave event listeners to the
+ * more menu items to provide hover feedback. Feedback
+ * entails a background colour change.
+ * @summary Adds event listeners to the more menu items
+ */
+function menuItemHoverFeedbackListeners() {
+    const menuItems = document.getElementsByClassName('menu_item');
+    for (item of menuItems) {
+        item.addEventListener('mouseenter', () => {
+            item.classList.add('active');
+        })
+        item.addEventListener('mouseleave', () => {
+            item.classList.remove('active');
+        })
+    }
+}
+
+menuItemHoverFeedbackListeners();
+
+/** Adds click event listeners to certain elements to provide clicked/pressed feedback. Feedback
+ * entails a temporary background and font colour change.
+ * @summary Adds click event listeners to chosen elements to provide clicked feedback.
+ */
+ function clickedFeedbackListeners() {
+    const menuItems = document.getElementsByClassName('menu_item');
+    for (item of menuItems) {
+        item.addEventListener('mousedown', () => {
+            item.classList.add('clicked');
+        })
+        item.addEventListener('mouseup', () => {
+            item.classList.remove('clicked');
+        })
+    }
+}
+
+clickedFeedbackListeners();
+
 /** Adds the current_image class atrribute to the nextImage parameter element.
  * Passes the currentImage parameter to the imageFadeOut function.
  * @param {Object} currentImage - The image element with the current_image class attribute

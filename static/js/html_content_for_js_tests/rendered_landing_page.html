@@ -1,18 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <meta name="description" content="Eventabase is a user-hosted group-based events/activity advertiser and organiser,
-                                        that allows registered users to either search for
-                                        events/activities to participate in; or advertise their own events/activities
-                                        for others to partake.">
+                                      that allows registered users to either search for
+                                      events/activities to participate in; or advertise their own events/activities
+                                      for others to partake.">
     <meta name="keywords" content="events/activities organiser, events/activities advertiser, group-based">
+
+
+    
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
     <title>Landing page</title>
+
 </head>
 <body id="landing_page">
     <header>
@@ -55,9 +58,9 @@
                     <div>
                         <span class="more_menu_button" aria-label="close menu" aria-role="button"><i class="fa-solid fa-xmark"></i> </span> 
                     </div>
-                    <div id="menu_items">
+                    <div id="menu_items_container">
                         
-                        <div aria-role="menuitem">
+                        <div aria-role="menuitem" class="menu_item">
                             <a href="" type="text/html">T &amp; C</a>
                         </div>
                     </div>
@@ -125,6 +128,46 @@
             <img class="slideshow_images" src="/static/images/tennis_small.jpg" alt="three men playing tennis">
         </picture>
     </div>
+    <!--How it works section-->
+    <section id="how_it_works">
+        <h2>How it Works</h2>
+        <p>
+            Are you bored with nothing to do in your area? Need people to do something with? Or perhaps you are looking to try something new and make new friends
+            at the same time.
+        </p>
+        <p>
+            <strong>Eventabase is an events and activities advertiser and organiser</strong>, that allows its registered users to both advertise an event or activity they wish
+            to host, as well as search for activities or events hosted by other users, to potentially participate in.
+        </p>
+        <p>
+            To advertise an event/activity all a user has to is provide the required information. Other users then can register their interest,
+            and the host can choose who to invite. Any further communication between the host and its attendees is managed through the message
+            dashboard.
+        </p>
+        <p>
+            Users can search for events/activities they like, by location and using keywords. All users can provide reviews/ratings for other users as
+            participants and hosts independently.
+        </p>
+        <div>
+            <div>
+            <h3>Next Steps</h3>
+            <ol>
+                <li>Sign-up to create an account</li>
+                <li>Verify your account email</li>
+                <li>Sign-in</li>
+                <li>Set-up your profile</li>
+                <li>
+                    On your homepage, navigate to the post or search events/activities
+                    sections to begin advertising or looking for your next event/activity.
+                </li>
+            </ol>
+            </div>
+            <div>
+                <button type="button" name="sign-up"> SIGN-UP</button>
+                <button type="button" name="sign-in"> SIGN-IN</button>
+            </div>
+        </div>
+    </section>
 
     </main>
     <footer>

@@ -33,6 +33,29 @@ describe('test more menu functionality', () => {
             expect(document.activeElement).toBe(moreMenu);
         })
     })
+    describe('Check the menu items have hover and click/press feedback', () => {
+        const menuItems = document.getElementsByClassName('menu_item');
+        test(" a menu item's background colour changes only when hovered over", () => {
+                for (item of menuItems) {
+                    let event = new Event('mouseenter');
+                    item.dispatchEvent(event);
+                    expect(item.classList.contains('active')).toBe(true);
+                    event = new Event('mouseleave');
+                    item.dispatchEvent(event);
+                    expect(item.classList.contains('active')).toBe(false);
+                }
+        })
+        test("when clicked/pressed the menu item background and font colour changes temporarily", () => {
+            for (item of menuItems) {
+                let event = new Event('mousedown');
+                item.dispatchEvent(event);
+                expect(item.classList.contains('clicked')).toBe(true);
+                event = new Event('mouseup');
+                item.dispatchEvent(event);
+                expect(item.classList.contains('clicked')).toBe(false);
+            }
+        })
+    })
     
     describe('check that the more menu closes when expected', () => {
         beforeEach(() => {
