@@ -16,7 +16,7 @@
         <nav>
             <div>
                 {% url "landing_page:landing_page_url" as landing_page_url%}
-                <a href="{{landing_page_url}}" type="text/html">
+                <a href="{{landing_page_url}}" type="text/html" aria-label="Home">
                     <div>
                         <i class="fa-solid fa-house nav_icon" ></i>
                         <div class="nav_icon">
@@ -32,20 +32,20 @@
                     Sign-in
                 </div>
             </div>
-            <div class="more_menu_button" aria-role="button" aria-haspopup="menu" aria-expanded="false" aria-controls="more_menu">
+            <div class="more_menu_button" role="button" aria-haspopup="menu" aria-expanded="false" aria-controls="more_menu" tabindex="0">
                 <i class="fa-solid fa-bars nav_icon"></i>
                 <div class="nav_icon">
                     More
                 </div>
             </div>
             <div id="more_menu_container">
-                <div id="more_menu" aria-role="menu" tabindex="-1">
+                <div id="more_menu" role="menu" tabindex="0">
                     <div>
-                        <span class="more_menu_button" aria-label="close menu" aria-role="button"><i class="fa-solid fa-xmark"></i> </span> 
+                        <span tabindex="0" class="more_menu_button" aria-label="close menu" role="button"><i class="fa-solid fa-xmark"></i> </span> 
                     </div>
                     <div id="menu_items_container">
                         {% block more_menu_items%}{% endblock %}
-                        <div aria-role="menuitem" class="menu_item">
+                        <div role="menuitem" class="menu_item">
                             <a href="" type="text/html">T & C</a>
                         </div>
                     </div>
