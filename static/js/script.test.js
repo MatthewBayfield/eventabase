@@ -103,13 +103,19 @@ describe('Test that the image slideshow functions as expected', () => {
     let image_number;
     for (let index = 0; index < slideshowImages.length; index++) {
         image_number = index + 1;
-        test((`check image ${image_number} is now the visible image`), () => {
-            expect(document.getElementsByClassName('current_image')[0]).toBe(slideshowImages[index]);
-            expect(document.getElementsByClassName('current_image').length).toBe(1);
+        test((`check image ${image_number} is now the visible (incl for screen readers) image`), () => {
+            const elementsWithClassCurrentImage = [...document.getElementsByClassName('current_image')];
+            expect(elementsWithClassCurrentImage[0]).toBe(slideshowImages[index]);
+            expect(elementsWithClassCurrentImage.length).toBe(1);
+            expect(elementsWithClassCurrentImage[0].getAttribute('aria-hidden')).toBe('false');
+            expect(document.querySelectorAll('[aria-hidden="false"]').length).toBe(1);
         })
     }
     test((`check image 1 is now the visible image again`), () => {
-        expect(document.getElementsByClassName('current_image')[0]).toBe(slideshowImages[0]);
-        expect(document.getElementsByClassName('current_image').length).toBe(1);
+        const elementsWithClassCurrentImage = [...document.getElementsByClassName('current_image')];
+        expect(elementsWithClassCurrentImage[0]).toBe(slideshowImages[0]);
+        expect(elementsWithClassCurrentImage.length).toBe(1);
+        expect(elementsWithClassCurrentImage[0].getAttribute('aria-hidden')).toBe('false');
+        expect(document.querySelectorAll('[aria-hidden="false"]').length).toBe(1);
     })
 })

@@ -113,6 +113,7 @@ clickedFeedbackListeners();
 function imageFadeIn(nextImage, currentImage) {
     nextImage.className += " current_image"
     imageFadeOut(currentImage);
+    nextImage.setAttribute('aria-hidden', 'false');
 }
 
 /** Removes the current_image class attribute from the currentImage parameter element.
@@ -122,6 +123,7 @@ function imageFadeIn(nextImage, currentImage) {
  * @summary Fades out the currently displayed image.
  */
 function imageFadeOut(currentImage) {
+    currentImage.setAttribute('aria-hidden', 'true');
     currentImage.classList.remove('current_image');
     setTimeout(slideshowHandler, 8000);
 }
