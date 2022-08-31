@@ -3,6 +3,11 @@
 const moreMenuContainer = document.getElementById('more_menu_container');
 const moreMenu = document.getElementById('more_menu');
 const moreMenuButtons = document.getElementsByClassName('more_menu_button');
+const menuItems = document.getElementsByClassName('menu_item');
+const slideshowImages = [...document.getElementsByClassName('slideshow_images')];
+const linksAndButtons = [...document.getElementsByTagName('a'), ...document.getElementsByTagName('button')];
+const focusable = [...linksAndButtons, ...document.querySelectorAll('[tabIndex="0"]')];
+const uniqueFocusable = [...new Set(focusable)];
 
 // JS Section: Event listeners:
 
@@ -73,8 +78,7 @@ function closeMenu() {
  * @summary Adds event listeners to the more menu items
  */
 function menuItemHoverFeedbackListeners() {
-    const menuItems = document.getElementsByClassName('menu_item');
-    for (item of menuItems) {
+    for (let item of menuItems) {
         item.addEventListener('mouseenter', () => {
             item.classList.add('active');
         })
@@ -91,13 +95,12 @@ menuItemHoverFeedbackListeners();
  * @summary Adds click event listeners to chosen elements to provide clicked feedback.
  */
  function clickedFeedbackListeners() {
-    const menuItems = document.getElementsByClassName('menu_item');
-    for (item of menuItems) {
-        item.addEventListener('mousedown', () => {
-            item.classList.add('clicked');
+    for (let element of [...new Set([...menuItems, ...uniqueFocusable])]) {
+        element.addEventListener('mousedown', () => {
+            element.classList.add('clicked');
         })
-        item.addEventListener('mouseup', () => {
-            item.classList.remove('clicked');
+        element.addEventListener('mouseup', () => {
+            setTimeout(() => element.classList.remove('clicked'), 100);
         })
     }
 }
@@ -134,7 +137,6 @@ function imageFadeOut(currentImage) {
  * @summary Operates the image slideshow. 
  */
 function slideshowHandler() {
-    const slideshowImages = [...document.getElementsByClassName('slideshow_images')];
     // current_image class image elements have opacity of 1, slideshow image elements have default opacity 0
     let currentImage = document.getElementsByClassName('current_image')[0];
     let currentImageIndex = slideshowImages.indexOf(currentImage);
@@ -153,4 +155,4 @@ if (document.getElementsByTagName('title')[0].textContent === 'Landing page') {
 }
 
 // uncommented during testing
-//module.exports = {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, imageFadeIn, imageFadeOut};
+//module.exports = {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut};
