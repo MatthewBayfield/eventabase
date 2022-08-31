@@ -48,36 +48,12 @@ function createMoreMenuContainerListener() {
 
 createMoreMenuContainerListener();
 
-// JS Section: Functions:
-
-/** An event handler that performs the DOM manipulations necessary
- *  to open the more menu, when the more menu hamburger button is
- *  clicked.
- */
-function openMenu() {
-    moreMenuContainer.style.display = 'block';
-    moreMenu.style.visibility = 'visible';
-    moreMenu.focus();
-    moreMenuButtons[0].setAttribute('aria-expanded', 'True');
-}
-
-/** An event handler that performs the DOM manipulations necessary
- *  to close the more menu, when the more menu close button is
- *  clicked, or anywhere not on the menu is clicked.
- */
-function closeMenu() {
-    moreMenu.style.removeProperty('visibility');
-    moreMenuButtons[0].setAttribute('aria-expanded', 'False');
-    moreMenuContainer.style.removeProperty('display');
-    moreMenu.blur();   
-}
-
 /** Adds mousenter and mouseleave event listeners to the
  * more menu items to provide hover feedback. Feedback
  * entails a background colour change.
  * @summary Adds event listeners to the more menu items
  */
-function menuItemHoverFeedbackListeners() {
+ function menuItemHoverFeedbackListeners() {
     for (let item of menuItems) {
         item.addEventListener('mouseenter', () => {
             item.classList.add('active');
@@ -107,6 +83,54 @@ menuItemHoverFeedbackListeners();
 
 clickedFeedbackListeners();
 
+/** Adds enter key press event listeners to focusable elements, to allow
+ * clicking of the element with the enter key. Also provides feedback
+ * when pressed.
+ * @summary Adds enter key click equivalent event listeners to focusable elements.
+ */
+ function enterKeyListeners() {
+    for (let element of uniqueFocusable) {
+        element.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                element.classList.add('clicked');
+            }
+
+        })
+        element.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                element.classList.remove('clicked');
+                element.click();
+            }
+        })
+    }
+}
+
+enterKeyListeners();
+
+// JS Section: Functions:
+
+/** An event handler that performs the DOM manipulations necessary
+ *  to open the more menu, when the more menu hamburger button is
+ *  clicked.
+ */
+function openMenu() {
+    moreMenuContainer.style.display = 'block';
+    moreMenu.style.visibility = 'visible';
+    moreMenu.focus();
+    moreMenuButtons[0].setAttribute('aria-expanded', 'True');
+}
+
+/** An event handler that performs the DOM manipulations necessary
+ *  to close the more menu, when the more menu close button is
+ *  clicked, or anywhere not on the menu is clicked.
+ */
+function closeMenu() {
+    moreMenu.style.removeProperty('visibility');
+    moreMenuButtons[0].setAttribute('aria-expanded', 'False');
+    moreMenuContainer.style.removeProperty('display');
+    moreMenu.blur();   
+}
+
 /** Adds the current_image class atrribute to the nextImage parameter element.
  * Passes the currentImage parameter to the imageFadeOut function.
  * @param {Object} currentImage - The image element with the current_image class attribute
@@ -130,7 +154,6 @@ function imageFadeOut(currentImage) {
     currentImage.classList.remove('current_image');
     setTimeout(slideshowHandler, 8000);
 }
-
 
 /** Determines the currently displayed image, and the image due to be displayed next. Passes
  *  these image vars on to the imageFadeOut function.

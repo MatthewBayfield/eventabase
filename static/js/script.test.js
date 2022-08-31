@@ -8,6 +8,8 @@ let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/html_content_for_js_tests/rendered_landing_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
 let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, slideshowImages, uniqueFocusable} = require('./script.js');
+// mock functions
+const log = jest.fn();
 
 describe('test more menu functionality', () => {
     describe('check the more menu hamburger-style button works', () => {
@@ -95,16 +97,55 @@ describe('test more menu functionality', () => {
     })    
 })
 
-test('check all focusable elements give feedback when clicked', () => {
-    for (let element of uniqueFocusable) {
-        let event = new Event('mousedown');
-        element.dispatchEvent(event);
-        expect(element.classList.contains('clicked')).toBe(true);
-        event = new Event('mouseup');
-        element.dispatchEvent(event);
-        jest.runOnlyPendingTimers();
-        expect(element.classList.contains('clicked')).toBe(false);
-    }
+describe('check all focusable elements give feedback when clicked directly or indirectly', () => {
+    test('check all focusable elements give feedback when clicked', () => {
+        for (let element of uniqueFocusable) {
+            let event = new Event('mousedown');
+            element.dispatchEvent(event);
+            expect(element.classList.contains('clicked')).toBe(true);
+            event = new Event('mouseup');
+            element.dispatchEvent(event);
+            jest.runOnlyPendingTimers();
+            expect(element.classList.contains('clicked')).toBe(false);
+        }
+    })
+    
+    describe("check that the 'enter key' event listeners work", () => {
+        const click = (event) => {log(event.target)};
+        beforeAll(() => {
+            for (let element of uniqueFocusable) {
+                element.addEventListener('click', click);
+            }
+        })
+        afterAll(() => {
+            for (let element of uniqueFocusable) {
+                element.removeEventListener('click', click);
+            }
+            log.mockClear();
+        })
+    
+        test('when a focusable element has focus and the enter key is pressed, the element is clicked', () => {
+            const event = new KeyboardEvent('keyup', {key: 'Enter'} );
+            for (let element of uniqueFocusable) {
+                log.mockClear();
+                element.dispatchEvent(event);
+                expect(log).toHaveBeenCalledWith(element);                     
+            }
+        })
+    
+        test('feedback is given when the enter key is pressed on a focused element', () => {
+            let event = new KeyboardEvent('keydown', {key: 'Enter'} );
+            for (let element of uniqueFocusable) {
+                element.dispatchEvent(event);
+                expect(element.classList.contains('clicked')).toBe(true);                     
+            }
+            event = new KeyboardEvent('keyup', {key: 'Enter'} );
+            for (let element of uniqueFocusable) {
+                element.dispatchEvent(event);
+                expect(element.classList.contains('clicked')).toBe(false);                     
+            }
+        })
+    })
 })
 
 describe('Test that the image slideshow functions as expected', () => {
