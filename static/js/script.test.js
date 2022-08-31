@@ -7,7 +7,7 @@ jest.useFakeTimers();
 let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/html_content_for_js_tests/rendered_landing_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
-let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu} = require('./script.js');
+let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, slideshowImages, uniqueFocusable} = require('./script.js');
 
 describe('test more menu functionality', () => {
     describe('check the more menu hamburger-style button works', () => {
@@ -36,7 +36,7 @@ describe('test more menu functionality', () => {
     describe('Check the menu items have hover and click/press feedback', () => {
         const menuItems = document.getElementsByClassName('menu_item');
         test(" a menu item's background colour changes only when hovered over", () => {
-                for (item of menuItems) {
+                for (let item of menuItems) {
                     let event = new Event('mouseenter');
                     item.dispatchEvent(event);
                     expect(item.classList.contains('active')).toBe(true);
@@ -46,12 +46,13 @@ describe('test more menu functionality', () => {
                 }
         })
         test("when clicked/pressed the menu item background and font colour changes temporarily", () => {
-            for (item of menuItems) {
+            for (let item of menuItems) {
                 let event = new Event('mousedown');
                 item.dispatchEvent(event);
                 expect(item.classList.contains('clicked')).toBe(true);
                 event = new Event('mouseup');
                 item.dispatchEvent(event);
+                jest.runOnlyPendingTimers();
                 expect(item.classList.contains('clicked')).toBe(false);
             }
         })
@@ -95,27 +96,34 @@ describe('test more menu functionality', () => {
 })
 
 describe('Test that the image slideshow functions as expected', () => {
-    afterEach(() => {
-       jest.runOnlyPendingTimers();
-    })
-
-    const slideshowImages = [...document.getElementsByClassName('slideshow_images')];
-    let image_number;
-    for (let index = 0; index < slideshowImages.length; index++) {
-        image_number = index + 1;
-        test((`check image ${image_number} is now the visible (incl for screen readers) image`), () => {
+    let imagesInToSlideshow = 1;
+    let imagesNotYetDisplayed = [...slideshowImages];
+    let lastImageDisplayed;
+    for (let index = 1; index <= slideshowImages.length; index++) {
+        test(`check after ${imagesInToSlideshow} images in to slideshow, the next image due becomes visible (incl for screen readers)`, () => {
             const elementsWithClassCurrentImage = [...document.getElementsByClassName('current_image')];
-            expect(elementsWithClassCurrentImage[0]).toBe(slideshowImages[index]);
-            expect(elementsWithClassCurrentImage.length).toBe(1);
-            expect(elementsWithClassCurrentImage[0].getAttribute('aria-hidden')).toBe('false');
+            const arrayLength = elementsWithClassCurrentImage.length;
+            const currentImageIndex = slideshowImages.indexOf(elementsWithClassCurrentImage[arrayLength - 1]);
+            nextImageIndex = currentImageIndex === slideshowImages.length - 1 ? 0 : currentImageIndex + 1;
+            jest.runOnlyPendingTimers();
+            expect(slideshowImages[nextImageIndex].classList.contains('current_image'));
+            expect(arrayLength).toBe(1);
+            expect(slideshowImages[nextImageIndex].getAttribute('aria-hidden')).toBe('false');
             expect(document.querySelectorAll('[aria-hidden="false"]').length).toBe(1);
+            expect(imagesNotYetDisplayed).toContain(slideshowImages[nextImageIndex]);
+            lastImageDisplayed = imagesNotYetDisplayed.splice(imagesNotYetDisplayed.indexOf(slideshowImages[nextImageIndex]), 1);
         })
+        imagesInToSlideshow += 1;
     }
-    test((`check image 1 is now the visible image again`), () => {
+    test('slideshow restarts after last image in a cycle displays', () => {
         const elementsWithClassCurrentImage = [...document.getElementsByClassName('current_image')];
-        expect(elementsWithClassCurrentImage[0]).toBe(slideshowImages[0]);
-        expect(elementsWithClassCurrentImage.length).toBe(1);
-        expect(elementsWithClassCurrentImage[0].getAttribute('aria-hidden')).toBe('false');
+        const arrayLength = elementsWithClassCurrentImage.length;
+        let currentImageIndex = slideshowImages.indexOf(lastImageDisplayed[0]);
+        let nextImageIndex = currentImageIndex === slideshowImages.length - 1 ? 0 : currentImageIndex + 1;
+        jest.runOnlyPendingTimers();
+        expect(slideshowImages[nextImageIndex].classList.contains('current_image'));
+        expect(arrayLength).toBe(1);
+        expect(slideshowImages[nextImageIndex].getAttribute('aria-hidden')).toBe('false');
         expect(document.querySelectorAll('[aria-hidden="false"]').length).toBe(1);
     })
 })
