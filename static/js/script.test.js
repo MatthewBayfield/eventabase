@@ -95,6 +95,18 @@ describe('test more menu functionality', () => {
     })    
 })
 
+test('check all focusable elements give feedback when clicked', () => {
+    for (let element of uniqueFocusable) {
+        let event = new Event('mousedown');
+        element.dispatchEvent(event);
+        expect(element.classList.contains('clicked')).toBe(true);
+        event = new Event('mouseup');
+        element.dispatchEvent(event);
+        jest.runOnlyPendingTimers();
+        expect(element.classList.contains('clicked')).toBe(false);
+    }
+})
+
 describe('Test that the image slideshow functions as expected', () => {
     let imagesInToSlideshow = 1;
     let imagesNotYetDisplayed = [...slideshowImages];
