@@ -49,8 +49,9 @@ button {
     display: block;
     margin: 3rem auto;
     padding: 1rem;
-    background-color: #fcfc62;
-    border: 2px solid #d62839;
+    color: #ffffff;
+    background-color: #d62839;
+    border: 2px solid #fcfc62;
     border-radius: 25px;
     width: 90%;
     height: fit-content;
@@ -109,19 +110,21 @@ nav > div {
 .clicked {
     background-color: #fa8334;
 }
-
-.clicked > a {
-    color: #fff;
-}
 	
 span.more_menu_button {
     cursor: pointer;
     padding: 0 0.6rem;
+    color: #ffffff;
 }
 
 .menu_item > a {
     display: inline-block;
     width: 100%;
+    color: #ffffff;
+}
+
+.active > a {
+    color: #000000;
 }
 
 #more_menu_container {
@@ -140,8 +143,8 @@ span.more_menu_button {
     top: 4.4rem;
     width: 25vw;
     min-height: 10vh;
-    background-color: #ffffff;
-    border: 2px solid black;
+    background-color: #d62839;
+    border: 2px solid #ffffff;
     visibility: hidden;
 }
 
