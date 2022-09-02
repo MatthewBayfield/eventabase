@@ -19,6 +19,14 @@ body {
     font-family: 'Josefin Slab', serif;
 }
 
+/*Make header sticky*/
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #ffffff;
+}
+
 h1 {
     font-family: 'Staatliches', cursive;
     width: fit-content;
