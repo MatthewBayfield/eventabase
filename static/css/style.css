@@ -10,7 +10,7 @@
 }
 
 html {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 
 body {
@@ -208,4 +208,87 @@ span.more_menu_button {
 
 #how_it_works > div > div:nth-child(2) {
     flex: 4 6 0%;
+}
+
+/* CSS Subsection: Media queries: */
+
+/*Slideshow image queries*/
+@media screen and (min-width: 400px) and (max-device-aspect-ratio: 650/700 ) and (orientation: portrait) {
+    #landing_page main > :first-child {
+        height: 33vh;
+
+    }
+}
+
+@media screen and (min-width: 510px) and (orientation: portrait) {
+    #landing_page main > :first-child {
+        height: 40vh;
+
+    }
+}
+
+@media screen and (min-width: 800px) and (orientation: portrait) {
+    #landing_page main > :first-child {
+        height: 50vh;
+    }
+}
+
+@media screen and (orientation: landscape) {
+    #landing_page main > :first-child {
+        height: 60vh;
+    }
+}
+
+@media screen and (orientation: landscape) and (min-aspect-ratio: 2/1) {
+    #landing_page main > :first-child {
+        height: 60vh;
+        background-color: rgba(214, 40, 57, 0.6);
+    }
+
+    .slideshow_images {
+        object-fit: contain;
+    }
+}
+
+/*Whole page queries*/
+@media screen and (min-width: 300px){
+    html {
+        font-size: 0.8rem;
+    }
+    
+}
+
+@media screen and (min-width: 400px){
+    html {
+        font-size: 1rem;
+    }
+    
+}
+
+@media screen and (min-width: 650px){
+    html {
+        font-size: 1.4rem;
+    }
+    
+}
+
+@media screen and (min-width: 850px){
+    html {
+        font-size: 1.6rem;
+    }
+    
+}
+
+@media screen and (min-width: 1150px){
+    html {
+        font-size: 1.8rem;
+    }
+    
+}
+
+@media screen and (min-width: 1400px){
+    html {
+        font-size: 2rem;
+    }
+    
 }
