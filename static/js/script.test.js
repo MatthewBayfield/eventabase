@@ -80,7 +80,7 @@ describe('test more menu functionality', () => {
             expect(document.activeElement).not.toBe(moreMenu);
         })
     
-        test('clicking anywhere not on the menu closes it', () => {
+        test('clicking anywhere within the visible menu container, but not on the open menu itself, closes it', () => {
             // moreMenu click event
             moreMenu.click();
             expect(moreMenuButtons[0].getAttribute('aria-expanded')).toBe('True'); 
@@ -93,6 +93,16 @@ describe('test more menu functionality', () => {
             expect(window.getComputedStyle(moreMenuContainer).getPropertyValue('display')).toBe('block');
             expect(window.getComputedStyle(moreMenu).getPropertyValue('visibility')).toBe('visible');
             expect(document.activeElement).not.toBe(moreMenu);
+            // checking else branch of createMoreMenuContainerListener
+            moreMenuContainer.style.setProperty('display', 'none');
+            moreMenu.style.setProperty('visibility', 'hidden');
+            moreMenuButtons[0].setAttribute('aria-expanded', 'True');
+            moreMenu.focus();
+            moreMenuContainer.click();
+            expect(moreMenuButtons[0].getAttribute('aria-expanded')).not.toBe('False');
+            expect(window.getComputedStyle(moreMenuContainer).getPropertyValue('display')).not.toBe('block');
+            expect(window.getComputedStyle(moreMenu).getPropertyValue('visibility')).not.toBe('visible');
+            expect(document.activeElement).toBe(moreMenu);
         })
     })    
 })
@@ -125,24 +135,38 @@ describe('check all focusable elements give feedback when clicked directly or in
         })
     
         test('when a focusable element has focus and the enter key is pressed, the element is clicked', () => {
-            const event = new KeyboardEvent('keyup', {key: 'Enter'} );
+            let event;
             for (let element of uniqueFocusable) {
+                event = new KeyboardEvent('keyup', {key: 'Enter'} );
                 log.mockClear();
                 element.dispatchEvent(event);
-                expect(log).toHaveBeenCalledWith(element);                     
+                expect(log).toHaveBeenCalledWith(element);
+                log.mockClear();
+                event = new KeyboardEvent('keyup', {key: 'Tab'});
+                element.dispatchEvent(event);
+                expect(log).not.toHaveBeenCalledWith(element);
+
             }
         })
     
         test('feedback is given when the enter key is pressed on a focused element', () => {
-            let event = new KeyboardEvent('keydown', {key: 'Enter'} );
+            let event;
             for (let element of uniqueFocusable) {
+                event = new KeyboardEvent('keydown', {key: 'Tab'});
                 element.dispatchEvent(event);
-                expect(element.classList.contains('clicked')).toBe(true);                     
+                expect(element.classList.contains('clicked')).toBe(false);
+                event = new KeyboardEvent('keydown', {key: 'Enter'} );    
+                element.dispatchEvent(event);
+                expect(element.classList.contains('clicked')).toBe(true);
+                                    
             }
-            event = new KeyboardEvent('keyup', {key: 'Enter'} );
             for (let element of uniqueFocusable) {
+                event = new KeyboardEvent('keyup', {key: 'Tab'});
                 element.dispatchEvent(event);
-                expect(element.classList.contains('clicked')).toBe(false);                     
+                expect(element.classList.contains('clicked')).toBe(true);
+                event = new KeyboardEvent('keyup', {key: 'Enter'} );   
+                element.dispatchEvent(event);
+                expect(element.classList.contains('clicked')).toBe(false);                  
             }
         })
     })
