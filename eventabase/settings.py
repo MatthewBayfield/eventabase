@@ -33,23 +33,29 @@ DEBUG = development
 
 if development:
     ALLOWED_HOSTS = ['localhost']
+    CSRF_TRUSTED_ORIGINS = ['https://8000-matthewbayfi-eventabase-lxfe72ybebg.ws-eu64.gitpod.io']
 else:
     ALLOWED_HOSTS = [os.environ.get('HEROKU_HOSTNAME')]
-
-
+    CSRF_TRUSTED_ORIGINS = ['https://eventabase.herokuapp.com/']
+    
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     'cloudinary_storage',
     'django.contrib.staticfiles',
     'cloudinary',
     'landing_page'
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -97,6 +103,12 @@ else:
         'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
 
+# authentication_backends
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -142,3 +154,16 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# allauth settings
+LOGIN_REDIRECT_URL = 'user_homepage'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+LOGIN_URL = 'accounts/login/'
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+ACCOUNT_MAX_EMAIL_ADDRESSES = 2
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
+ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
+AUTH_USER_MODEL = 'landing_page.CustomUserModel'
