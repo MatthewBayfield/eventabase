@@ -30,7 +30,7 @@ header {
 h1 {
     font-family: 'Staatliches', cursive;
     width: fit-content;
-    margin: 0.1rem auto;
+    margin: 0.1rem 0.5rem;
 }
 
 h2,h3 {
@@ -80,6 +80,11 @@ nav {
 a {
     text-decoration: none;
     cursor: default;
+}
+
+input {
+    border: 2px solid black;
+    width: 50%
 }
 
 :focus {
@@ -135,6 +140,56 @@ span.more_menu_button {
     color: #000000;
 }
 
+/* Google help iocn styling class*/
+.material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 40
+}
+
+/* submitted form fields error feedback message styling */
+.errorlist {
+    list-style: inside;
+}
+
+.errorlist > li {
+    margin: 0rem 0rem 0.5rem;
+}
+
+.field_flex_container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+}
+
+.field_flex_container > div {
+    flex-basis: 50%;
+}
+
+.field_flex_container > div:nth-child(2) {
+    color: #d62839;
+}
+
+.form_fields > div {
+    display: inline-block;
+    width: 40%;
+    text-align: right;
+}
+
+.errors_present > input {
+    border-color: #d62839;
+}
+
+.help_text {
+    color: #000000;
+    display: none;
+    border: 2px solid #000000;
+    margin-right: 0.1rem;
+    padding: 0.15rem;
+}
+
 #more_menu_container {
     z-index: 2;
     width: 100vw;
@@ -147,8 +202,8 @@ span.more_menu_button {
 
 #more_menu {
     position: fixed;
+    top: 2.65rem;
     right: 0;
-    top: 4.4rem;
     width: 25vw;
     min-height: 10vh;
     background-color: #d62839;
@@ -170,6 +225,10 @@ span.more_menu_button {
 
 /* CSS Section: Landing_page only styling */
 
+#landing_page h1 {
+    margin: 0.1rem auto;
+}
+
 #landing_page header > h2 {
     margin: -0.8rem  auto 0 auto;
     padding-bottom: 0.1rem;
@@ -178,6 +237,10 @@ span.more_menu_button {
 #landing_page main > :first-child {
     height: 25vh;
     position: relative;
+}
+
+#landing_page #more_menu {
+    top: 4.4rem;
 }
 
 .slideshow_images {
