@@ -7,12 +7,15 @@
     {% block extra_meta %}{% endblock %}
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body id="{{page_id}}">
     <header>
         <h1>{% block h1 %}main heading{% endblock %}</h1>
-        <h2>{{slogan}}</h2>
+        {% if slogan %}
+            <h2>{{slogan}}</h2>
+        {% endif %}
         <nav>
             <div>
                 {% url "landing_page:landing_page_url" as landing_page_url%}
@@ -27,10 +30,14 @@
             </div>
             {% block nav_options %}{% endblock %}
             <div>
-                <i class="fa-solid fa-arrow-right-to-bracket nav_icon"></i>
-                <div class="nav_icon">
-                    Sign-in
-                </div>
+                <a href="{% url 'account_login' %}" type="text/html" aria-label="sign-in">
+                    <div>
+                        <i class="fa-solid fa-arrow-right-to-bracket nav_icon"></i>
+                        <div class="nav_icon">
+                            Sign-in
+                        </div>
+                    </div>
+                </a>
             </div>
             <div class="more_menu_button" role="button" aria-haspopup="menu" aria-expanded="false" aria-controls="more_menu" tabindex="0">
                 <i class="fa-solid fa-bars nav_icon"></i>
