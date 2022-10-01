@@ -1,0 +1,34 @@
+<!--Modified form of the allauth account/signup.html template-->
+{% extends "base.html" %}
+
+{% block extra_meta %}
+  <meta name="description" content="Eventabase account sign-up form.">
+  <meta name="keywords" content="account, sign-up">
+{% endblock %}
+
+{% block title %}Sign-up{% endblock %}
+
+{% block h1 %}Account Registration{% endblock %}
+
+{% block nav_options %}
+    <div>
+        <i class="fa-solid fa-user-plus nav_icon"></i>
+        <div class="nav_icon">
+            Sign-up
+        </div>
+    </div>
+{% endblock %}
+
+{% block main %}
+  <p>Already have an account? Then please <a href="{{ login_url }}">sign in</a>.</p>
+
+  <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+    {% csrf_token %}
+    {{ form }}
+    {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+    {% endif %}
+    <button type="submit">Sign Up &raquo;</button>
+  </form>
+{% endblock %}
+
