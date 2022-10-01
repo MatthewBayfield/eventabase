@@ -34,7 +34,8 @@ class CustomUserModel(AbstractBaseUser, PermissionsMixin):
                                 help_text="Required. 150 characters or fewer."
                                           "Letters, digits and @/./+/-/_ only.",
                                 validators=[UnicodeUsernameValidator(),
-                                            MaxLengthValidator(150)])
+                                            MaxLengthValidator(150)],
+                                error_messages={'unique': 'A user with this username already exists.'})
 
     email = models.EmailField(primary_key=True, unique=True,
                               validators=[EmailValidator()])
