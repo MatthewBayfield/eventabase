@@ -33,11 +33,20 @@ DEBUG = development
 
 if development:
     ALLOWED_HOSTS = ['localhost']
-    CSRF_TRUSTED_ORIGINS = ['https://8000-matthewbayfi-eventabase-lxfe72ybebg.ws-eu64.gitpod.io']
+    CSRF_TRUSTED_ORIGINS = ['https://8000-matthewbayfi-eventabase-lxfe72ybebg.ws-eu67.gitpod.io']
+    #Email settings
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
     ALLOWED_HOSTS = [os.environ.get('HEROKU_HOSTNAME')]
     CSRF_TRUSTED_ORIGINS = ['https://eventabase.herokuapp.com/']
-    
+    # Email settings
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -46,13 +55,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
     'cloudinary_storage',
     'django.contrib.staticfiles',
     'cloudinary',
-    'landing_page'
+    'landing_page',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount'
 ]
 
 SITE_ID = 1
@@ -72,7 +81,7 @@ ROOT_URLCONF = 'eventabase.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -167,3 +176,6 @@ ACCOUNT_MAX_EMAIL_ADDRESSES = 2
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 AUTH_USER_MODEL = 'landing_page.CustomUserModel'
+ACCOUNT_FORMS = {
+    'signup': 'landing_page.forms.Signup'
+}
