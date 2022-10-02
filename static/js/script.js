@@ -127,15 +127,12 @@ function helpTextIconsListeners() {
             helpText[helpTextIndex].style.removeProperty('display');
         })
 
-        // click event listeners to trigger the above mouseenter and mouseleave event listeners for touchscreens
-        helpIcon.addEventListener('click', (event) => {
+        // click event listeners to trigger the same effects as the above mouseenter and mouseleave event listeners for touchscreens
+        helpIcon.addEventListener('click', () => {
             let helpTextIndex = helpTextIcons.indexOf(helpIcon);
             if (window.getComputedStyle(helpText[helpTextIndex]).getPropertyValue('display') === 'none') {
-                const mouseEnterEvent = new Event('mouseenter');
-                const mouseLeaveEvent = new Event('mouseleave');
-                event.target.dispatchEvent(mouseEnterEvent);
-                setTimeout(() => {
-                    event.target.dispatchEvent(mouseLeaveEvent);
+                helpText[helpTextIndex].style.display = 'block';
+                setTimeout(() => {helpText[helpTextIndex].style.removeProperty('display');
                     }, 5000)
             }
         })
@@ -216,4 +213,4 @@ if (document.getElementsByTagName('title')[0].textContent === 'Landing page') {
 }
 
 // uncommented during testing
-// module.exports = {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons, helpText};
+//module.exports = {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons, helpText};
