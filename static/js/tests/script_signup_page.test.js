@@ -3,11 +3,12 @@
 */
 
 jest.useFakeTimers();
-// Adds rendered landing_page template HTML content to the JSDOM
+const { expect } = require('expect');
+// Adds rendered signup_page template HTML content to the JSDOM
 let fs = require('fs');
-let fileContents = fs.readFileSync('static/js/html_content_for_js_tests/rendered_landing_page.html', 'utf-8');
+let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_signup_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
-let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, slideshowImages, uniqueFocusable} = require('./script.js');
+let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, slideshowImages, uniqueFocusable, helpTextIcons, helpText} = require('../script.js');
 // mock functions
 const log = jest.fn();
 
@@ -172,35 +173,43 @@ describe('check all focusable elements give feedback when clicked directly or in
     })
 })
 
-describe('Test that the image slideshow functions as expected', () => {
-    let imagesInToSlideshow = 1;
-    let imagesNotYetDisplayed = [...slideshowImages];
-    let lastImageDisplayed;
-    for (let index = 1; index <= slideshowImages.length; index++) {
-        test(`check after ${imagesInToSlideshow} images in to slideshow, the next image due becomes visible (incl for screen readers)`, () => {
-            const elementsWithClassCurrentImage = [...document.getElementsByClassName('current_image')];
-            const arrayLength = elementsWithClassCurrentImage.length;
-            const currentImageIndex = slideshowImages.indexOf(elementsWithClassCurrentImage[arrayLength - 1]);
-            nextImageIndex = currentImageIndex === slideshowImages.length - 1 ? 0 : currentImageIndex + 1;
-            jest.runOnlyPendingTimers();
-            expect(slideshowImages[nextImageIndex].classList.contains('current_image'));
-            expect(arrayLength).toBe(1);
-            expect(slideshowImages[nextImageIndex].getAttribute('aria-hidden')).toBe('false');
-            expect(document.querySelectorAll('[aria-hidden="false"]').length).toBe(1);
-            expect(imagesNotYetDisplayed).toContain(slideshowImages[nextImageIndex]);
-            lastImageDisplayed = imagesNotYetDisplayed.splice(imagesNotYetDisplayed.indexOf(slideshowImages[nextImageIndex]), 1);
-        })
-        imagesInToSlideshow += 1;
-    }
-    test('slideshow restarts after last image in a cycle displays', () => {
-        const elementsWithClassCurrentImage = [...document.getElementsByClassName('current_image')];
-        const arrayLength = elementsWithClassCurrentImage.length;
-        let currentImageIndex = slideshowImages.indexOf(lastImageDisplayed[0]);
-        let nextImageIndex = currentImageIndex === slideshowImages.length - 1 ? 0 : currentImageIndex + 1;
-        jest.runOnlyPendingTimers();
-        expect(slideshowImages[nextImageIndex].classList.contains('current_image'));
-        expect(arrayLength).toBe(1);
-        expect(slideshowImages[nextImageIndex].getAttribute('aria-hidden')).toBe('false');
-        expect(document.querySelectorAll('[aria-hidden="false"]').length).toBe(1);
+describe('Test the functionality of the help text icon event listeners', ( () => {
+    beforeEach(() => {
+        // inline styles used to set initial display of help text elements (jsdom initial element display is always 'block')
+        for (let text of helpText) {
+            text.style.setProperty('display', 'none');
+        }
     })
-})
+
+    test('that the field help text displays only when the mouse hovers over the icon', () => {
+        const mouseEnterEvent =  new Event('mouseenter');
+        const mouseLeaveEvent = new Event('mouseleave');
+        for (let icon of helpTextIcons) {
+            let helpTextIndex = helpTextIcons.indexOf(icon);
+            expect(helpText[helpTextIndex].style.display).toBe('none');
+            icon.dispatchEvent(mouseEnterEvent);
+            expect(helpText[helpTextIndex].style.display).toBe('block');
+            // for testing purposes, use inline style to set display: inline
+            helpText[helpTextIndex].style.display = 'inline';
+            icon.dispatchEvent(mouseLeaveEvent);
+            // Expect to be left with jsdom default display: 'block'
+            expect(window.getComputedStyle(helpText[helpTextIndex]).getPropertyValue('display')).toBe('block');
+        }
+    })
+
+    test('that the click event listeners work', () => {
+        for (let icon of helpTextIcons) {
+            let helpTextIndex = helpTextIcons.indexOf(icon);
+            expect(helpText[helpTextIndex].style.display).toBe('none');
+            icon.click();
+            expect(helpText[helpTextIndex].style.display).toBe('block');
+            // for testing purposes, use inline style to set display: inline
+            helpText[helpTextIndex].style.display = 'inline';
+            jest.advanceTimersByTime(4000);
+            expect(window.getComputedStyle(helpText[helpTextIndex]).getPropertyValue('display')).toBe('inline');
+            jest.advanceTimersByTime(1000);
+            // Expect to be left with jsdom default display: 'block'
+            expect(window.getComputedStyle(helpText[helpTextIndex]).getPropertyValue('display')).toBe('block');
+        }
+    })
+}))

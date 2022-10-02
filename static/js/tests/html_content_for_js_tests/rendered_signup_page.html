@@ -1,0 +1,172 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+  <meta name="description" content="Eventabase account sign-up form.">
+  <meta name="keywords" content="account, sign-up">
+
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <title>Sign-up</title>
+
+</head>
+<body id="">
+    <header>
+        <h1>Account Registration</h1>
+        
+        <nav>
+            <div>
+                
+                <a href="/" type="text/html" aria-label="Home">
+                    <div>
+                        <i class="fa-solid fa-house nav_icon"></i>
+                        <div class="nav_icon">
+                            Home
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+    <div>
+        <i class="fa-solid fa-user-plus nav_icon"></i>
+        <div class="nav_icon">
+            Sign-up
+        </div>
+    </div>
+
+            <div>
+                <a href="/accounts/login/" type="text/html" aria-label="sign-in">
+                    <div>
+                        <i class="fa-solid fa-arrow-right-to-bracket nav_icon"></i>
+                        <div class="nav_icon">
+                            Sign-in
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="more_menu_button" role="button" aria-haspopup="menu" aria-expanded="false" aria-controls="more_menu" tabindex="0">
+                <i class="fa-solid fa-bars nav_icon"></i>
+                <div class="nav_icon">
+                    More
+                </div>
+            </div>
+            <div id="more_menu_container">
+                <div id="more_menu" role="menu" tabindex="0">
+                    <div>
+                        <span tabindex="0" class="more_menu_button" aria-label="close menu" role="button"><i class="fa-solid fa-xmark"></i> </span> 
+                    </div>
+                    <div id="menu_items_container">
+                        
+                        <div role="menuitem" class="menu_item">
+                            <a href="" type="text/html"><b>T &amp; C</b></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        
+  <p>Already have an account? Then please <a href="/accounts/login/">sign in</a>.</p>
+
+  <form class="signup" id="signup_form" method="post" action="/accounts/signup/">
+    <input type="hidden" name="csrfmiddlewaretoken" value="sWGaZrbYrwSwAR27vrMCpLuXTUFpgTh2KlxchhdtAgdrPEBL0CTdmzAsFpaLSfDC">
+    <!--Modified version of the django form template-->
+
+
+
+  <div class="field_flex_container">
+    <div class="form_fields">
+      
+        <div><label for="id_email">E-mail:</label>*</div>
+      
+      <input type="email" name="email" placeholder="E-mail address" autocomplete="email" required="" id="id_email">
+      
+    </div>
+    <div>
+      
+      
+    </div>
+  </div>
+  
+
+  <div class="field_flex_container">
+    <div class="form_fields">
+      
+        <div><label for="id_email2">E-mail (again):</label>*</div>
+      
+      <input type="email" name="email2" placeholder="E-mail address confirmation" required="" id="id_email2">
+      
+    </div>
+    <div>
+      
+      
+    </div>
+  </div>
+  
+
+  <div class="field_flex_container">
+    <div class="form_fields">
+      
+        <div><label for="id_username">Username:</label>*</div>
+      
+      <input type="text" name="username" placeholder="Username" autocomplete="username" minlength="1" maxlength="150" required="" id="id_username">
+      
+        <span class="material-symbols-outlined">help</span>
+      
+    </div>
+    <div>
+      
+        <div class="help_text" style="">Must contain contain only letters, numbers, and @/./+/-/_ characters. Max 150 characters.</div>
+      
+      
+    </div>
+  </div>
+  
+
+  <div class="field_flex_container">
+    <div class="form_fields">
+      
+        <div><label for="id_password1">Password:</label>*</div>
+      
+      <input type="password" name="password1" placeholder="Password" autocomplete="new-password" required="" id="id_password1">
+      
+        <span class="material-symbols-outlined">help</span>
+      
+    </div>
+    <div>
+      
+        <div class="help_text" style="">Must be at least 8 characters long, and include non-numeric characters.</div>
+      
+      
+    </div>
+  </div>
+  
+
+  <div class="field_flex_container">
+    <div class="form_fields">
+      
+        <div><label for="id_password2">Password (again):</label>*</div>
+      
+      <input type="password" name="password2" placeholder="Password (again)" autocomplete="new-password" required="" id="id_password2">
+      
+    </div>
+    <div>
+      
+      
+    </div>
+  </div>
+    
+    <button type="submit">Sign Up »</button>
+  </form>
+
+    </main>
+    <footer>
+    </footer>
+    <script src="https://kit.fontawesome.com/498cc55193.js" crossorigin="anonymous"></script>
+    <script src="/static/js/script.js"></script>
+
+</body>
+</html>

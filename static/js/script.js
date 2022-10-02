@@ -8,6 +8,8 @@ const slideshowImages = [...document.getElementsByClassName('slideshow_images')]
 const linksAndButtons = [...document.getElementsByTagName('a'), ...document.getElementsByTagName('button')];
 const focusable = [...linksAndButtons, ...document.querySelectorAll('[tabIndex="0"]')];
 const uniqueFocusable = [...new Set(focusable)];
+const helpTextIcons = [...document.getElementsByClassName('material-symbols-outlined')]
+const helpText = [...document.getElementsByClassName('help_text')]
 
 // JS Section: Event listeners:
 
@@ -107,6 +109,42 @@ clickedFeedbackListeners();
 
 enterKeyListeners();
 
+// JS Subsection: form related event listeners 
+
+/** Adds mouseenter and mouseleave event listeners to 'help icon' elements, to
+ * alter the visibility of the field help text.
+ * @summary Adds mouse event listeners to 'help icon' elements to display related field help text.
+ */
+function helpTextIconsListeners() {
+    for (let helpIcon of helpTextIcons) {
+        helpIcon.addEventListener('mouseenter', () => {
+            let helpTextIndex = helpTextIcons.indexOf(helpIcon);
+            helpText[helpTextIndex].style.display = 'block';
+        })
+
+        helpIcon.addEventListener('mouseleave', () => {
+            let helpTextIndex = helpTextIcons.indexOf(helpIcon);
+            helpText[helpTextIndex].style.removeProperty('display');
+        })
+
+        // click event listeners to trigger the above mouseenter and mouseleave event listeners for touchscreens
+        helpIcon.addEventListener('click', (event) => {
+            let helpTextIndex = helpTextIcons.indexOf(helpIcon);
+            if (window.getComputedStyle(helpText[helpTextIndex]).getPropertyValue('display') === 'none') {
+                const mouseEnterEvent = new Event('mouseenter');
+                const mouseLeaveEvent = new Event('mouseleave');
+                event.target.dispatchEvent(mouseEnterEvent);
+                setTimeout(() => {
+                    event.target.dispatchEvent(mouseLeaveEvent);
+                    }, 5000)
+            }
+        })
+
+    }
+}
+
+helpTextIconsListeners();
+
 // JS Section: Functions:
 
 /** An event handler that performs the DOM manipulations necessary
@@ -178,4 +216,4 @@ if (document.getElementsByTagName('title')[0].textContent === 'Landing page') {
 }
 
 // uncommented during testing
-//module.exports = {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut};
+// module.exports = {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons, helpText};
