@@ -197,15 +197,16 @@ describe('Test the functionality of the help text icon event listeners', ( () =>
         }
     })
 
-    test('that the click event listeners work', () => {
+    test('that the touchstart event listeners work', () => {
         for (let icon of helpTextIcons) {
+            const touchstartEvent = new Event('touchstart');
             let helpTextIndex = helpTextIcons.indexOf(icon);
             expect(helpText[helpTextIndex].style.display).toBe('none');
-            icon.click();
+            icon.dispatchEvent(touchstartEvent);
             expect(helpText[helpTextIndex].style.display).toBe('block');
             // for testing purposes, use inline style to set display: inline
             helpText[helpTextIndex].style.display = 'inline';
-            jest.advanceTimersByTime(4000);
+            jest.advanceTimersByTime(7000);
             expect(window.getComputedStyle(helpText[helpTextIndex]).getPropertyValue('display')).toBe('inline');
             jest.advanceTimersByTime(1000);
             // Expect to be left with jsdom default display: 'block'

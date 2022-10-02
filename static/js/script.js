@@ -124,16 +124,17 @@ function helpTextIconsListeners() {
 
         helpIcon.addEventListener('mouseleave', () => {
             let helpTextIndex = helpTextIcons.indexOf(helpIcon);
-            helpText[helpTextIndex].style.removeProperty('display');
+            helpText[helpTextIndex].removeAttribute('style');
         })
 
-        // click event listeners to trigger the same effects as the above mouseenter and mouseleave event listeners for touchscreens
-        helpIcon.addEventListener('click', () => {
+        // touchstart event listeners to trigger the same effects as the above mouseenter and mouseleave event listeners for touchscreens
+        helpIcon.addEventListener('touchstart', (event) => {
+            event.preventDefault();
             let helpTextIndex = helpTextIcons.indexOf(helpIcon);
             if (window.getComputedStyle(helpText[helpTextIndex]).getPropertyValue('display') === 'none') {
                 helpText[helpTextIndex].style.display = 'block';
-                setTimeout(() => {helpText[helpTextIndex].style.removeProperty('display');
-                    }, 5000)
+                setTimeout(() => {helpText[helpTextIndex].removeAttribute('style');
+                    }, 8000)
             }
         })
 
