@@ -206,6 +206,10 @@ describe('Test the functionality of the help text icon event listeners', ( () =>
             expect(helpText[helpTextIndex].style.display).toBe('block');
             // for testing purposes, use inline style to set display: inline
             helpText[helpTextIndex].style.display = 'inline';
+            // testing event handler else path
+            icon.dispatchEvent(touchstartEvent);
+            expect(helpText[helpTextIndex].style.display).toBe('inline');
+            // testing setTimeout statement of event handler
             jest.advanceTimersByTime(7000);
             expect(window.getComputedStyle(helpText[helpTextIndex]).getPropertyValue('display')).toBe('inline');
             jest.advanceTimersByTime(1000);
