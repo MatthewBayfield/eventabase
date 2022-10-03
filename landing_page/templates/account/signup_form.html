@@ -10,16 +10,16 @@
         <div>{{ field.label_tag }}{% if field.field.required %}*{% endif %}</div>
       {% endif %}
       {{ field }}
-      {% if field.help_text %}
-        <span class="material-symbols-outlined">help</span>
-      {% endif %}
     </div>
+    {% if field.help_text %}
+        <span class="material-symbols-outlined">help</span>
+    {% endif %}
     <div>
       {% if field.help_text %}
         <div class="help_text">{{ field.help_text|safe }}</div>
       {% endif %}
       {% if errors %}
-        <div>
+        <div class="field_errors">
           {{ errors }}
         </div>
       {% endif %}

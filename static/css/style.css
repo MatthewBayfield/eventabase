@@ -84,7 +84,7 @@ a {
 
 input {
     border: 2px solid black;
-    width: 50%
+    width: 60%
 }
 
 :focus {
@@ -154,6 +154,10 @@ span.more_menu_button {
     list-style: inside;
 }
 
+.field_errors {
+    margin-left: 0.3rem;
+}
+
 .errorlist > li {
     margin: 0rem 0rem 0.5rem;
 }
@@ -165,16 +169,24 @@ span.more_menu_button {
 }
 
 .field_flex_container > div {
-    flex-basis: 50%;
+    flex-basis: 60%;
+    flex-shrink: 1;
 }
 
-.field_flex_container > div:nth-child(2) {
+.field_flex_container > span {
+    flex-basis: 5%;
+    flex-shrink: 1;
+}
+
+.field_flex_container > div:last-child {
     color: #d62839;
+    flex-basis: 30%;
+    flex-shrink: 4;
 }
 
 .form_fields > div {
     display: inline-block;
-    width: 40%;
+    width: 35%;
     text-align: right;
 }
 
