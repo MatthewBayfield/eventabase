@@ -12,11 +12,11 @@
       {{ field }}
     </div>
     {% if field.help_text %}
-        <span data-icon-type="help" class="material-symbols-outlined">help</span>
+        <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
     {% endif %}
     {% if '2' in field.name %}
-        <span class="material-symbols-outlined matching_icon">check_circle</span>
-        <span class="material-symbols-outlined no_match_icon">dangerous</span>
+        <span class="material-symbols-outlined matching_icon" aria-hidden="true">check_circle</span>
+        <span class="material-symbols-outlined no_match_icon" aria-hidden="true">dangerous</span>
     {% endif %}
     <div>
       {% if field.help_text %}
