@@ -179,22 +179,16 @@ describe('Test the functionality of the help text icon event listeners', ( () =>
         for (let text of helpText) {
             text.style.setProperty('display', 'none');
         }
-        // inline styles used to set initial help icon css properties
-        for (let icon of helpTextIcons) {
-            icon.style.setProperty('align-self', 'end')
-        }
     })
 
     test('that the field help text displays as expected, only when the mouse hovers over the icon', () => {
         const mouseEnterEvent =  new Event('mouseenter');
         const mouseLeaveEvent = new Event('mouseleave');
         for (let icon of helpTextIcons) {
-            expect(icon.style.getPropertyValue('align-self')).toBe('end')
             let helpTextIndex = helpTextIcons.indexOf(icon);
             expect(helpText[helpTextIndex].style.display).toBe('none');
             icon.dispatchEvent(mouseEnterEvent);
             expect(helpText[helpTextIndex].style.display).toBe('block');
-            expect(icon.style.getPropertyValue('align-self')).toBe('start');
             // for testing purposes, use inline style to set display: inline
             helpText[helpTextIndex].style.display = 'inline';
             icon.dispatchEvent(mouseLeaveEvent);
@@ -209,10 +203,8 @@ describe('Test the functionality of the help text icon event listeners', ( () =>
         for (let icon of helpTextIcons) {
             const touchstartEvent = new Event('touchstart');
             let helpTextIndex = helpTextIcons.indexOf(icon);
-            expect(icon.style.getPropertyValue('align-self')).toBe('end')
             expect(helpText[helpTextIndex].style.display).toBe('none');
             icon.dispatchEvent(touchstartEvent);
-            expect(icon.style.getPropertyValue('align-self')).toBe('start');
             expect(helpText[helpTextIndex].style.display).toBe('block');
             // for testing purposes, use inline style to set display: inline
             helpText[helpTextIndex].style.display = 'inline';
@@ -221,7 +213,6 @@ describe('Test the functionality of the help text icon event listeners', ( () =>
             expect(helpText[helpTextIndex].style.display).toBe('inline');
             // testing setTimeout statement of event handler
             jest.advanceTimersByTime(7000);
-            expect(icon.style.getPropertyValue('align-self')).toBe('start');
             expect(window.getComputedStyle(helpText[helpTextIndex]).getPropertyValue('display')).toBe('inline');
             jest.advanceTimersByTime(1000);
             // expecting style attribute to have been removed

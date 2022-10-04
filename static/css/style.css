@@ -176,7 +176,7 @@ span.more_menu_button {
 .field_flex_container > span {
     flex-basis: 5%;
     flex-shrink: 1;
-    align-self: end;
+    align-self: start;
 }
 
 .field_flex_container > div:last-child {

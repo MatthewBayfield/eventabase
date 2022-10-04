@@ -121,13 +121,11 @@ function helpTextIconsListeners() {
         helpIcon.addEventListener('mouseenter', () => {
             let helpTextIndex = helpTextIcons.indexOf(helpIcon);
             helpText[helpTextIndex].style.display = 'block';
-            helpIcon.style.setProperty('align-self', 'start');
         })
 
         helpIcon.addEventListener('mouseleave', () => {
             let helpTextIndex = helpTextIcons.indexOf(helpIcon);
             helpText[helpTextIndex].removeAttribute('style');
-            helpIcon.removeAttribute('style');
         })
 
         // touchstart event listeners to trigger the same effects as the above mouseenter and mouseleave event listeners for touchscreens
@@ -135,11 +133,9 @@ function helpTextIconsListeners() {
             event.preventDefault();
             let helpTextIndex = helpTextIcons.indexOf(helpIcon);
             if (window.getComputedStyle(helpText[helpTextIndex]).getPropertyValue('display') === 'none') {
-                helpIcon.style.setProperty('align-self', 'start');
                 helpText[helpTextIndex].style.display = 'block';
                 setTimeout(() => {
                     helpText[helpTextIndex].removeAttribute('style');
-                    helpIcon.removeAttribute('style');
                 }, 8000)
             }
         })
