@@ -10,6 +10,7 @@ const focusable = [...linksAndButtons, ...document.querySelectorAll('[tabIndex="
 const uniqueFocusable = [...new Set(focusable)];
 const helpTextIcons = [...document.querySelectorAll('[data-icon-type = "help"]')];
 const helpText = [...document.getElementsByClassName('help_text')];
+const matchingIcons = [...document.getElementsByClassName('matching_icon')];
 
 // JS Section: Event listeners:
 
@@ -148,6 +149,28 @@ function helpTextIconsListeners() {
 
 helpTextIconsListeners();
 
+/** Adds keyup event listeners to a pair of related input fields, with one having a matching/no_match icon indicator.
+ *  After a keyup event in either field (indicating a change to its input value), the input values of both
+ * fields are compared and the display of the indicator icons altered using the compareFields handler.
+ * @summary Adds keyup event listeners to a pair of typed/retyped input fields.
+ */
+function formFieldChangeListeners() {
+    for (let matchingIcon of matchingIcons) {
+        let noMatchIcon = matchingIcon.nextElementSibling;
+        let secondField = matchingIcon.parentElement.firstElementChild.children[1];
+        let firstField = matchingIcon.parentElement.previousElementSibling.firstElementChild.children[1];
+        let fields = [firstField, secondField];
+        let icons = [matchingIcon, noMatchIcon];
+        for (let field of fields) {
+            field.addEventListener('keyup', () => {
+                compareFields(fields, icons);
+            })
+        }
+    }
+}
+
+formFieldChangeListeners();
+
 // JS Section: Functions:
 
 /** An event handler that performs the DOM manipulations necessary
@@ -170,6 +193,26 @@ function closeMenu() {
     moreMenuButtons[0].setAttribute('aria-expanded', 'False');
     moreMenuContainer.style.removeProperty('display');
     moreMenu.blur();   
+}
+
+/** An event handler thar compares the values of two input text fields
+ * and then conditionally changes the display of the matching
+ * and no-match field icons.
+ * @param {array} fields - The two fields whose values to compare.
+ * @param {array} icons - The matching and no-match icons.
+ */
+function compareFields(fields, icons) {
+    let [field1, field2] = fields;
+    let [matchingIcon, noMatchIcon] = icons;
+    if (field1.value !== field2.value) {
+            matchingIcon.style.display = 'none';
+            noMatchIcon.style.display = 'inline';
+    } else {
+        if (window.getComputedStyle(matchingIcon).getPropertyValue('display') === 'none') {
+            matchingIcon.removeAttribute('style');
+            noMatchIcon.removeAttribute('style');
+        }
+    }
 }
 
 /** Adds the current_image class atrribute to the nextImage parameter element.
@@ -219,4 +262,8 @@ if (document.getElementsByTagName('title')[0].textContent === 'Landing page') {
 }
 
 // uncommented during testing
-//module.exports = {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons, helpText};
+// module.exports = {
+//     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
+//     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
+//     helpText, matchingIcons
+// };

@@ -8,7 +8,7 @@ const { expect } = require('expect');
 let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_signup_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
-let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, slideshowImages, uniqueFocusable, helpTextIcons, helpText} = require('../script.js');
+let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, slideshowImages, uniqueFocusable, helpTextIcons, helpText, matchingIcons} = require('../script.js');
 // mock functions
 const log = jest.fn();
 
@@ -231,3 +231,57 @@ describe('Test the functionality of the help text icon event listeners', ( () =>
         }
     })
 }))
+
+describe('Test the functionality of the typed/retyped input field pair event listeners', () => {
+    beforeEach(() => {
+        const noMatchIcons = [...document.getElementsByClassName('no_match_icon')];
+        // inline styles used to set initial display of matching/no-match icons
+        for (let icon of matchingIcons) {
+            icon.style.display = 'inline';
+        }
+        for (let icon of noMatchIcons) {
+            icon.style.display = 'none';
+        }
+        // set initial input field values
+        for (let matchingIcon of matchingIcons) {
+            let secondField = matchingIcon.parentElement.firstElementChild.children[1];
+            let firstField = matchingIcon.parentElement.previousElementSibling.firstElementChild.children[1];
+            firstField.value, secondField.value = '';
+        }
+    })
+
+    test('that the correct icon displays in response to field input value changes', () => {
+        function inner(firstField, secondField, firstFieldValue, secondFieldValue) {
+            firstFieldValue ? firstField.value = firstFieldValue : '';
+            secondFieldValue ? secondField.value = secondFieldValue : '';
+            const keyupEvent = new Event('keyup');
+            firstFieldValue ? firstField.dispatchEvent(keyupEvent) : secondField.dispatchEvent(keyupEvent);
+        }
+
+        for (let matchingIcon of matchingIcons) {
+            let noMatchIcon = matchingIcon.nextElementSibling;
+            let secondField = matchingIcon.parentElement.firstElementChild.children[1];
+            let firstField = matchingIcon.parentElement.previousElementSibling.firstElementChild.children[1];
+            // fields empty and thus matching
+            inner(firstField, secondField, '', '');
+            expect(matchingIcon.style.display).toBe('inline');
+            expect(noMatchIcon.style.display).toBe('none');
+            // change first field value only: no match
+            inner(firstField, secondField, 'f', '');
+            expect(matchingIcon.style.display).toBe('none');
+            expect(noMatchIcon.style.display).toBe('inline');
+            // change second field value only to match again
+            inner(firstField, secondField, '', 'f');
+            expect(matchingIcon.hasAttribute('style')).toBe(false);
+            expect(noMatchIcon.hasAttribute('style')).toBe(false);
+            // change second field value only: no match
+            inner(firstField, secondField, '', 'g');
+            expect(matchingIcon.style.display).toBe('none');
+            expect(noMatchIcon.style.display).toBe('inline');
+            //change first field value only to match again
+            inner(firstField, secondField, 'g', '');
+            expect(matchingIcon.hasAttribute('style')).toBe(false);
+            expect(noMatchIcon.hasAttribute('style')).toBe(false);           
+        }
+    })
+})
