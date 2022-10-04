@@ -8,8 +8,8 @@ const slideshowImages = [...document.getElementsByClassName('slideshow_images')]
 const linksAndButtons = [...document.getElementsByTagName('a'), ...document.getElementsByTagName('button')];
 const focusable = [...linksAndButtons, ...document.querySelectorAll('[tabIndex="0"]')];
 const uniqueFocusable = [...new Set(focusable)];
-const helpTextIcons = [...document.getElementsByClassName('material-symbols-outlined')]
-const helpText = [...document.getElementsByClassName('help_text')]
+const helpTextIcons = [...document.querySelectorAll('[data-icon-type = "help"]')];
+const helpText = [...document.getElementsByClassName('help_text')];
 
 // JS Section: Event listeners:
 
@@ -120,11 +120,13 @@ function helpTextIconsListeners() {
         helpIcon.addEventListener('mouseenter', () => {
             let helpTextIndex = helpTextIcons.indexOf(helpIcon);
             helpText[helpTextIndex].style.display = 'block';
+            helpIcon.style.setProperty('align-self', 'start');
         })
 
         helpIcon.addEventListener('mouseleave', () => {
             let helpTextIndex = helpTextIcons.indexOf(helpIcon);
             helpText[helpTextIndex].removeAttribute('style');
+            helpIcon.removeAttribute('style');
         })
 
         // touchstart event listeners to trigger the same effects as the above mouseenter and mouseleave event listeners for touchscreens
@@ -132,9 +134,12 @@ function helpTextIconsListeners() {
             event.preventDefault();
             let helpTextIndex = helpTextIcons.indexOf(helpIcon);
             if (window.getComputedStyle(helpText[helpTextIndex]).getPropertyValue('display') === 'none') {
+                helpIcon.style.setProperty('align-self', 'start');
                 helpText[helpTextIndex].style.display = 'block';
-                setTimeout(() => {helpText[helpTextIndex].removeAttribute('style');
-                    }, 8000)
+                setTimeout(() => {
+                    helpText[helpTextIndex].removeAttribute('style');
+                    helpIcon.removeAttribute('style');
+                }, 8000)
             }
         })
 
