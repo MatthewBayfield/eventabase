@@ -4,6 +4,7 @@ const moreMenuContainer = document.getElementById('more_menu_container');
 const moreMenu = document.getElementById('more_menu');
 const moreMenuButtons = document.getElementsByClassName('more_menu_button');
 const menuItems = document.getElementsByClassName('menu_item');
+const signupButton = document.querySelector("[name = 'sign-up']");
 const slideshowImages = [...document.getElementsByClassName('slideshow_images')];
 const linksAndButtons = [...document.getElementsByTagName('a'), ...document.getElementsByTagName('button')];
 const focusable = [...linksAndButtons, ...document.querySelectorAll('[tabIndex="0"]')];
@@ -109,6 +110,19 @@ clickedFeedbackListeners();
 }
 
 enterKeyListeners();
+
+/** Adds click event listener to the sign-up button on the
+ * landing page. When clicked redirects the user to the
+ * signup page.
+ * @summary Adds click event listener to sign-up button. Redirects to signup page.
+ */
+function signupButtonEventListener() {
+    signupButton.addEventListener('click', () => {
+        let current_location = window.location.href;
+        let next_location = current_location + '/accounts/signup/';
+        window.location.assign(next_location);
+    })
+}
 
 // JS Subsection: form related event listeners 
 
@@ -255,11 +269,13 @@ function slideshowHandler() {
 if (document.getElementsByTagName('title')[0].textContent === 'Landing page') {
     // Initial delay so that initally displayed image does not fade out immediately
     setTimeout(slideshowHandler, 8000);
+    
+    signupButtonEventListener();
 }
 
 // uncommented during testing
 // module.exports = {
 //     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
 //     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
-//     helpText, matchingIcons
+//     helpText, matchingIcons, signupButton
 // };

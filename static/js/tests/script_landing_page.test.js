@@ -7,7 +7,10 @@ jest.useFakeTimers();
 let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_landing_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
-let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, slideshowImages, uniqueFocusable} = require('../script.js');
+// A consequence of importing this module is some 'not implemented' console errors for some window.location methods. These can be ignored.
+let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, slideshowImages, uniqueFocusable, signupButton} = require('../script.js');
+// needed to restore window.location after mocking. 
+const originalLocation = window.location;
 // mock functions
 const log = jest.fn();
 
@@ -169,6 +172,29 @@ describe('check all focusable elements give feedback when clicked directly or in
                 expect(element.classList.contains('clicked')).toBe(false);                  
             }
         })
+    })
+})
+
+describe('check sign-up and sign-in work', () => {
+    beforeEach(() => {
+        delete window.location;
+        window.location = {
+            href: '',
+            assign: jest.fn((url) => {
+                return url;
+            })
+        }
+    })
+
+    afterEach(() => {
+        window.location = originalLocation;
+    })
+
+    test('that the sign-up button works', () => {
+        expect(window.location.assign).toHaveBeenCalledTimes(0);
+        signupButton.click();
+        expect(window.location.assign).toHaveBeenCalledTimes(1);
+        expect(window.location.assign).toHaveBeenCalledWith('/accounts/signup/');
     })
 })
 
