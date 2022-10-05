@@ -1,8 +1,24 @@
-from allauth.account.forms import SignupForm, BaseSignupForm
+from allauth.account.forms import SignupForm, BaseSignupForm, LoginForm
 from django.forms.utils import ErrorList
 from django.core.validators import EmailValidator, MaxLengthValidator
 
-class Signup(SignupForm):
+
+class FormFieldMixin():
+    """
+    Mixin class with methods shared by multiple forms.
+    """
+    def set_field_styles(self):
+        """
+        Assigns css classes to form fields.
+        """
+        for tuple_obj in self.get_context()['fields']:
+            boundfield = tuple_obj[0]
+            boundfield.css_classes = 'form_fields'
+            if tuple_obj[1] != "":
+                boundfield.css_classes += " errors_present"
+
+
+class Signup(SignupForm, FormFieldMixin):
     """
     Sign-up form used for user registration.
 
@@ -26,16 +42,6 @@ class Signup(SignupForm):
         if self.is_bound:
             self.set_field_error_msgs()
         self.set_field_styles()
-
-    def set_field_styles(self):
-        """
-        Assigns css classes to form fields.
-        """
-        for tuple_obj in self.get_context()['fields']:
-            boundfield = tuple_obj[0]
-            boundfield.css_classes = 'form_fields'
-            if tuple_obj[1] != "":
-                boundfield.css_classes += " errors_present"
 
     def set_field_error_msgs(self):
         """
@@ -85,7 +91,23 @@ class Signup(SignupForm):
         self.fields['password1'].help_text = 'Must be at least 8 characters long, and include non-numeric characters.'
 
 
+class Login(LoginForm, FormFieldMixin):
+    """
+    Login form used for user authentication and sign-in.
 
+    Essentially the same as the allauth LoginForm class, with minor modifications
+    affecting field validation, displayed error messages, and field-styles.
 
+    Attributes:
+        template_name (str): Sets the form template
+    """
+    template_name = "account/login_form.html"
+    EmailValidator.message = ('Enter a valid email address format.')
+    BaseSignupForm.declared_fields['email'].validators.append(MaxLengthValidator(254, 'Email cannot be more than 254 characters.'))
 
-
+    def __init__(self, *args, **kwargs):
+        """
+        Form instance constructor.
+        """
+        super().__init__(*args, **kwargs)
+        super().set_field_styles()
