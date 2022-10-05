@@ -245,8 +245,8 @@ describe('Test the functionality of the typed/retyped input field pair event lis
         function inner(firstField, secondField, firstFieldValue, secondFieldValue) {
             firstFieldValue ? firstField.value = firstFieldValue : '';
             secondFieldValue ? secondField.value = secondFieldValue : '';
-            const keyupEvent = new Event('keyup');
-            firstFieldValue ? firstField.dispatchEvent(keyupEvent) : secondField.dispatchEvent(keyupEvent);
+            const inputEvent = new Event('input');
+            firstFieldValue ? firstField.dispatchEvent(inputEvent) : secondField.dispatchEvent(inputEvent);
         }
 
         for (let matchingIcon of matchingIcons) {

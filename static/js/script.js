@@ -159,10 +159,10 @@ function helpTextIconsListeners() {
 
 helpTextIconsListeners();
 
-/** Adds keyup event listeners to a pair of related input fields, with one having a matching/no_match icon indicator.
- *  After a keyup event in either field (indicating a change to its input value), the input values of both
+/** Adds input event listeners to a pair of related input fields, with one having a matching/no_match icon indicator.
+ *  After an input event, the input values of both
  * fields are compared and the display of the indicator icons altered using the compareFields handler.
- * @summary Adds keyup event listeners to a pair of typed/retyped input fields.
+ * @summary Adds input event listeners to a pair of typed/retyped input fields.
  */
 function formFieldChangeListeners() {
     for (let matchingIcon of matchingIcons) {
@@ -172,7 +172,7 @@ function formFieldChangeListeners() {
         let fields = [firstField, secondField];
         let icons = [matchingIcon, noMatchIcon];
         for (let field of fields) {
-            field.addEventListener('keyup', () => {
+            field.addEventListener('input', () => {
                 compareFields(fields, icons);
             })
         }
