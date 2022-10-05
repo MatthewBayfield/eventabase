@@ -34,7 +34,7 @@ DEBUG = development
 if development:
     ALLOWED_HOSTS = ['localhost']
     CSRF_TRUSTED_ORIGINS = ['https://8000-matthewbayfi-eventabase-lxfe72ybebg.ws-eu67.gitpod.io']
-    #Email settings
+    # Email settings
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
     ALLOWED_HOSTS = [os.environ.get('HEROKU_HOSTNAME')]
@@ -177,5 +177,6 @@ ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 AUTH_USER_MODEL = 'landing_page.CustomUserModel'
 ACCOUNT_FORMS = {
-    'signup': 'landing_page.forms.Signup'
+    'signup': 'landing_page.forms.Signup',
+    'login': 'landing_page.forms.Login'
 }

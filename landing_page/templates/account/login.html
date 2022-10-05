@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block extra_meta %}
+    <meta name="description" content="Eventabase account sign-in form.">
+    <meta name="keywords" content="account, sign-in">
+{% endblock %}
+
+{% block title %}Sign-in{% endblock %}
+
+{% block h1 %}Sign-In{% endblock %}
+
+{% block nav_options %}
+<div>
+    <a href="{% url 'account_signup' %}" type="text/html" aria-label="sign-up">
+        <div>
+            <i class="fa-solid fa-user-plus nav_icon"></i>
+            <div class="nav_icon">
+                Sign-up
+            </div>
+        </div>
+    </a>
+</div>
+{% endblock %}
+
+{% block main %}
+    {% if messages %}
+        <div id="messages">
+            <ul>
+                {% for message in messages %}
+                    <li>{{message}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <p>You can now sign-in to your new account.</Label></p>
+    {% else %}
+        <p>If you have not created an account yet, then please <a href="{{ signup_url }}">sign up</a> first.</p>
+    {% endif %}
+
+    <form class="login" method="POST" action="{% url 'account_login' %}">
+        {% csrf_token %}
+        {{ form }}
+        {% if redirect_field_value %}
+        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+        {% endif %}
+        <p>
+            <a class="button secondaryAction" href="{% url 'account_reset_password' %}">Forgot Password?</a>
+        </p>
+        <button class="primaryAction" type="submit">"Sign In"</button>
+    </form>
+{% endblock %}

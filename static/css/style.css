@@ -87,6 +87,10 @@ input {
     width: 60%
 }
 
+input[type = 'checkbox'] {
+    width: fit-content;
+}
+
 :focus {
     outline: #fcfc62 solid 2px;
 }
@@ -152,6 +156,7 @@ span.more_menu_button {
 /* submitted form fields error feedback message styling */
 .errorlist {
     list-style: inside;
+    color: #d62839;
 }
 
 .field_errors {
@@ -180,7 +185,6 @@ span.more_menu_button {
 }
 
 .field_flex_container > div:last-child {
-    color: #d62839;
     flex-basis: 30%;
     flex-shrink: 4;
 }
@@ -211,6 +215,10 @@ span.more_menu_button {
 .no_match_icon {
     color: #FF0000;
     display: none;
+}
+
+#messages {
+    list-style-position: inside;
 }
 
 #more_menu_container {
