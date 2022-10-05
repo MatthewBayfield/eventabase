@@ -119,7 +119,7 @@ enterKeyListeners();
 function signupButtonEventListener() {
     signupButton.addEventListener('click', () => {
         let current_location = window.location.href;
-        let next_location = current_location + '/accounts/signup/';
+        let next_location = current_location + 'accounts/signup/';
         window.location.assign(next_location);
     })
 }

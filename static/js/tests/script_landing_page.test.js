@@ -194,7 +194,7 @@ describe('check sign-up and sign-in work', () => {
         expect(window.location.assign).toHaveBeenCalledTimes(0);
         signupButton.click();
         expect(window.location.assign).toHaveBeenCalledTimes(1);
-        expect(window.location.assign).toHaveBeenCalledWith('/accounts/signup/');
+        expect(window.location.assign).toHaveBeenCalledWith('accounts/signup/');
     })
 })
 
