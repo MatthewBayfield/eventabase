@@ -52,3 +52,6 @@ class CustomUserModel(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['username']
 
     objects = UserManager()
+
+    class Meta:
+        db_table = 'RegisteredUser'
