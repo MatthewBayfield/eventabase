@@ -5,6 +5,7 @@ const moreMenu = document.getElementById('more_menu');
 const moreMenuButtons = document.getElementsByClassName('more_menu_button');
 const menuItems = document.getElementsByClassName('menu_item');
 const signupButton = document.querySelector("[name = 'sign-up']");
+const signinButton = document.querySelector("[name = 'sign-in']");
 const slideshowImages = [...document.getElementsByClassName('slideshow_images')];
 const linksAndButtons = [...document.getElementsByTagName('a'), ...document.getElementsByTagName('button')];
 const focusable = [...linksAndButtons, ...document.querySelectorAll('[tabIndex="0"]')];
@@ -120,6 +121,19 @@ function signupButtonEventListener() {
     signupButton.addEventListener('click', () => {
         let current_location = window.location.href;
         let next_location = current_location + 'accounts/signup/';
+        window.location.assign(next_location);
+    })
+}
+
+/** Adds click event listener to the sign-in button on the
+ * landing page. When clicked redirects the user to the
+ * login page.
+ * @summary Adds click event listener to sign-in button. Redirects to login page.
+ */
+ function signinButtonEventListener() {
+    signinButton.addEventListener('click', () => {
+        let current_location = window.location.href;
+        let next_location = current_location + 'accounts/login/';
         window.location.assign(next_location);
     })
 }
@@ -271,11 +285,12 @@ if (document.getElementsByTagName('title')[0].textContent === 'Landing page') {
     setTimeout(slideshowHandler, 8000);
     
     signupButtonEventListener();
+    signinButtonEventListener();
 }
 
 // uncommented during testing
 // module.exports = {
 //     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
 //     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
-//     helpText, matchingIcons, signupButton
+//     helpText, matchingIcons, signupButton, signinButton
 // };

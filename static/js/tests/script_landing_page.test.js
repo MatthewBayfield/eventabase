@@ -8,7 +8,7 @@ let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_landing_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
 // A consequence of importing this module is some 'not implemented' console errors for some window.location methods. These can be ignored.
-let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, slideshowImages, uniqueFocusable, signupButton} = require('../script.js');
+let {moreMenu, moreMenuContainer, moreMenuButtons, slideshowImages, uniqueFocusable, signupButton, signinButton} = require('../script.js');
 // needed to restore window.location after mocking. 
 const originalLocation = window.location;
 // mock functions
@@ -195,6 +195,13 @@ describe('check sign-up and sign-in work', () => {
         signupButton.click();
         expect(window.location.assign).toHaveBeenCalledTimes(1);
         expect(window.location.assign).toHaveBeenCalledWith('accounts/signup/');
+    })
+
+    test('that the sign-in button works', () => {
+        expect(window.location.assign).toHaveBeenCalledTimes(0);
+        signinButton.click();
+        expect(window.location.assign).toHaveBeenCalledTimes(1);
+        expect(window.location.assign).toHaveBeenCalledWith('accounts/login/');
     })
 })
 
