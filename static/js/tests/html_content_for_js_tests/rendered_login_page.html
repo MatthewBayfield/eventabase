@@ -1,0 +1,145 @@
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="description" content="Eventabase account sign-in form.">
+    <meta name="keywords" content="account, sign-in">
+
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <title>Sign-in</title>
+</head>
+<body id="">
+    <header>
+        <h1>Sign-In</h1>
+        
+        <nav>
+            <div>
+                
+                <a href="/" type="text/html" aria-label="Home">
+                    <div>
+                        <i class="fa-solid fa-house nav_icon"></i>
+                        <div class="nav_icon">
+                            Home
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+<div>
+    <a href="/accounts/signup/" type="text/html" aria-label="sign-up">
+        <div>
+            <i class="fa-solid fa-user-plus nav_icon"></i>
+            <div class="nav_icon">
+                Sign-up
+            </div>
+        </div>
+    </a>
+</div>
+
+            <div>
+                <a href="/accounts/login/" type="text/html" aria-label="sign-in">
+                    <div>
+                        <i class="fa-solid fa-arrow-right-to-bracket nav_icon"></i>
+                        <div class="nav_icon">
+                            Sign-in
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="more_menu_button" role="button" aria-haspopup="menu" aria-expanded="false" aria-controls="more_menu" tabindex="0">
+                <i class="fa-solid fa-bars nav_icon"></i>
+                <div class="nav_icon">
+                    More
+                </div>
+            </div>
+            <div id="more_menu_container">
+                <div id="more_menu" role="menu" tabindex="0">
+                    <div>
+                        <span tabindex="0" class="more_menu_button" aria-label="close menu" role="button"><i class="fa-solid fa-xmark"></i> </span> 
+                    </div>
+                    <div id="menu_items_container">
+                        
+                        <div role="menuitem" class="menu_item">
+                            <a href="" type="text/html"><b>T &amp; C</b></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        
+    
+        <p>If you have not created an account yet, then please <a href="/accounts/signup/">sign up</a> first.</p>
+    
+
+    <form class="login" method="POST" action="/accounts/login/">
+        <input type="hidden" name="csrfmiddlewaretoken" value="RaegGV5xsLE2dY3j5pKaEy5LEbHxrCc0eTI27lfJz0j2mmXMMEaX8Ex9KparZnG9">
+        <!--Modified version of the django form template-->
+
+
+
+  <div class="field_flex_container">
+    <div class="form_fields">
+      
+        <div><label for="id_login">E-mail:</label>*</div>
+      
+      <input type="email" name="login" placeholder="E-mail address" autocomplete="email" required="" id="id_login">
+    </div>
+    
+    
+    <div>
+      
+      
+    </div>
+  </div>
+  
+
+  <div class="field_flex_container">
+    <div class="form_fields">
+      
+        <div><label for="id_password">Password:</label>*</div>
+      
+      <input type="password" name="password" placeholder="Password" autocomplete="current-password" required="" id="id_password">
+    </div>
+    
+    
+    <div>
+      
+      
+    </div>
+  </div>
+  
+
+  <div class="field_flex_container">
+    <div class="form_fields">
+      
+        <div><label for="id_remember">Remember Me:</label></div>
+      
+      <input type="checkbox" name="remember" id="id_remember">
+    </div>
+    
+    
+    <div>
+      
+      
+    </div>
+  </div>
+        
+        <p>
+            <a class="button secondaryAction" href="/accounts/password/reset/">Forgot Password?</a>
+        </p>
+        <button class="primaryAction" type="submit">"Sign In"</button>
+    </form>
+
+    </main>
+    <footer>
+    </footer>
+    <script src="https://kit.fontawesome.com/498cc55193.js" crossorigin="anonymous"></script><script src="/static/js/script.js"></script>
+
+</body>
+</html>
