@@ -38,7 +38,7 @@ class CustomUserModel(AbstractBaseUser, PermissionsMixin):
                                 error_messages={'unique': 'A user with this username already exists.'})
 
     email = models.EmailField(primary_key=True, unique=True,
-                              validators=[EmailValidator()])
+                              validators=[EmailValidator(), MaxLengthValidator(254, 'Email cannot be more than 254 characters.')])
 
     is_staff = models.BooleanField(default=False, help_text="Designates whether the user can log into this admin site.",)
     is_superuser = models.BooleanField(default=False, help_text="Designates that this user has all permissions without "
@@ -54,4 +54,4 @@ class CustomUserModel(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     class Meta:
-        db_table = 'RegisteredUser'
+        db_table = 'registered_users'
