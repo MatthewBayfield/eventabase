@@ -2,6 +2,9 @@ from allauth.account.forms import SignupForm, BaseSignupForm, LoginForm
 from django.forms.utils import ErrorList
 from django.core.validators import EmailValidator, MaxLengthValidator
 
+EmailValidator.message = ('Enter a valid email address format.')
+BaseSignupForm.declared_fields['email'].validators.append(MaxLengthValidator(254, 'Email cannot be more than 254 characters.'))
+
 
 class FormFieldMixin():
     """
@@ -30,8 +33,6 @@ class Signup(SignupForm, FormFieldMixin):
         template_name (str): Sets the form template.
     """
     template_name = "account/signup_form.html"
-    EmailValidator.message = ('Enter a valid email address format.')
-    BaseSignupForm.declared_fields['email'].validators.append(MaxLengthValidator(254, 'Email cannot be more than 254 characters.'))
 
     def __init__(self, *args, **kwargs):
         """
@@ -102,12 +103,11 @@ class Login(LoginForm, FormFieldMixin):
         template_name (str): Sets the form template
     """
     template_name = "account/login_form.html"
-    EmailValidator.message = ('Enter a valid email address format.')
-    BaseSignupForm.declared_fields['email'].validators.append(MaxLengthValidator(254, 'Email cannot be more than 254 characters.'))
 
     def __init__(self, *args, **kwargs):
         """
         Form instance constructor.
         """
         super().__init__(*args, **kwargs)
+        self.fields['login'].validators.append(MaxLengthValidator(254, 'Email cannot be more than 254 characters.'))
         super().set_field_styles()

@@ -4,13 +4,16 @@ from django.core.validators import MaxLengthValidator
 from django.core.exceptions import ValidationError
 from django.forms import fields, boundfield
 from django.template import Context, Template
-from ..forms import Signup
+from allauth.account.models import EmailAddress
+from ..forms import Signup, Login
 
 # Create your tests here.
 
 
-class TestForms(TestCase):
-    "Tests all landing_page app forms"
+class TestSignupForm(TestCase):
+    """
+    Tests the sign-up form.
+    """
     def test_email_field_length_validators(self):
         """
         Tests that the correct length email field errors are raised for too long email inputs.
@@ -39,23 +42,33 @@ class TestForms(TestCase):
         """
         Tests that for a non-unique email input the expected error is raised.
         """
+        # sign-up new user
         client = Client()
         data = {'email': 'tommypaul@gmail.com',
                 'email2': 'tommypaul@gmail.com',
                 'password1': 'holly!123',
                 'password2': 'holly!123',
                 'username': 'jimmy'}
-        client.post('/acounts/signup/', data)
+        client.post('/accounts/signup/', data)
+        # try sign-up new user with non-unique email
         data = {'email': 'tommypaul@gmail.com',
                 'email2': 'tommypaul@gmail.com',
                 'password1': 'holly!1235',
                 'password2': 'holly!1235',
                 'username': 'Timmy'}
-        client.post('/accounts/signup/', data)
         form = Signup(data)
         self.assertFalse(form.is_valid())
         self.assertFormError(form, 'email',
                              ['A user is already registered with this e-mail address.'])
+        # check no error is raised when unique email is provided
+        data = {'email': 'tommypaul147@gmail.com',
+                'email2': 'tommypaul147@gmail.com',
+                'password1': 'holly!1235',
+                'password2': 'holly!1235',
+                'username': 'Timmy'}
+        form = Signup(data)
+        self.assertTrue(form.is_valid())
+        self.assertFormError(form, 'email', [])  
 
     def test_email_fields_match_validation(self):
         """
@@ -125,23 +138,33 @@ class TestForms(TestCase):
         Tests that for a non-unique username input the expected error is raised.
         """
         client = Client()
+        # sign-up new user
         data = {'email': 'tommypaul@gmail.com',
                 'email2': 'tommypaul@gmail.com',
                 'password1': 'holly!123',
                 'password2': 'holly!123',
                 'username': 'jimmy'}
-        client.post('/acounts/signup/', data)
+        client.post('/accounts/signup/', data)
+        # attempt sign-up new user with non-unique username
         data = {'email': 'tommy@gmail.com',
                 'email2': 'tommy@gmail.com',
                 'password1': 'holly!1235',
                 'password2': 'holly!1235',
                 'username': 'jimmy'}
-        client.post('/accounts/signup/', data)
         form = Signup(data)
         self.assertFalse(form.is_valid())
         self.assertFormError(form, 'username',
                              ['A user with this username already exists.'])
-
+        # check no error is raised when unique username is provided
+        data = {'email': 'tommy@gmail.com',
+                'email2': 'tommy@gmail.com',
+                'password1': 'holly!1235',
+                'password2': 'holly!1235',
+                'username': 'jimmy147'}
+        form = Signup(data)
+        self.assertTrue(form.is_valid())
+        self.assertFormError(form, 'username', [])
+        
     def test_password_length_validation(self):
         """
         Tests that the MinlengthValidator is immplemented and the expected error message is provided.
@@ -285,3 +308,81 @@ class TestForms(TestCase):
         field.help_text = 'help'
         self.assertEqual(inner(tag_str, {'field': field}), '<div class="help_text">help</div>')
 
+
+class TestLoginForm(TestCase):
+    """
+    Tests the login form.
+    """
+    def test_set_field_styles_method(self):
+        """
+        Ensures the set_field_styles method works.
+        """
+        form = Login({'password': 'jimmy649'})
+        visible_fields = form.visible_fields()
+        for field in visible_fields:
+            with self.subTest(field.name):
+                if field.name in form.errors:
+                    self.assertEqual(field.css_classes, 'form_fields errors_present')
+                else:
+                    self.assertEqual(field.css_classes, 'form_fields')
+    
+    def test_email_field_length_validators(self):
+        """
+        Tests that the correct length email field errors are raised for too long email inputs.
+        """
+        too_long_email1 = 'a@' + 254*'a' + 'e.com'
+        too_long_email2 = 254*'a' + '@a.com'
+        data1 = {'login': too_long_email1, 'password': 'jimmy123'}
+        form1 = Login(data1)
+        self.assertFalse(form1.is_valid())
+        self.assertFormError(form=form1, field='login',
+                             errors=['Enter a valid email address format.',
+                                     'Email cannot be more than 254 characters.'])
+        data2 = {'login': too_long_email2, 'password': 'jimmy123'}
+        form2 = Login(data2)
+        self.assertFalse(form2.is_valid())
+        self.assertFormError(form=form2, field='login',
+                             errors=['Email cannot be more than 254 characters.'])
+    
+    def test_authentication(self):
+        """
+        Tests that an error is displayed if the entered credentials do not
+        match a registered user.
+        """
+        # Sign-up new user 
+        client = Client()
+        data = {'email': 'tommypaul147@gmail.com',
+                'email2': 'tommypaul147@gmail.com',
+                'password1': 'holly!123',
+                'password2': 'holly!123',
+                'username': 'jimmy147'}
+        client.post('/accounts/signup/', data)
+        # verify user email
+        user = EmailAddress.objects.get(user='tommypaul147@gmail.com')
+        user.verified = True
+        user.save()
+        # attempt user login: password wrong only
+        data = {'login': 'tommypaul147@gmail.com', 'password': 'olly!123'}
+        form = client.post('/accounts/login/', data).context_data['form']
+        non_field_errors = form.get_context()['errors']
+        self.assertFalse(form.is_valid())
+        self.assertEqual(non_field_errors, ['The e-mail address and/or password you specified are not correct.'])
+        # email wrong only
+        data = {'login': 'tommypaul17@gmail.com', 'password': 'holly!123'}
+        form = client.post('/accounts/login/', data).context_data['form']
+        non_field_errors = form.get_context()['errors']
+        self.assertFalse(form.is_valid())
+        self.assertEqual(non_field_errors, ['The e-mail address and/or password you specified are not correct.'])
+        # both wrong
+        data = {'login': 'tommypaul17@gmail.com', 'password': 'olly!123'}      
+        form = client.post('/accounts/login/', data).context_data['form']
+        non_field_errors = form.get_context()['errors']
+        self.assertFalse(form.is_valid())
+        self.assertEqual(non_field_errors, ['The e-mail address and/or password you specified are not correct.'])
+        # correct login
+        data = {'login': 'tommypaul147@gmail.com', 'password': 'holly!123'}
+        response = client.post('/accounts/login/', data).context_data
+        form = response['form']
+        non_field_errors = form.get_context()['errors']
+        self.assertTrue(form.is_valid())
+        self.assertEqual(non_field_errors, [])
