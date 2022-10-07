@@ -380,9 +380,5 @@ class TestLoginForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(non_field_errors, ['The e-mail address and/or password you specified are not correct.'])
         # correct login
-        data = {'login': 'tommypaul147@gmail.com', 'password': 'holly!123'}
-        response = client.post('/accounts/login/', data).context_data
-        form = response['form']
-        non_field_errors = form.get_context()['errors']
-        self.assertTrue(form.is_valid())
-        self.assertEqual(non_field_errors, [])
+        response = client.login(email='tommypaul147@gmail.com', password='holly!123')
+        self.assertTrue(response)
