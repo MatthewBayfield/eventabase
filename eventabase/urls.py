@@ -14,10 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, re_path, include
+from allauth.account import views
 
 urlpatterns = [
     path('', include('landing_page.urls')),
     path('accounts/', include('allauth.urls')),
+    re_path(r"^accounts/password/reset/key/(?P<uidb36>.+)-(?P<key>.+)/$",
+            views.password_reset_from_key,
+            name="account_reset_password_from_key"),
     path('admin/', admin.site.urls)    
 ]
