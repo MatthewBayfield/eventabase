@@ -33,7 +33,7 @@ DEBUG = development
 
 if development:
     ALLOWED_HOSTS = ['localhost']
-    CSRF_TRUSTED_ORIGINS = ['https://8000-matthewbayfi-eventabase-lxfe72ybebg.ws-eu67.gitpod.io']
+    CSRF_TRUSTED_ORIGINS = ['https://8000-matthewbayfi-eventabase-lxfe72ybebg.ws-eu70.gitpod.io']
     # Email settings
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary',
     'landing_page',
+    'home',
     'allauth',
     'allauth.account',
     'allauth.socialaccount'
@@ -165,7 +166,7 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # allauth settings
-LOGIN_REDIRECT_URL = 'user_homepage'
+LOGIN_REDIRECT_URL = '/home/'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
