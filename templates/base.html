@@ -18,8 +18,12 @@
         {% endif %}
         <nav>
             <div>
-                {% url "landing_page:landing_page_url" as landing_page_url%}
-                <a href="{{landing_page_url}}" type="text/html" aria-label="Home">
+                {% if logged_in %}
+                    {% url "home:user_homepage" as home_url %}
+                {% else %}
+                    {% url "landing_page:landing_page_url" as home_url %}
+                {% endif %}
+                <a href="{{ home_url }}" type="text/html" aria-label="Home">
                     <div>
                         <i class="fa-solid fa-house nav_icon"></i>
                         <div class="nav_icon">
@@ -28,17 +32,40 @@
                     </div>
                 </a>
             </div>
-            {% block nav_options %}{% endblock %}
-            <div>
-                <a href="{% url 'account_login' %}" type="text/html" aria-label="sign-in">
-                    <div>
-                        <i class="fa-solid fa-arrow-right-to-bracket nav_icon"></i>
-                        <div class="nav_icon">
-                            Sign-in
+            {% if not logged_in %}
+                <div>
+                    <a href="{% url 'account_login' %}" type="text/html" aria-label="sign-in">
+                        <div>
+                            <i class="fa-solid fa-arrow-right-to-bracket nav_icon"></i>
+                            <div class="nav_icon">
+                                Sign-in
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </div>
+                    </a>
+                </div>
+                <div>
+                    <a href="{% url 'account_signup' %}" type="text/html" aria-label="sign-up">
+                        <div>
+                            <i class="fa-solid fa-user-plus nav_icon"></i>
+                            <div class="nav_icon">
+                                Sign-up
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% else %}
+                <div>
+                    <a href="{% url 'account_logout' %}" type="text/html" aria-label="sign-out">
+                        <div>
+                            <i class="fa-solid fa-right-from-bracket nav_icon"></i>
+                            <div class="nav_icon">
+                                Sign-out
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+                
             <div class="more_menu_button" role="button" aria-haspopup="menu" aria-expanded="false" aria-controls="more_menu" tabindex="0">
                 <i class="fa-solid fa-bars nav_icon"></i>
                 <div class="nav_icon">

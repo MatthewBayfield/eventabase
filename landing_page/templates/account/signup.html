@@ -10,19 +10,6 @@
 
 {% block h1 %}Account Registration{% endblock %}
 
-{% block nav_options %}
-<div>
-    <a href="{% url 'account_signup' %}" type="text/html" aria-label="sign-up">
-        <div>
-            <i class="fa-solid fa-user-plus nav_icon"></i>
-            <div class="nav_icon">
-                Sign-up
-            </div>
-        </div>
-    </a>
-</div>
-{% endblock %}
-
 {% block main %}
   <p>Already have an account? Then please <a href="{{ login_url }}">sign in</a>.</p>
 
