@@ -5,9 +5,9 @@ from allauth.account.models import EmailAddress
 # Create your tests here.
 
 
-class TestLandingPageViews(TestCase):
+class TestHomeViews(TestCase):
     """
-    Tests for all views.
+    Tests for all home views.
     """
     data = {'email': 'tommypaul147@gmail.com',
             'email2': 'tommypaul147@gmail.com',
@@ -24,27 +24,27 @@ class TestLandingPageViews(TestCase):
         user.verified = True
         user.save()
         
-    def test_landing_page_response_anonymous_user(self):
+    def test_home_page_response_anonymous_user(self):
         """
-        Tests status code for landing page get request by an anonymous user.
+        Tests status code for home page get request by an anonymous user.
         """
         client = Client()
-        response_code = client.get('').status_code
+        response = client.get('/home/', follow=True)
+        response_code = response.status_code
+        redirect_chain = response.redirect_chain
         self.assertEqual(response_code, 200)
+        self.assertEqual(redirect_chain, [('/accounts/login/?next=/home/', 302)])
 
-    def test_landing_page_rendered_template_anonymous_user(self):
+    def test_home_page_response_rendered_template_anonymous_user(self):
         """
-        Tests the correct template is rendered for a landing page url
+        Tests the correct template is rendered for a home page url
         get request by an anonymous user.
         """
         client = Client()
-        response = client.get('')
-        self.assertTemplateUsed(response, 'landing_page/landing_page.html')
-        self.assertEqual(response.context['slogan'],
-                         'Events & Activities Organised by You for You')
-        self.assertEqual(response.context['page_id'], 'landing_page')
+        response = client.get('/home/', follow=True)
+        self.assertTemplateUsed(response, 'account/login.html')
 
-    def test_landing_page_response_authenticated_user(self):
+    def test_home_page_response_authenticated_user(self):
         """
         Tests status code for landing page get request by an authenticated user.
         """
@@ -60,7 +60,7 @@ class TestLandingPageViews(TestCase):
         self.assertEqual(response_code, 200)
         self.assertEqual(redirect_chain, [('/home/', 302)])
 
-    def test_landing_page_response_rendered_template_authenticated_user(self):
+    def test_home_page_response_rendered_template_authenticated_user(self):
         """
         Tests the correct template is rendered for a landing page url
         get request by an authenticated user.
@@ -73,6 +73,14 @@ class TestLandingPageViews(TestCase):
         # get request to landing page url
         response = client.get('', follow=True)
         self.assertTemplateUsed(response, 'home/home.html')
-        self.assertEqual(response.context['logged_in'],
-                         True)
-        self.assertEqual(response.context['page_id'], 'home_page')
+        sub_context = {'page_id': 'home_page',
+                       'logged_in': True,
+                       'username': self.data['username']}
+        for key, value in sub_context.items():
+            with self.subTest(key):
+                self.assertEqual(response.context[key], value)
+    
+    # # will add in the near future
+    # def test_authenticated_staff_user_home_page_response(self):
+    #     """
+    #     """
