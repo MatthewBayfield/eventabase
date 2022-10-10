@@ -23,5 +23,6 @@ urlpatterns = [
     re_path(r"^accounts/password/reset/key/(?P<uidb36>.+)-(?P<key>.+)/$",
             views.password_reset_from_key,
             name="account_reset_password_from_key"),
+    path('home/', include('home.urls')),
     path('admin/', admin.site.urls)    
 ]
