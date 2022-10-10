@@ -280,7 +280,7 @@ function slideshowHandler() {
     imageFadeIn(nextImage, currentImage);
 }
 
-if (document.getElementsByTagName('title')[0].textContent === 'Landing page') {
+if (document.getElementsByTagName('title')[0].textContent === 'Eventabase') {
     // Initial delay so that initally displayed image does not fade out immediately
     setTimeout(slideshowHandler, 8000);
     
