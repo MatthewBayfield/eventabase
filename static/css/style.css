@@ -31,6 +31,7 @@ h1 {
     font-family: 'Staatliches', cursive;
     width: fit-content;
     margin: 0.1rem 0.5rem;
+    display: inline-block;
 }
 
 h2,h3 {
@@ -258,6 +259,7 @@ span.more_menu_button {
 
 #landing_page h1 {
     margin: 0.1rem auto;
+    display: block;
 }
 
 #landing_page header > h2 {
