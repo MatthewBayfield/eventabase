@@ -3,5 +3,7 @@ from . import views
 
 app_name = 'home'
 urlpatterns = [
-    path('', views.UserHomePage.as_view(extra_context={'page_id': 'home_page'}), name='user_homepage')
+    path('', views.UserHomePage.as_view(extra_context={'page_id': 'home_page',
+                                                       'logged_in': True}),
+         name='user_homepage')
 ]
