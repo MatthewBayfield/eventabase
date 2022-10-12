@@ -80,13 +80,13 @@ class UserAddress(models.Model):
                                                     MaxLengthValidator(100)])
     
     city_or_town = models.CharField(max_length=50, verbose_name='City/Town',
-                                    validators=[RegexValidator(regex=r"/^[a-z]+$/",
+                                    validators=[RegexValidator(regex=r"/[a-z]+|([a-z]?<=)\s(?=[a-z])/",
                                                                message="Must contain only standard alphabetic characters.",
                                                                flags=[re.I]),
                                                 MaxLengthValidator(50)])
     
     county = models.CharField(max_length=50, verbose_name='County',
-                              validators=[RegexValidator(regex=r"/^[a-z]+$/",
+                              validators=[RegexValidator(regex=r"/[a-z]+|([a-z]?<=)\s(?=[a-z])/",
                                                          message="Must contain only standard alphabetic characters.",
                                                          flags=[re.I]),
                                           MaxLengthValidator(50)])
