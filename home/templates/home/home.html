@@ -9,3 +9,32 @@
 {% block title %}Home{% endblock %}
 
 {% block h1 %}Welcome back:{% endblock %}
+
+{% block main %}
+    <section id="profile">
+        {{profile}}
+        <div class="expand_icon">
+            <span data-icon-type='expand_more' class="material-symbols-outlined">expand_more</span>
+            <span data-icon-type="expand_less" class="material-symbols-outlined">expand_less</span>
+        </div>
+    </section>
+    <section id="search_events">
+        <div class="expand_icon">
+            <span data-icon-type='expand_more' class="material-symbols-outlined">expand_more</span>
+            <span data-icon-type="expand_less" class="material-symbols-outlined">expand_less</span>
+        </div>
+    </section>
+    <section id="post_events">
+        <div class="expand_icon">
+            <span data-icon-type='expand_more' class="material-symbols-outlined">expand_more</span>
+            <span data-icon-type="expand_less" class="material-symbols-outlined">expand_less</span>
+        </div>
+
+    </section>
+    <section id="reviews">
+        <div class="expand_icon">
+            <span data-icon-type='expand_more' class="material-symbols-outlined">expand_more</span>
+            <span data-icon-type="expand_less" class="material-symbols-outlined">expand_less</span>
+        </div>
+    </section>
+{% endblock %}
