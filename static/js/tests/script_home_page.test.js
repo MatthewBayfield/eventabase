@@ -3,11 +3,11 @@
 */
 
 jest.useFakeTimers();
-// Adds rendered signup_page template HTML content to the JSDOM
+// Adds rendered home_page template HTML content to the JSDOM
 let fs = require('fs');
-let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_signup_page.html', 'utf-8');
+let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_home_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
-let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, slideshowImages, uniqueFocusable, helpTextIcons, helpText, matchingIcons} = require('../script.js');
+let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons} = require('../script.js');
 // mock functions
 const log = jest.fn();
 
@@ -222,56 +222,46 @@ describe('Test the functionality of the help text icon event listeners', ( () =>
     })
 }))
 
-describe('Test the functionality of the typed/retyped input field pair event listeners', () => {
-    beforeEach(() => {
-        const noMatchIcons = [...document.getElementsByClassName('no_match_icon')];
-        // inline styles used to set initial display of matching/no-match icons
-        for (let icon of matchingIcons) {
-            icon.style.display = 'inline';
-        }
-        for (let icon of noMatchIcons) {
-            icon.style.display = 'none';
-        }
-        // set initial input field values
-        for (let matchingIcon of matchingIcons) {
-            let secondField = matchingIcon.parentElement.firstElementChild.children[1];
-            let firstField = matchingIcon.parentElement.previousElementSibling.firstElementChild.children[1];
-            firstField.value, secondField.value = '';
-        }
+describe('Test that the expand less and more icons work', () => {
+    let grid_containers = [...document.getElementsByClassName('grid_container')];
+    // initial css styling: elements of class grid container are left with their jsdom default of 'block'
+    // for the purpose of testing as oppose to 'none'. Likewise the expand_less and expand_more icons
+    // will have default jsdom inline element display of ''. In reality stylesheet styling has expand_more:'inline-block', expand_less:'none'.
+            
+    test('that after being clicked an icon is no longer visible, whilst its counterpart becomes visible', () => {
+            for (let i=0; i < 2*grid_containers.length; ++i) {
+                // not all grid containers neccesarily exist yet, so some tests may fail if i >= length
+                if (!(i % 2)) {
+                    // ith even element is an expand more icon
+                    expandLessIcon = expandIcons[i].nextElementSibling;
+                    expect(window.getComputedStyle(expandIcons[i]).getPropertyValue('display')).toBe('');
+                    expect(window.getComputedStyle(expandLessIcon).getPropertyValue('display')).toBe('');
+                
+                    expandIcons[i].click();
+                    expect(window.getComputedStyle(expandIcons[i]).getPropertyValue('display')).toBe('none');
+                    expect(window.getComputedStyle(expandLessIcon).getPropertyValue('display')).toBe('inline-block');
+                    expandLessIcon.click();
+                    expect(window.getComputedStyle(expandIcons[i]).getPropertyValue('display')).toBe('');
+                    expect(window.getComputedStyle(expandLessIcon).getPropertyValue('display')).toBe('');
+                }
+            }
     })
 
-    test('that the correct icon displays in response to field input value changes', () => {
-        function inner(firstField, secondField, firstFieldValue, secondFieldValue) {
-            firstFieldValue ? firstField.value = firstFieldValue : '';
-            secondFieldValue ? secondField.value = secondFieldValue : '';
-            const inputEvent = new Event('input');
-            firstFieldValue ? firstField.dispatchEvent(inputEvent) : secondField.dispatchEvent(inputEvent);
-        }
+    test('that the grid containers become visible when the expand_more icons are clicked, and invisible when the expand_less icons are clicked', () => {
+        for (let i=0; i < 2*grid_containers.length; ++i) {
+            // not all grid containers neccesarily exist yet, so some tests may fail if i >= length
+            if (!(i % 2)) {
+                // ith even element is an expand more icon
+                parentGrid = expandIcons[i].parentElement.previousElementSibling;
+                expandLessIcon = expandIcons[i].nextElementSibling;
+                expect(window.getComputedStyle(parentGrid).getPropertyValue('display')).toBe('block');
 
-        for (let matchingIcon of matchingIcons) {
-            let noMatchIcon = matchingIcon.nextElementSibling;
-            let secondField = matchingIcon.parentElement.firstElementChild.children[1];
-            let firstField = matchingIcon.parentElement.previousElementSibling.firstElementChild.children[1];
-            // fields empty and thus matching
-            inner(firstField, secondField, '', '');
-            expect(matchingIcon.style.display).toBe('inline');
-            expect(noMatchIcon.style.display).toBe('none');
-            // change first field value only: no match
-            inner(firstField, secondField, 'f', '');
-            expect(matchingIcon.style.display).toBe('none');
-            expect(noMatchIcon.style.display).toBe('inline');
-            // change second field value only to match again
-            inner(firstField, secondField, '', 'f');
-            expect(matchingIcon.hasAttribute('style')).toBe(false);
-            expect(noMatchIcon.hasAttribute('style')).toBe(false);
-            // change second field value only: no match
-            inner(firstField, secondField, '', 'g');
-            expect(matchingIcon.style.display).toBe('none');
-            expect(noMatchIcon.style.display).toBe('inline');
-            //change first field value only to match again
-            inner(firstField, secondField, 'g', '');
-            expect(matchingIcon.hasAttribute('style')).toBe(false);
-            expect(noMatchIcon.hasAttribute('style')).toBe(false);           
+                expandIcons[i].click();
+                expect(window.getComputedStyle(parentGrid).getPropertyValue('display')).toBe('grid');
+                expandLessIcon.click();
+                expect(window.getComputedStyle(parentGrid).getPropertyValue('display')).toBe('block');
+            }
         }
     })
 })
+

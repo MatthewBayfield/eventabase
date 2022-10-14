@@ -1,4 +1,6 @@
-<html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,10 +13,9 @@
 
 
     
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
-    <title>Landing page</title>
-
+    <title>Eventabase</title>
 </head>
 <body id="landing_page">
     <header>
@@ -22,8 +23,11 @@
         
             <h2>Events &amp; Activities Organised by You for You</h2>
         
+        
         <nav>
             <div>
+                
+                    
                 
                 <a href="/" type="text/html" aria-label="Home">
                     <div>
@@ -35,27 +39,29 @@
                 </a>
             </div>
             
-    <div>
-        <a href="/accounts/signup/" type="text/html" aria-label="sign-up">
-            <div>
-                <i class="fa-solid fa-user-plus nav_icon"></i>
-                <div class="nav_icon">
-                    Sign-up
-                </div>
-            </div>
-        </a>
-    </div>
-
-            <div>
-                <a href="/accounts/login/" type="text/html" aria-label="sign-in">
-                    <div>
-                        <i class="fa-solid fa-arrow-right-to-bracket nav_icon"></i>
-                        <div class="nav_icon">
-                            Sign-in
+            
+                <div>
+                    <a href="/accounts/login/" type="text/html" aria-label="sign-in">
+                        <div>
+                            <i class="fa-solid fa-arrow-right-to-bracket nav_icon"></i>
+                            <div class="nav_icon">
+                                Sign-in
+                            </div>
                         </div>
-                    </div>
-                </a>
-            </div>
+                    </a>
+                </div>
+                <div>
+                    <a href="/accounts/signup/" type="text/html" aria-label="sign-up">
+                        <div>
+                            <i class="fa-solid fa-user-plus nav_icon"></i>
+                            <div class="nav_icon">
+                                Sign-up
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            
+                
             <div class="more_menu_button" role="button" aria-haspopup="menu" aria-expanded="false" aria-controls="more_menu" tabindex="0">
                 <i class="fa-solid fa-bars nav_icon"></i>
                 <div class="nav_icon">
@@ -70,7 +76,7 @@
                     <div id="menu_items_container">
                         
                         <div role="menuitem" class="menu_item">
-                            <a href="" type="text/html"><b>T &amp; C</b></a>
+                            <a href="" type="text/html"><b>T & C</b></a>
                         </div>
                     </div>
                 </div>
@@ -86,55 +92,64 @@
             <source media="(max-width: 640px)" srcset="/static/images/group_playing_pool_small.webp">
             <source media="(max-width: 1280px)" srcset="/static/images/group_playing_pool_medium.webp">
             <source srcset="/static/images/group_playing_pool_large.webp">
-            <img class="slideshow_images" src="/static/images/group_playing_pool_small.webp" alt="group of people playing pool slideshow image" aria-hidden="true">
+            <img class="slideshow_images current_image" src="/static/images/group_playing_pool_small.webp"
+            alt="group of people playing pool slideshow image" aria-hidden="false">
         </picture>
         <picture>
             <source media="(max-width: 640px)" srcset="/static/images/cyclists_small.webp">
             <source media="(max-width: 1280px)" srcset="/static/images/cyclists_medium.webp">
             <source srcset="/static/images/cyclists_large.webp">
-            <img class="slideshow_images" src="/static/images/cyclists_small.webp" alt="three men cycling side-by-side on the road slideshow image" aria-hidden="true">
+            <img class="slideshow_images" src="/static/images/cyclists_small.webp"
+            alt="three men cycling side-by-side on the road slideshow image" aria-hidden="true">
         </picture>
         <picture>
             <source media="(max-width: 640px)" srcset="/static/images/people_bowling_small.webp">
             <source media="(max-width: 1280px)" srcset="/static/images/people_bowling_medium.webp">
             <source srcset="/static/images/people_bowling_large.webp">
-            <img class="slideshow_images current_image" src="/static/images/people_bowling_small.webp" alt="four people posing for a photograph whilst at a bowling alley, and holding bowling balls slideshow image" aria-hidden="false">
+            <img class="slideshow_images" src="/static/images/people_bowling_small.webp"
+            alt="four people posing for a photograph whilst at a bowling alley, and holding bowling balls slideshow image" aria-hidden="true">
         </picture>
         <picture>
             <source media="(max-width: 640px)" srcset="/static/images/karting_small.webp">
             <source media="(max-width: 1280px)" srcset="/static/images/karting_medium.webp">
             <source srcset="/static/images/karting_large.webp">
-            <img class="slideshow_images" src="/static/images/karting_small.webp" alt="three go-karts waiting to race on the start line slideshow image" aria-hidden="true">
+            <img class="slideshow_images" src="/static/images/karting_small.webp"
+            alt="three go-karts waiting to race on the start line slideshow image" aria-hidden="true">
         </picture>
         <picture>
             <source media="(max-width: 640px)" srcset="/static/images/group_in_pub_small.webp">
             <source media="(max-width: 1280px)" srcset="/static/images/group_in_pub_medium.webp">
             <source srcset="/static/images/group_in_pub_large.webp">
-            <img class="slideshow_images" src="/static/images/group_in_pub_small.webp" alt="group of people sitting side-by-side in pub slideshow image" aria-hidden="true">
+            <img class="slideshow_images" src="/static/images/group_in_pub_small.webp"
+            alt="group of people sitting side-by-side in pub slideshow image" aria-hidden="true">
         </picture>
         <picture>
             <source media="(max-width: 640px)" srcset="/static/images/climbing_small.webp">
             <source media="(max-width: 1280px)" srcset="/static/images/climbing_medium.webp">
             <source srcset="/static/images/climbing_large.webp">
-            <img class="slideshow_images" src="/static/images/climbing_small.webp" alt="two climbers on climbing wall in climbing gym slideshow image" aria-hidden="true">
+            <img class="slideshow_images" src="/static/images/climbing_small.webp"
+            alt="two climbers on climbing wall in climbing gym slideshow image" aria-hidden="true">
         </picture>
         <picture>
             <source media="(max-width: 640px)" srcset="/static/images/concert_small.webp">
             <source media="(max-width: 1280px)" srcset="/static/images/concert_medium.webp">
             <source srcset="/static/images/concert_large.webp">
-            <img class="slideshow_images" src="/static/images/concert_small.webp" alt="people in a crowd at a concert, with the band in the background on stage slideshow image" aria-hidden="true">
+            <img class="slideshow_images" src="/static/images/concert_small.webp"
+            alt="people in a crowd at a concert, with the band in the background on stage slideshow image" aria-hidden="true">
         </picture>
         <picture>
             <source media="(max-width: 640px)" srcset="/static/images/swimming_small.webp">
             <source media="(max-width: 1280px)" srcset="/static/images/swimming_medium.webp">
             <source srcset="/static/images/swimming_large.webp">
-            <img class="slideshow_images" src="/static/images/swimming_small.webp" alt="aerial photo of people in a swimming race in the sea slideshow image" aria-hidden="true">
+            <img class="slideshow_images" src="/static/images/swimming_small.webp"
+            alt="aerial photo of people in a swimming race in the sea slideshow image" aria-hidden="true">
         </picture>
         <picture>
             <source media="(max-width: 640px)" srcset="/static/images/tennis_small.webp">
             <source media="(max-width: 1280px)" srcset="/static/images/tennis_medium.webp">
             <source srcset="/static/images/tennis_large.webp">
-            <img class="slideshow_images" src="/static/images/tennis_small.webp" alt="three men playing tennis slideshow image" aria-hidden="true">
+            <img class="slideshow_images" src="/static/images/tennis_small.webp"
+            alt="three men playing tennis slideshow image" aria-hidden="true">
         </picture>
     </div>
     <!--How it works section-->
@@ -181,7 +196,7 @@
     </main>
     <footer>
     </footer>
-    <script src="https://kit.fontawesome.com/498cc55193.js" crossorigin="anonymous"></script><script src="/static/js/script.js"></script>
-
+    <script src="https://kit.fontawesome.com/498cc55193.js" crossorigin="anonymous"></script>
+    <script src="/static/js/script.js"></script>
 </body>
 </html>

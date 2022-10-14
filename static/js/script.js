@@ -8,11 +8,12 @@ const signupButton = document.querySelector("[name = 'sign-up']");
 const signinButton = document.querySelector("[name = 'sign-in']");
 const slideshowImages = [...document.getElementsByClassName('slideshow_images')];
 const linksAndButtons = [...document.getElementsByTagName('a'), ...document.getElementsByTagName('button')];
-const focusable = [...linksAndButtons, ...document.querySelectorAll('[tabIndex="0"]')];
+const focusable = [...linksAndButtons, ...document.querySelectorAll('[tabindex="0"]')];
 const uniqueFocusable = [...new Set(focusable)];
 const helpTextIcons = [...document.querySelectorAll('[data-icon-type = "help"]')];
 const helpText = [...document.getElementsByClassName('help_text')];
 const matchingIcons = [...document.getElementsByClassName('matching_icon')];
+const expandIcons = [...document.querySelectorAll('[data-icon-type ^= "expand"]')]
 
 // JS Section: Event listeners:
 
@@ -137,6 +138,35 @@ function signupButtonEventListener() {
         window.location.assign(next_location);
     })
 }
+
+function expandIconListeners() {
+    for (let icon of expandIcons) {
+        icon.addEventListener('click', () => {
+            if (icon.getAttribute('data-icon-type') === 'expand_more') {
+                icon.parentElement.previousElementSibling.style.display = 'grid';
+            }
+            else {
+                icon.parentElement.previousElementSibling.removeAttribute('style');
+            }
+            if (icon.hasAttribute('style')) {
+                icon.removeAttribute('style');
+            }
+            else {
+                icon.style.display = 'none';
+            }
+            let otherIcon = icon.nextElementSibling;
+            let siblingIcon = otherIcon ? otherIcon : icon.previousElementSibling;
+            if (siblingIcon.hasAttribute('style')) {
+                siblingIcon.removeAttribute('style');
+            }
+            else {
+                siblingIcon.style.display = 'inline-block'
+            }
+        })
+    }
+}
+
+expandIconListeners();
 
 // JS Subsection: form related event listeners 
 
@@ -292,5 +322,5 @@ if (document.getElementsByTagName('title')[0].textContent === 'Eventabase') {
 // module.exports = {
 //     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
 //     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
-//     helpText, matchingIcons, signupButton, signinButton
+//     helpText, matchingIcons, signupButton, signinButton, expandIcons
 // };
