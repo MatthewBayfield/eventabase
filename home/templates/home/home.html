@@ -11,8 +11,9 @@
 {% block h1 %}Welcome back:{% endblock %}
 
 {% block main %}
-    <section id="profile">
+    <section id="profile" role="region" aria-label="profile section">
         {{profile}}
+        {{edit_profile_modal}}
         <div class="expand_icon">
             <span tabindex="0" data-icon-type='expand_more' class="material-symbols-outlined">expand_more</span>
             <span tabindex="0" data-icon-type="expand_less" class="material-symbols-outlined">expand_less</span>

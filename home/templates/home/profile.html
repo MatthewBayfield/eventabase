@@ -1,5 +1,5 @@
 <h2>Profile</h2>
-<div class="grid_container">
+<div class="grid_container" tabindex="-1">
     <div class="left_column top_row">
         <h3 class="profile_display">Personal Info</h3>
     {% for field_name, field_value in user_profile_data %}
@@ -26,9 +26,11 @@
     {% endfor %}
     </div>
     <div id="profile_flex" class="bottom_row">
-        <div id="edit">
-            Edit <i class="fa-solid fa-pen-to-square"></i>
-        </div>
+        {% with modal='edit_profile_modal' %}
+            <div id="edit" role="button" aria-label="edit profile" aria-controls="{{modal}}" tabindex="0">
+                <span>Edit <i class="fa-solid fa-pen-to-square"></i></span>
+            </div>
+        {% endwith %}
         <div id="report_issue">
             <div>
                 <button type="button" name="report_issue">Report Issue</button>
