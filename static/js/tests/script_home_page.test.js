@@ -231,7 +231,7 @@ describe('Test that the expand less and more icons work', () => {
     test('that after being clicked an icon is no longer visible, whilst its counterpart becomes visible', () => {
             for (let i=0; i < 2*grid_containers.length; ++i) {
                 // not all grid containers neccesarily exist yet, so some tests may fail if i >= length
-                if (!(i % 2)) {
+                if ((Boolean((i + 1) % 2))) {
                     // ith even element is an expand more icon
                     expandLessIcon = expandIcons[i].nextElementSibling;
                     expect(window.getComputedStyle(expandIcons[i]).getPropertyValue('display')).toBe('');
@@ -250,7 +250,7 @@ describe('Test that the expand less and more icons work', () => {
     test('that the grid containers become visible when the expand_more icons are clicked, and invisible when the expand_less icons are clicked', () => {
         for (let i=0; i < 2*grid_containers.length; ++i) {
             // not all grid containers neccesarily exist yet, so some tests may fail if i >= length
-            if (!(i % 2)) {
+            if ((Boolean((i + 1) % 2))) {
                 // ith even element is an expand more icon
                 parentGrid = expandIcons[i].parentElement.previousElementSibling;
                 expandLessIcon = expandIcons[i].nextElementSibling;
@@ -260,6 +260,23 @@ describe('Test that the expand less and more icons work', () => {
                 expect(window.getComputedStyle(parentGrid).getPropertyValue('display')).toBe('grid');
                 expandLessIcon.click();
                 expect(window.getComputedStyle(parentGrid).getPropertyValue('display')).toBe('block');
+            }
+        }
+    })
+
+    test('that the now visible grid container receives focus after the expand icon is clicked', () => {
+        for (let i=0; i < 2*grid_containers.length; ++i) {
+            // not all grid containers neccesarily exist yet, so some tests may fail if i >= length
+            if ((Boolean((i + 1) % 2))) {
+                // ith even element is an expand more icon
+                parentGrid = expandIcons[i].parentElement.parentElement.children[1];
+                console.log(parentGrid);
+                console.log(i);
+                expect(window.getComputedStyle(parentGrid).getPropertyValue('display')).toBe('block');
+
+                expandIcons[i].click();
+                expect(window.getComputedStyle(parentGrid).getPropertyValue('display')).toBe('grid');
+                expect(document.activeElement).toBe(parentGrid);
             }
         }
     })

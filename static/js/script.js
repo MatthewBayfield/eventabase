@@ -13,7 +13,7 @@ const uniqueFocusable = [...new Set(focusable)];
 const helpTextIcons = [...document.querySelectorAll('[data-icon-type = "help"]')];
 const helpText = [...document.getElementsByClassName('help_text')];
 const matchingIcons = [...document.getElementsByClassName('matching_icon')];
-const expandIcons = [...document.querySelectorAll('[data-icon-type ^= "expand"]')]
+const expandIcons = [...document.querySelectorAll('[data-icon-type ^= "expand"]')];
 
 // JS Section: Event listeners:
 
@@ -139,14 +139,19 @@ function signupButtonEventListener() {
     })
 }
 
+/** Adds click event Listeners to the expand more/less section icons.
+ *  Provides the expand/contract functionality, and handles focus switching.
+ * @summary Gives expand icons their functionality.
+ */
 function expandIconListeners() {
     for (let icon of expandIcons) {
         icon.addEventListener('click', () => {
             if (icon.getAttribute('data-icon-type') === 'expand_more') {
-                icon.parentElement.previousElementSibling.style.display = 'grid';
+                icon.parentElement.parentElement.children[1].style.display = 'grid';
+                icon.parentElement.parentElement.children[1].focus();
             }
             else {
-                icon.parentElement.previousElementSibling.removeAttribute('style');
+                icon.parentElement.parentElement.children[1].removeAttribute('style');
             }
             if (icon.hasAttribute('style')) {
                 icon.removeAttribute('style');
@@ -154,8 +159,7 @@ function expandIconListeners() {
             else {
                 icon.style.display = 'none';
             }
-            let otherIcon = icon.nextElementSibling;
-            let siblingIcon = otherIcon ? otherIcon : icon.previousElementSibling;
+            let siblingIcon = icon.nextElementSibling || icon.previousElementSibling;
             if (siblingIcon.hasAttribute('style')) {
                 siblingIcon.removeAttribute('style');
             }
@@ -310,12 +314,18 @@ function slideshowHandler() {
     imageFadeIn(nextImage, currentImage);
 }
 
+// page specific executed code
+
 if (document.getElementsByTagName('title')[0].textContent === 'Eventabase') {
     // Initial delay so that initally displayed image does not fade out immediately
     setTimeout(slideshowHandler, 8000);
     
     signupButtonEventListener();
     signinButtonEventListener();
+}
+
+if (document.getElementsByTagName('title')[0].textContent === 'Home') {
+
 }
 
 // uncommented during testing
