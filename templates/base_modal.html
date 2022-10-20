@@ -1,0 +1,20 @@
+<div class="modal_container" tabindex="0" {% if first_login%}style="display:block"{% endif %}>
+    <div id="{{modal}}" class="modal" role="dialog" aria-modal="true" tabindex="0" aria-label="edit profile modal">
+        <div>
+            {% if not first_login %}
+                <div class="close_button">
+                    <span tabindex="0" aria-label="close modal" role="button"><i class="fa-solid fa-xmark"></i> </span> 
+                </div>
+            {% endif %}
+            <h2>{% block modal_title %}Modal{% endblock %}</h2>
+        </div>
+        {% block main %}
+        {% endblock %}
+        <div class="modal_buttons_container">
+            <button class='modal_button' type="button" name="{{button1_name}}">{{button1_name|title}}</button>
+            {% if button2_name and not first_login %}
+                <button class="modal_button" type="button" name="{{button2_name}}">{{button2_name|title}}</button>
+            {% endif %}
+        </div>
+    </div>
+</div>

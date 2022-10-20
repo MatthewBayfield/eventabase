@@ -1,0 +1,21 @@
+{% extends 'base_modal.html' %}
+{% block modal_title%}Edit Profile{% endblock %}
+{% block main %}
+    {% if first_login %}
+        <p>
+            Before you get started, please fill out the following mandatory form in order to create your profile.
+        </p>
+    {% endif%}
+    {% with form_id='personal_info_form' %}
+    <form id={{form_id}} method="post" action="profile_form/">
+        {% csrf_token %}
+        {{ personal_info_form }}
+    </form>
+    {% endwith %}
+    {% with form_id='address_form' %}
+    <form id={{form_id}} method="post" action="profile_form/">
+        {% csrf_token %}
+        {{ address_form }}
+    </form>
+    {% endwith %}
+{% endblock %}
