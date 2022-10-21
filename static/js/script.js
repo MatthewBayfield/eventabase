@@ -250,6 +250,26 @@ function formFieldChangeListeners() {
 
 formFieldChangeListeners();
 
+// JS Subsection: modal related event listeners:
+
+/** Adds click event listeners to the close modal buttons, that
+ * cause the related modal to be closed, and the focus returned
+ * to the open modal button. The body scrollbar also becomes visible again.
+ * @summary Gives the close modal buttons their button functionality.
+ */
+function closeModalButtonListeners() {
+    for (let button of closeModalButtons) {
+        button.firstElementChild.addEventListener('click', () => {
+            let parentModalContainer = button.parentElement.parentElement.parentElement;
+            parentModalContainer.removeAttribute('style');
+            document.body.removeAttribute('style');
+            if (parentModalContainer.firstElementChild.id === 'edit_profile_modal') {
+                editButton.focus(); 
+            }
+        })
+    }
+}
+
 // JS Section: Functions:
 
 /** An event handler that performs the DOM manipulations necessary
@@ -347,11 +367,13 @@ if (document.getElementsByTagName('title')[0].textContent === 'Eventabase') {
 
 if (document.getElementsByTagName('title')[0].textContent === 'Home') {
     editButtonListeners();
+    closeModalButtonListeners();
 }
 
 // uncommented during testing
-module.exports = {
-    moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
-    slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
-    helpText, matchingIcons, signupButton, signinButton, expandIcons, editButton, modalContainers, modals
-};
+// module.exports = {
+//     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
+//     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
+//     helpText, matchingIcons, signupButton, signinButton, expandIcons, editButton, modalContainers, modals,
+//     closeModalButtons
+// };

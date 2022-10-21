@@ -7,7 +7,8 @@ jest.useFakeTimers();
 let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_home_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
-let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons, modalContainers, modals, editButton} = require('../script.js');
+let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
+     modalContainers, modals, editButton, closeModalButtons} = require('../script.js');
 // mock functions
 const log = jest.fn();
 
@@ -293,4 +294,44 @@ describe('Test that the edit profile button works', () => {
         expect(document.body.style.overflowY).toBe('hidden');
     })
 
+})
+
+describe('Test that the close modal buttons work', () => {
+    beforeEach(() => {
+        // simulate open modal containers
+        for (let container of modalContainers) {
+            container.style.display = 'block';
+        }
+    })
+
+    test('that the modal container is no longer visible', () => {
+        for (let button of closeModalButtons) {
+            // scrollbar is hidden when a modal is open.
+            document.body.style.overflowY = 'hidden';
+            let buttonsModalContainer = button.parentElement.parentElement.parentElement;
+            let clickableButtonRegion = button.firstElementChild;
+            clickableButtonRegion.click();
+            expect(buttonsModalContainer.hasAttribute('style')).toBe(false);
+        }
+    })
+
+    test('that the body scrollbar is no longer hidden', () => {
+        for (let button of closeModalButtons) {
+            // scrollbar is hidden when a modal is open.
+            document.body.style.overflowY = 'hidden';
+            let clickableButtonRegion = button.firstElementChild;
+            clickableButtonRegion.click();
+            expect(document.body.hasAttribute('style')).toBe(false);
+        }
+    })
+
+    test('that the open modal button has focus after the modal is closed', () => {
+        // scrollbar is hidden when a modal is open.
+        document.body.style.overflowY = 'hidden';
+        // only edit profile modal exists at the moment
+        let button = editButton;
+        let clickableButtonRegion = button.firstElementChild;
+        clickableButtonRegion.click();
+        expect(document.activeElement).toBe(editButton);
+    })
 })
