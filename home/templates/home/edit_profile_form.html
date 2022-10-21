@@ -1,0 +1,24 @@
+{{ errors }}
+{% for field, errors in fields %}
+    <div class="field_flex_container">
+        <div{% with classes=field.css_classes %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
+        {% if field.label %}
+            <div>{{ field.label_tag|title }}{% if field.field.required %}*{% endif %}</div>
+        {% endif %}
+        {{ field }}
+        </div>
+        {% if field.help_text %}
+            <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
+        {% endif %}
+        <div>
+        {% if field.help_text %}
+            <div class="help_text">{{ field.help_text|safe }}</div>
+        {% endif %}
+        {% if errors %}
+            <div class="field_errors">
+            {{ errors }}
+            </div>
+        {% endif %}
+        </div>
+    </div>
+{% endfor %}
