@@ -14,6 +14,10 @@ const helpTextIcons = [...document.querySelectorAll('[data-icon-type = "help"]')
 const helpText = [...document.getElementsByClassName('help_text')];
 const matchingIcons = [...document.getElementsByClassName('matching_icon')];
 const expandIcons = [...document.querySelectorAll('[data-icon-type ^= "expand"]')];
+const editButton = document.getElementById('edit');
+const modalContainers = [...document.getElementsByClassName('modal_container')];
+const modals = [...document.getElementsByClassName('modal')]
+const closeModalButtons = [...document.getElementsByClassName('close_button')];
 
 // JS Section: Event listeners:
 
@@ -172,6 +176,23 @@ function expandIconListeners() {
 
 expandIconListeners();
 
+/** Adds a click event listener to the edit profile button.
+ * When clicked the edit profile modal is opened with focus, and the background
+ * scrollbar is hidden.
+ * @summary Gives the edit profile button its button functionality.
+ */
+function editButtonListeners() {
+    editButton.addEventListener('click', () => {
+    let profileModalContainer = modalContainers[0];
+    let profileModal = modals[0];
+    if (window.getComputedStyle(profileModalContainer).getPropertyValue('display') === 'none') {
+        profileModalContainer.style.display = 'block';
+        profileModal.focus();
+        document.body.style.overflowY = 'hidden';
+    }
+    })
+}
+
 // JS Subsection: form related event listeners 
 
 /** Adds mouseenter and mouseleave event listeners to 'help icon' elements, to
@@ -325,12 +346,12 @@ if (document.getElementsByTagName('title')[0].textContent === 'Eventabase') {
 }
 
 if (document.getElementsByTagName('title')[0].textContent === 'Home') {
-
+    editButtonListeners();
 }
 
 // uncommented during testing
-// module.exports = {
-//     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
-//     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
-//     helpText, matchingIcons, signupButton, signinButton, expandIcons
-// };
+module.exports = {
+    moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
+    slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
+    helpText, matchingIcons, signupButton, signinButton, expandIcons, editButton, modalContainers, modals
+};

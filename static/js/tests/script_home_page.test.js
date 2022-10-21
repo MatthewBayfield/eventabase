@@ -7,7 +7,7 @@ jest.useFakeTimers();
 let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_home_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
-let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons} = require('../script.js');
+let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons, modalContainers, modals, editButton} = require('../script.js');
 // mock functions
 const log = jest.fn();
 
@@ -233,7 +233,7 @@ describe('Test that the expand less and more icons work', () => {
                 // not all grid containers neccesarily exist yet, so some tests may fail if i >= length
                 if ((Boolean((i + 1) % 2))) {
                     // ith even element is an expand more icon
-                    expandLessIcon = expandIcons[i].nextElementSibling;
+                    let expandLessIcon = expandIcons[i].nextElementSibling;
                     expect(window.getComputedStyle(expandIcons[i]).getPropertyValue('display')).toBe('');
                     expect(window.getComputedStyle(expandLessIcon).getPropertyValue('display')).toBe('');
                 
@@ -252,8 +252,8 @@ describe('Test that the expand less and more icons work', () => {
             // not all grid containers neccesarily exist yet, so some tests may fail if i >= length
             if ((Boolean((i + 1) % 2))) {
                 // ith even element is an expand more icon
-                parentGrid = expandIcons[i].parentElement.previousElementSibling;
-                expandLessIcon = expandIcons[i].nextElementSibling;
+                let parentGrid = expandIcons[i].parentElement.parentElement.children[1];
+                let expandLessIcon = expandIcons[i].nextElementSibling;
                 expect(window.getComputedStyle(parentGrid).getPropertyValue('display')).toBe('block');
 
                 expandIcons[i].click();
@@ -269,16 +269,28 @@ describe('Test that the expand less and more icons work', () => {
             // not all grid containers neccesarily exist yet, so some tests may fail if i >= length
             if ((Boolean((i + 1) % 2))) {
                 // ith even element is an expand more icon
-                parentGrid = expandIcons[i].parentElement.parentElement.children[1];
-                console.log(parentGrid);
-                console.log(i);
-                expect(window.getComputedStyle(parentGrid).getPropertyValue('display')).toBe('block');
-
+                let parentGrid = expandIcons[i].parentElement.parentElement.children[1];
                 expandIcons[i].click();
-                expect(window.getComputedStyle(parentGrid).getPropertyValue('display')).toBe('grid');
                 expect(document.activeElement).toBe(parentGrid);
             }
         }
     })
 })
 
+describe('Test that the edit profile button works', () => {
+    beforeEach(() => {
+        // setting intitial profile modal container styling
+        modalContainers[0].style.display = 'none';
+    })
+
+    test('that the container becomes visible, the modal gains focus, and background scrollbar is hidden', () => {
+        const profileModalContainer = modalContainers[0];
+        const profileModal = modals[0];
+        expect(window.getComputedStyle(profileModalContainer).getPropertyValue('display')).toBe('none');
+        editButton.click();
+        expect(window.getComputedStyle(profileModalContainer).getPropertyValue('display')).toBe('block');
+        expect(document.activeElement).toBe(profileModal);
+        expect(document.body.style.overflowY).toBe('hidden');
+    })
+
+})

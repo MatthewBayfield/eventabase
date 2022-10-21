@@ -81,87 +81,260 @@
     </header>
     <main>
         
-    <section id="profile">
+    <section id="profile" role="region" aria-label="profile section">
         <h2>Profile</h2>
-        <div class="grid_container" tabindex="-1">
-            <div class="left_column top_row">
-                <h3 class="profile_display">Personal Info</h3>
-            
-                
-                    <div class="profile_display">
-                        <span>First Name :</span>
-                        <span>Matthew</span>
-                    </div>
-                
-            
-                
-                    <div class="profile_display">
-                        <span>Last Name :</span>
-                        <span>Bayfield</span>
-                    </div>
-                
-            
-                
-                    <div class="profile_display">
-                        <span>Date Of Birth :</span>
-                        <span>Nov. 19, 1993</span>
-                    </div>
-                
-            
-                
-                    <div class="profile_display">
-                        <span>Sex :</span>
-                        <span>male</span>
-                    </div>
-                
-            
-                
-                    <div class="profile_display">
-                        <span>Bio :</span>
-                        <span></span>
-                    </div>
-                
-            
+<div class="grid_container" tabindex="-1">
+    <div class="left_column top_row">
+        <h3 class="profile_display">Personal Info</h3>
+    
+        
+            <div class="profile_display">
+                <span>First Name :</span>
+                <span>matthew</span>
             </div>
-            <div class="right_column top_row">
-                <h3 class="profile_display">Address</h3>
-            
-                <div class="profile_display">
-                    <span>Address Line 1 :</span>
-                    <span>11 rise park boulevard</span>
-                </div>
-            
-                <div class="profile_display">
-                    <span>City/Town :</span>
-                    <span>romford</span>
-                </div>
-            
-                <div class="profile_display">
-                    <span>County :</span>
-                    <span>essex</span>
-                </div>
-            
-                <div class="profile_display">
-                    <span>Postcode :</span>
-                    <span>rm14pp</span>
-                </div>
-            
+        
+    
+        
+            <div class="profile_display">
+                <span>Last Name :</span>
+                <span>bayfield</span>
             </div>
-            <div id="profile_flex" class="bottom_row">
-                <div id="edit">
-                    Edit <i class="fa-solid fa-pen-to-square"></i>
-                </div>
-                <div id="report_issue">
-                    <div>
-                        <button type="button" name="report_issue">Report Issue</button>
-                        <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
-                    </div>
-                    <div class="help_text">
-                        Report any issues, about the site, your account etc.
-                    </div>
-                </div> 
+        
+    
+        
+            <div class="profile_display">
+                <span>Date Of Birth :</span>
+                <span>19/11/1993</span>
             </div>
+        
+    
+        
+            <div class="profile_display">
+                <span>Sex :</span>
+                <span>male</span>
+            </div>
+        
+    
+        
+            <div class="profile_display">
+                <span>Bio :</span>
+                <span></span>
+            </div>
+        
+    
+    </div>
+    <div class="right_column top_row">
+        <h3 class="profile_display">Address</h3>
+    
+        <div class="profile_display">
+            <span>Address Line 1 :</span>
+            <span>11 rise park boulevard</span>
         </div>
+    
+        <div class="profile_display">
+            <span>City/Town :</span>
+            <span>romford</span>
+        </div>
+    
+        <div class="profile_display">
+            <span>County :</span>
+            <span>essex</span>
+        </div>
+    
+        <div class="profile_display">
+            <span>Postcode :</span>
+            <span>rm14pp</span>
+        </div>
+    
+    </div>
+    <div id="profile_flex" class="bottom_row">
+        
+            <div id="edit" role="button" aria-label="edit profile" aria-controls="edit_profile_modal" tabindex="0">
+                <span>Edit <i class="fa-solid fa-pen-to-square"></i></span>
+            </div>
+        
+        <div id="report_issue">
+            <div>
+                <button type="button" name="report_issue">Report Issue</button>
+                <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
+            </div>
+            <div class="help_text">
+                Report any issues, about the site, your account etc.
+            </div>
+        </div> 
+    </div>
+</div>
+        <div class="modal_container" tabindex="0" >
+    <div id="edit_profile_modal" class="modal" role="dialog" aria-modal="true" tabindex="0" aria-label="edit profile modal">
+        <div>
+            
+                <div class="close_button">
+                    <span tabindex="0" aria-label="close modal" role="button"><i class="fa-solid fa-xmark"></i> </span> 
+                </div>
+            
+            <h2>Edit Profile</h2>
+        </div>
+        
+    
+    
+    <form id=personal_info_form method="post" action="profile_form/">
+        <input type="hidden" name="csrfmiddlewaretoken" value="xuTM0QqAHADD7C2n9tsbAI6oYABna4TZpy1C1us2ZtO0fGACbTVvdGRtovc6n3Mz">
+        <div class="field_flex_container">
+        <div class="form_fields">
+        
+            <div><Label For="Id_First_Name">First Name:</Label>*</div>
+        
+        <input type="text" name="first_name" value="matthew" maxlength="50" required id="id_first_name">
+        </div>
+        
+        <div>
+        
+        
+        </div>
+    </div>
+
+    <div class="field_flex_container">
+        <div class="form_fields">
+        
+            <div><Label For="Id_Last_Name">Last Name:</Label>*</div>
+        
+        <input type="text" name="last_name" value="bayfield" maxlength="50" required id="id_last_name">
+        </div>
+        
+        <div>
+        
+        
+        </div>
+    </div>
+
+    <div class="field_flex_container">
+        <div class="form_fields">
+        
+            <div><Label For="Id_Date_Of_Birth">Date Of Birth:</Label>*</div>
+        
+        <input type="text" name="date_of_birth" value="19/11/1993" required id="id_date_of_birth">
+        </div>
+        
+            <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
+        
+        <div>
+        
+            <div class="help_text">Enter a date in the format dd/mm/yyyy.</div>
+        
+        
+        </div>
+    </div>
+
+    <div class="field_flex_container">
+        <div class="form_fields">
+        
+            <div><Label For="Id_Sex">Sex:</Label>*</div>
+        
+        <select name="sex" required id="id_sex">
+  <option value="">---------</option>
+
+  <option value="male" selected>male</option>
+
+  <option value="female">female</option>
+
+</select>
+        </div>
+        
+        <div>
+        
+        
+        </div>
+    </div>
+
+    <div class="field_flex_container">
+        <div class="form_fields">
+        
+            <div><Label For="Id_Bio">Bio:</Label></div>
+        
+        <textarea name="bio" cols="40" rows="10" maxlength="500" id="id_bio">
+</textarea>
+        </div>
+        
+            <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
+        
+        <div>
+        
+            <div class="help_text">Describe a bit about yourself, and or the activities you like. Max 500 characters.</div>
+        
+        
+        </div>
+    </div>
+    </form>
+    
+    
+    <form id=address_form method="post" action="profile_form/">
+        <input type="hidden" name="csrfmiddlewaretoken" value="xuTM0QqAHADD7C2n9tsbAI6oYABna4TZpy1C1us2ZtO0fGACbTVvdGRtovc6n3Mz">
+        <div class="field_flex_container">
+        <div class="form_fields">
+        
+            <div><Label For="Id_Address_Line_One">Address Line 1:</Label>*</div>
+        
+        <input type="text" name="address_line_one" value="11 rise park boulevard" maxlength="100" required id="id_address_line_one">
+        </div>
+        
+        <div>
+        
+        
+        </div>
+    </div>
+
+    <div class="field_flex_container">
+        <div class="form_fields">
+        
+            <div><Label For="Id_City_Or_Town">City/Town:</Label>*</div>
+        
+        <input type="text" name="city_or_town" value="romford" maxlength="50" required id="id_city_or_town">
+        </div>
+        
+        <div>
+        
+        
+        </div>
+    </div>
+
+    <div class="field_flex_container">
+        <div class="form_fields">
+        
+            <div><Label For="Id_County">County:</Label>*</div>
+        
+        <input type="text" name="county" value="essex" maxlength="50" required id="id_county">
+        </div>
+        
+        <div>
+        
+        
+        </div>
+    </div>
+
+    <div class="field_flex_container">
+        <div class="form_fields">
+        
+            <div><Label For="Id_Postcode">Postcode:</Label>*</div>
+        
+        <input type="text" name="postcode" value="rm14pp" maxlength="10" required id="id_postcode">
+        </div>
+        
+        <div>
+        
+        
+        </div>
+    </div>
+    </form>
+    
+
+        <div class="modal_buttons_container">
+            <button class='modal_button' type="button" name="Done">Done</button>
+            
+                <button class="modal_button" type="button" name="Cancel">Cancel</button>
+            
+        </div>
+    </div>
+</div>
         <div class="expand_icon">
             <span tabindex="0" data-icon-type='expand_more' class="material-symbols-outlined">expand_more</span>
             <span tabindex="0" data-icon-type="expand_less" class="material-symbols-outlined">expand_less</span>
