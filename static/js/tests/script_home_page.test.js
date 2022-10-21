@@ -335,3 +335,16 @@ describe('Test that the close modal buttons work', () => {
         expect(document.activeElement).toBe(editButton);
     })
 })
+
+describe("Test that the 'trap focus within open modal' event listeners work", () => {
+    test('the modal is given focus when its last button loses focus', () => {
+       for (let modal of modals) {
+        let modalId = modal.id;
+        let querySelector = '#' + modalId + ' button';
+        let lastButtonInModal = [...document.querySelectorAll(querySelector)].pop();
+        let blurEvent = new Event('blur');
+        lastButtonInModal.dispatchEvent(blurEvent);
+        expect(document.activeElement).toBe(modal);
+       }
+    })
+})

@@ -270,6 +270,22 @@ function closeModalButtonListeners() {
     }
 }
 
+/** Adds blur event listener to the last button in a modal. Ensures focus remains on
+ * elements within the modal, and cannot exit it by pressing the tab key.
+ * @summary Creates event listeners that trap focus within an open modal.
+ */
+function trapFocusModalListeners() {
+    for (let modal of modals) {
+        let modalId = modal.id;
+        let querySelector = '#' + modalId + ' button';
+        // The last modal button is its last focusable element.
+        let lastButtonInModal = [...document.querySelectorAll(querySelector)].pop();
+        lastButtonInModal.addEventListener('blur', () => {
+            modal.focus();
+        })
+    }
+}
+
 // JS Section: Functions:
 
 /** An event handler that performs the DOM manipulations necessary
@@ -368,6 +384,7 @@ if (document.getElementsByTagName('title')[0].textContent === 'Eventabase') {
 if (document.getElementsByTagName('title')[0].textContent === 'Home') {
     editButtonListeners();
     closeModalButtonListeners();
+    trapFocusModalListeners();
 }
 
 // uncommented during testing
