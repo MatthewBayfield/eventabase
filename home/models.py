@@ -66,14 +66,14 @@ class UserProfile(ProfileMixin):
                                 db_column='username')
     
     first_name = models.CharField(max_length=50, verbose_name='first name',
-                                  validators=[RegexValidator(regex=r"/^[a-z]+$/",
+                                  validators=[RegexValidator(regex=r"^[A-Za-z]+$",
                                               message="Must contain only standard alphabetic characters.",
                                               flags=re.I),
                                               MaxLengthValidator(50)],
                                   blank=False)
     last_name = models.CharField(max_length=50, verbose_name='last name',
                                  blank=False,
-                                 validators=[RegexValidator(regex=r"/^[a-z]+$/",
+                                 validators=[RegexValidator(regex=r"^[A-Za-z]+$",
                                              message="Must contain only standard alphabetic characters.",
                                              flags=re.I),
                                              MaxLengthValidator(50)])
@@ -110,28 +110,26 @@ class UserAddress(ProfileMixin):
                                         db_column='profile')
 
     address_line_one = models.CharField(max_length=100, verbose_name='Address line 1',
-                                        validators=[RegexValidator(regex=r"/[a-z0-9]+|([a-z0-9]?<=)\s(?=[a-z0-9])/",
-                                                    message="Must contain only standard alphabetic characters and numbers.",
-                                                    flags=[re.I, re.M]),
+                                        validators=[RegexValidator(regex=r"^([a-zA-Z0-9]+\s{0,1}[a-zA-Z0-9]+)+\Z",
+                                                    message="Must contain only standard alphabetic characters and numbers, with single spaces between words.",
+                                                    flags=re.MULTILINE),
                                                     MaxLengthValidator(100)],
                                         blank=False)
     
     city_or_town = models.CharField(max_length=50, verbose_name='City/Town',
-                                    validators=[RegexValidator(regex=r"/[a-z]+|([a-z]?<=)\s(?=[a-z])/",
-                                                               message="Must contain only standard alphabetic characters.",
-                                                               flags=[re.I]),
+                                    validators=[RegexValidator(regex=r"^([a-zA-Z]+\s{0,1}[a-zA-Z]+)+\Z",
+                                                               message="Must contain only standard alphabetic characters, with single spaces between words."),
                                                 MaxLengthValidator(50)],
                                     blank=False)
     
     county = models.CharField(max_length=50, verbose_name='County',
-                              validators=[RegexValidator(regex=r"/[a-z]+|([a-z]?<=)\s(?=[a-z])/",
-                                                         message="Must contain only standard alphabetic characters.",
-                                                         flags=[re.I]),
+                              validators=[RegexValidator(regex=r"^([a-zA-Z]+\s{0,1}[a-zA-Z]+)+\Z",
+                                                         message="Must contain only standard alphabetic characters, with single spaces between words."),
                                           MaxLengthValidator(50)],
                               blank=False)
     
     # taken from https://stackoverflow.com/questions/164979/regex-for-matching-uk-postcodes/17024047#17024047
-    UK_POSTCODE_REGREX_EXPRESSION = r"/^(([gG][iI][rR] {0,}0[aA]{2})|((([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y]?[0-9][0-9]?)|(([a-pr-uwyzA-PR-UWYZ][0-9][a-hjkstuwA-HJKSTUW])|([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y][0-9][abehmnprv-yABEHMNPRV-Y]))) {0,}[0-9][abd-hjlnp-uw-zABD-HJLNP-UW-Z]{2}))$/"
+    UK_POSTCODE_REGREX_EXPRESSION = r"^(([gG][iI][rR] {0,}0[aA]{2})|((([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y]?[0-9][0-9]?)|(([a-pr-uwyzA-PR-UWYZ][0-9][a-hjkstuwA-HJKSTUW])|([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y][0-9][abehmnprv-yABEHMNPRV-Y]))) {0,}[0-9][abd-hjlnp-uw-zABD-HJLNP-UW-Z]{2}))$"
 
     postcode = models.CharField(max_length=10, verbose_name='Postcode', blank=False,
                                 validators=[RegexValidator(regex=UK_POSTCODE_REGREX_EXPRESSION,
