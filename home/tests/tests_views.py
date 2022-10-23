@@ -2,15 +2,16 @@ from django.test import TestCase
 from django.test import Client
 from allauth.account.models import EmailAddress
 from landing_page.models import CustomUserModel
-from home.models import UserAddress, UserProfile
-import datetime
+from ..models import UserAddress, UserProfile
+from ..forms import EditAddress, EditPersonalInfo
+
 
 # Create your tests here.
 
 
 class TestHomeViews(TestCase):
     """
-    Tests for all home views.
+    Tests for all home app views.
     """
     data = {'email': 'tommypaul147@gmail.com',
             'email2': 'tommypaul147@gmail.com',
@@ -18,24 +19,36 @@ class TestHomeViews(TestCase):
             'password2': 'holly!123',
             'username': 'jimmy147'}
 
-    def setUp(self):
-        # Sign-up new user 
+    data2 = {'email': 'tommypaul1478@gmail.com',
+             'email2': 'tommypaul1478@gmail.com',
+             'password1': 'holly!1234',
+             'password2': 'holly!1234',
+             'username': 'jimmy1479'}
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Sign-up new users 
         client = Client()
-        client.post('/accounts/signup/', self.data)
-        # verify user email
+        client.post('/accounts/signup/', cls.data)
+        client.post('/accounts/signup/', cls.data2)
+        # verify user emails
         user_email = EmailAddress.objects.get(user='tommypaul147@gmail.com')
         user_email.verified = True
         user_email.save()
+        user_email2 = EmailAddress.objects.get(user='tommypaul1478@gmail.com')
+        user_email2.verified = True
+        user_email2.save()
         # create profile for user
         user = CustomUserModel.objects.get(email=user_email.email)
-        UserProfile.objects.create(username=user,
+        UserProfile.objects.create(user=user,
                                    first_name='jimmy',
                                    last_name='knighton',
                                    date_of_birth='1926-03-25',
                                    sex='male',
                                    bio='I enjoy all outdoor activities.')
         # create address for user
-        UserAddress.objects.create(username=user.profile,
+        UserAddress.objects.create(user_profile=user.profile,
                                    address_line_one='57 portland gardens',
                                    city_or_town='chadwell heath',
                                    county='essex',
@@ -136,26 +149,165 @@ class TestHomeViews(TestCase):
     #     """
     #     """
 
-    def test_profile_template_rendering(self):
+    def test_profile_template_rendering_not_first_login(self):
         """
+        Tests the view logic and that the profile template is rendered with the correct context
+        for a user, for who it is not their first login.
         """
         client = Client()
-        # sign-in user
+        # sign-in user (not first login)
         client.login(email=self.data['email'],
                      password=self.data['password1'])
         response = client.get('/home/')
         self.assertTemplateUsed(response, 'home/profile.html')
+        self.assertContains(response, response.context['profile'], html=True)
         expected_user_profile_data = {'first name': 'jimmy',
                                       'last name': 'knighton',
-                                      'date of birth': datetime.date(1926, 3, 25),
+                                      'date of birth': '25/03/1926',
                                       'sex': 'male', 'bio': 'I enjoy all outdoor activities.'}.items()
         expected_user_address_data = {'Address line 1': '57 portland gardens',
                                       'City/Town': 'chadwell heath',
                                       'County': 'essex',
                                       'Postcode': 'rm65uh'}.items()
 
-        sub_context = {'user_profile_data': expected_user_profile_data,
-                       'user_address_data': expected_user_address_data}
+        sub_context = {'first_login': False,
+                       'user_profile_data': expected_user_profile_data,
+                       'user_address_data': expected_user_address_data,
+                       'button1_name': 'Done',
+                       'button2_name': 'Cancel'}
         for key, value in sub_context.items():
             with self.subTest(key):
                 self.assertEqual(response.context[key], value)
+    
+    def test_profile_template_rendering_first_login(self):
+        """
+        Tests the view logic and that the profile template is rendered with the correct context
+        for a user, for who it is their first login.
+        """
+        client = Client()
+        # sign-in user (first login)
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        response = client.get('/home/')
+        self.assertTemplateUsed(response, 'home/profile.html')
+        self.assertContains(response, response.context['profile'], html=True)
+        expected_user_profile_data = {'first name': '',
+                                      'last name': '',
+                                      'date of birth': '',
+                                      'sex': '', 'bio': ''}.items()
+        expected_user_address_data = {'Address line 1': '',
+                                      'City/Town': '',
+                                      'County': '',
+                                      'Postcode': ''}.items()
+
+        sub_context = {'first_login': True,
+                       'user_profile_data': expected_user_profile_data,
+                       'user_address_data': expected_user_address_data,
+                       'button1_name': 'Done',
+                       'button2_name': 'Cancel'}
+        for key, value in sub_context.items():
+            with self.subTest(key):
+                self.assertEqual(response.context[key], value)
+
+    def test_edit_profile_modal_template_rendering_not_first_login(self):
+        """
+        Tests the view logic and that the edit profile modal template is rendered with the correct context
+        for a user, for who it is not their first login.
+        """
+        client = Client()
+        # sign-in user (not first login)
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        response = client.get('/home/')
+        self.assertTemplateUsed(response, 'base_modal.html')
+        self.assertTemplateUsed(response, 'home/edit_profile_modal.html')
+        self.assertContains(response, response.context['edit_profile_modal'], html=True)
+
+        sub_context = {'first_login': False}
+        for key, value in sub_context.items():
+            with self.subTest(key):
+                self.assertEqual(response.context[key], value)
+
+    def test_edit_profile_modal_template_rendering_first_login(self):
+        """
+        Tests the view logic and that the edit profile modal template is rendered with the correct context
+        for a user, for who it is their first login.
+        """
+        client = Client()
+        # sign-in user (first login)
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        response = client.get('/home/')
+        self.assertTemplateUsed(response, 'base_modal.html')
+        self.assertTemplateUsed(response, 'home/edit_profile_modal.html')
+        self.assertContains(response, response.context['edit_profile_modal'], html=True)
+
+        sub_context = {'first_login': True}
+        for key, value in sub_context.items():
+            with self.subTest(key):
+                self.assertEqual(response.context[key], value)
+
+    def test_edit_profile_form_template_rendering_not_first_login(self):
+        """
+        Tests the view logic and that the edit profile form template is rendered with the correct context
+        for a user, for who it is not their first login (has profile).
+        """
+        client = Client()
+        # sign-in user (not first login)
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        response = client.get('/home/')
+        # checking the personal_info_form context variable
+        user = response.context['user']
+        user_profile = user.profile
+        user_personal_info_data = user_profile.retrieve_field_data(False)
+        user_personal_info_data['date_of_birth'] = user_personal_info_data['date_of_birth'].strftime('%d/%m/%Y')
+        form = EditPersonalInfo(initial=user_personal_info_data)
+        self.assertHTMLEqual(str(response.context['personal_info_form']), str(form))
+        # checking the address_form context variable
+        user_address = user_profile.address
+        user_address_data = user_address.retrieve_field_data(False)
+        form = EditAddress(initial=user_address_data)
+        self.assertHTMLEqual(str(response.context['address_form']), str(form))
+
+        sub_context = {'first_login': False}
+        for key, value in sub_context.items():
+            with self.subTest(key):
+                self.assertEqual(response.context[key], value)
+
+    def test_edit_profile_form_template_rendering_first_login(self):
+        """
+        Tests the view logic and that the edit profile form template is rendered with the correct context
+        for a user, for who it is their first login (has no profile).
+        """
+        client = Client()
+        # sign-in user (first login)
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        response = client.get('/home/')
+        # checking the personal_info_form context variable
+        form = EditPersonalInfo()
+        self.assertHTMLEqual(str(response.context['personal_info_form']), str(form))
+        # checking the address_form context variable
+        form = EditAddress()
+        self.assertHTMLEqual(str(response.context['address_form']), str(form))
+
+        sub_context = {'first_login': True}
+        for key, value in sub_context.items():
+            with self.subTest(key):
+                self.assertEqual(response.context[key], value)
+
+    def test_response_external_get_request_profile_form_view(self):
+        """
+        Tests that if a user tries to access the ProfileFormView
+        via a GET request to its url, they are redirected.
+        """
+        # unauthenticated user
+        client = Client()
+        response = client.get('/home/profile_form/', follow=True)
+        self.assertRedirects(response, '/accounts/login/?next=/home/profile_form/')
+        # authenticated user
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        response = client.get('/home/profile_form/', follow=True)
+        self.assertRedirects(response, '/home/')
