@@ -347,4 +347,12 @@ describe("Test that the 'trap focus within open modal' event listeners work", ()
         expect(document.activeElement).toBe(modal);
        }
     })
+    test('the modal is given focus when its modal container gains focus', () => {
+        for (let modal of modals) {
+         let parentModalContainer = modal.parentElement
+         let focusEvent = new Event('focus');
+         parentModalContainer.dispatchEvent(focusEvent);
+         expect(document.activeElement).toBe(modal);
+        }
+     })
 })

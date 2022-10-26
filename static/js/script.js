@@ -1,23 +1,30 @@
-// JS Section: DOM element constants:
+// JS Section: DOM element effective constants:
 
-const moreMenuContainer = document.getElementById('more_menu_container');
-const moreMenu = document.getElementById('more_menu');
-const moreMenuButtons = document.getElementsByClassName('more_menu_button');
-const menuItems = document.getElementsByClassName('menu_item');
-const signupButton = document.querySelector("[name = 'sign-up']");
-const signinButton = document.querySelector("[name = 'sign-in']");
-const slideshowImages = [...document.getElementsByClassName('slideshow_images')];
-const linksAndButtons = [...document.getElementsByTagName('a'), ...document.getElementsByTagName('button')];
-const focusable = [...linksAndButtons, ...document.querySelectorAll('[tabindex="0"]')];
-const uniqueFocusable = [...new Set(focusable)];
-const helpTextIcons = [...document.querySelectorAll('[data-icon-type = "help"]')];
-const helpText = [...document.getElementsByClassName('help_text')];
-const matchingIcons = [...document.getElementsByClassName('matching_icon')];
-const expandIcons = [...document.querySelectorAll('[data-icon-type ^= "expand"]')];
-const editButton = document.getElementById('edit');
-const modalContainers = [...document.getElementsByClassName('modal_container')];
-const modals = [...document.getElementsByClassName('modal')]
-const closeModalButtons = [...document.getElementsByClassName('close_button')];
+// defined with let to allow re-application of event listeners to updated dom elements
+let moreMenuContainer = document.getElementById('more_menu_container');
+let moreMenu = document.getElementById('more_menu');
+let moreMenuButtons = document.getElementsByClassName('more_menu_button');
+let menuItems = document.getElementsByClassName('menu_item');
+let signupButton = document.querySelector("[name = 'sign-up']");
+let signinButton = document.querySelector("[name = 'sign-in']");
+let slideshowImages = [...document.getElementsByClassName('slideshow_images')];
+let linksAndButtons = [...document.getElementsByTagName('a'), ...document.getElementsByTagName('button')];
+let focusable = [...linksAndButtons, ...document.querySelectorAll('[tabindex="0"]')];
+let uniqueFocusable = [...new Set(focusable)];
+let helpTextIcons = [...document.querySelectorAll('[data-icon-type = "help"]')];
+let helpText = [...document.getElementsByClassName('help_text')];
+let matchingIcons = [...document.getElementsByClassName('matching_icon')];
+let expandIcons = [...document.querySelectorAll('[data-icon-type ^= "expand"]')];
+let editButton = document.getElementById('edit');
+let modalContainers = [...document.getElementsByClassName('modal_container')];
+let modals = [...document.getElementsByClassName('modal')]
+let closeModalButtons = [...document.getElementsByClassName('close_button')];
+let editPersonalInfoForm = document.getElementById('personal_info_form');
+let editAddressForm = document.getElementById('address_form');
+let editProfileModal = document.getElementById('edit_profile_modal');
+if (editProfileModal) {
+    var editProfileModalDoneButton = editProfileModal.lastElementChild.children[0]
+}
 
 // JS Section: Event listeners:
 
@@ -38,8 +45,6 @@ function createMoreMenuButtonsListeners() {
     }
 }
 
-createMoreMenuButtonsListeners();
-
 /** Adds a click event listener to the more menu background container
  * element. Alows the more menu to be closed when clicking anywhere
  * not on it. 
@@ -55,8 +60,6 @@ function createMoreMenuContainerListener() {
         }
     })
 }
-
-createMoreMenuContainerListener();
 
 /** Adds mousenter and mouseleave event listeners to the
  * more menu items to provide hover feedback. Feedback
@@ -74,8 +77,6 @@ createMoreMenuContainerListener();
     }
 }
 
-menuItemHoverFeedbackListeners();
-
 /** Adds click event listeners to certain elements to provide clicked/pressed feedback. Feedback
  * entails a temporary background and font colour change.
  * @summary Adds click event listeners to chosen elements to provide clicked feedback.
@@ -90,8 +91,6 @@ menuItemHoverFeedbackListeners();
         })
     }
 }
-
-clickedFeedbackListeners();
 
 /** Adds enter key press event listeners to focusable elements, to allow
  * clicking of the element with the enter key. Also provides feedback
@@ -114,8 +113,6 @@ clickedFeedbackListeners();
         })
     }
 }
-
-enterKeyListeners();
 
 /** Adds click event listener to the sign-up button on the
  * landing page. When clicked redirects the user to the
@@ -174,8 +171,6 @@ function expandIconListeners() {
     }
 }
 
-expandIconListeners();
-
 /** Adds a click event listener to the edit profile button.
  * When clicked the edit profile modal is opened with focus, and the background
  * scrollbar is hidden.
@@ -226,8 +221,6 @@ function helpTextIconsListeners() {
     }
 }
 
-helpTextIconsListeners();
-
 /** Adds input event listeners to a pair of related input fields, with one having a matching/no_match icon indicator.
  *  After an input event, the input values of both
  * fields are compared and the display of the indicator icons altered using the compareFields handler.
@@ -247,8 +240,6 @@ function formFieldChangeListeners() {
         }
     }
 }
-
-formFieldChangeListeners();
 
 // JS Subsection: modal related event listeners:
 
@@ -283,7 +274,15 @@ function trapFocusModalListeners() {
         lastButtonInModal.addEventListener('blur', () => {
             modal.focus();
         })
+        let parentModalContainer = modal.parentElement
+        parentModalContainer.addEventListener('focus', () => {
+            modal.focus();
+        })
     }
+}
+
+function addEditProfileModalDonebuttonListeners() {
+    editProfileModalDoneButton.addEventListener('click', editProfileFormFetchHandler)
 }
 
 // JS Section: Functions:
@@ -371,26 +370,174 @@ function slideshowHandler() {
     imageFadeIn(nextImage, currentImage);
 }
 
-// page specific executed code
+/**Recreates all the event listeners
+ * for shared elements across all pages.
+ * Necessary when the DOM is dynamically
+ * updated.
+ * @summary Recreates event listeners shared across all pages.
+ */
+function executeAllPageAddListenerFunctions() {
+    createMoreMenuButtonsListeners();
+    createMoreMenuContainerListener();
+    menuItemHoverFeedbackListeners();
+    clickedFeedbackListeners();
+    enterKeyListeners();
+    expandIconListeners();
+    helpTextIconsListeners();
+    formFieldChangeListeners();
+}
 
-if (document.getElementsByTagName('title')[0].textContent === 'Eventabase') {
-    // Initial delay so that initally displayed image does not fade out immediately
-    setTimeout(slideshowHandler, 8000);
-    
+/**Recreates all the event listeners
+ * for the HomePage.
+ * Necessary when the DOM is dynamically
+ * updated.
+ * @summary Recreates event listeners for the HomePage.
+ */
+function executeAllHomePageAddListenersFunctions() {
+    editButtonListeners();
+    closeModalButtonListeners();
+    trapFocusModalListeners();
+    addEditProfileModalDonebuttonListeners();
+}
+
+/**Recreates all the event listeners
+ * for the LandingPage.
+ * Necessary when the DOM is dynamically
+ * updated.
+ * @summary Recreates event listeners for the LandingPage.
+ */
+function executeAllLandingPageAddListenersFunctions() {
     signupButtonEventListener();
     signinButtonEventListener();
 }
 
-if (document.getElementsByTagName('title')[0].textContent === 'Home') {
-    editButtonListeners();
-    closeModalButtonListeners();
-    trapFocusModalListeners();
+/**Recreates all DOM element variables.
+ * Necessary when the DOM is dynamically
+ * updated.
+ * @summary Recreates all DOM element variables.
+ */
+function refreshDomElementVariables() {
+    moreMenuContainer = document.getElementById('more_menu_container');
+    moreMenu = document.getElementById('more_menu');
+    moreMenuButtons = document.getElementsByClassName('more_menu_button');
+    menuItems = document.getElementsByClassName('menu_item');
+    signupButton = document.querySelector("[name = 'sign-up']");
+    signinButton = document.querySelector("[name = 'sign-in']");
+    slideshowImages = [...document.getElementsByClassName('slideshow_images')];
+    linksAndButtons = [...document.getElementsByTagName('a'), ...document.getElementsByTagName('button')];
+    focusable = [...linksAndButtons, ...document.querySelectorAll('[tabindex="0"]')];
+    uniqueFocusable = [...new Set(focusable)];
+    helpTextIcons = [...document.querySelectorAll('[data-icon-type = "help"]')];
+    helpText = [...document.getElementsByClassName('help_text')];
+    matchingIcons = [...document.getElementsByClassName('matching_icon')];
+    expandIcons = [...document.querySelectorAll('[data-icon-type ^= "expand"]')];
+    editButton = document.getElementById('edit');
+    modalContainers = [...document.getElementsByClassName('modal_container')];
+    modals = [...document.getElementsByClassName('modal')]
+    closeModalButtons = [...document.getElementsByClassName('close_button')];
+    editPersonalInfoForm = document.getElementById('personal_info_form');
+    editAddressForm = document.getElementById('address_form');
+    editProfileModal = document.getElementById('edit_profile_modal');
+    if (editProfileModal) {
+        editProfileModalDoneButton = editProfileModal.lastElementChild.children[0];
+    }  
 }
+
+// JS Subsection: Fetch requests:
+
+/** Fetch POST request handler for submitting
+ *  the edit profile form. Updates page
+ *  when a valid form is submitted.
+ * @summary Fetch POST request handler for edit profile form submission.
+ */
+ async function editProfileFormFetchHandler() {
+    // form data for the first pair of requests
+    let personalInfoFormData = new FormData(editPersonalInfoForm);
+    personalInfoFormData.append('validate', 'true');
+    let addressFormData = new FormData(editAddressForm);
+    addressFormData.append('validate', 'true');
+    try {
+        // For aquiring the form csrf token
+    const csrftoken = Cookies.get('csrftoken');
+    
+    // first two requests to check each form's validity
+    let firstRequest = new Request('profile_form/',
+                                   {method: 'POST', headers: {'X-CSRFToken': csrftoken},
+                                   mode: 'same-origin',
+                                   body: personalInfoFormData});
+    let firstResponse = await fetch(firstRequest);
+    let firstResponseJson = await firstResponse.json();
+
+    let secondRequest = new Request('profile_form/',
+                                    {method: 'POST', headers: {'X-CSRFToken': csrftoken},
+                                    mode: 'same-origin',
+                                    body: addressFormData});
+    let secondResponse = await fetch(secondRequest);
+    let secondResponseJson = await secondResponse.json();
+    
+    // If both forms are valid submit both forms again to be postprocessed and saved.
+    // Update profile section.
+    if (firstResponseJson.valid === 'true' && secondResponseJson.valid === 'true') {
+        personalInfoFormData.set('validate', 'false');
+        addressFormData.set('validate', 'false')
+        let thirdRequest = new Request('profile_form/',
+                                   {method: 'POST', headers: {'X-CSRFToken': csrftoken},
+                                   mode: 'same-origin',
+                                   body: personalInfoFormData});
+        let thirdResponse = await fetch(thirdRequest);
+        let thirdResponseJson = await thirdResponse.json();
+
+        let fourthRequest = new Request('profile_form/',
+                                    {method: 'POST', headers: {'X-CSRFToken': csrftoken},
+                                    mode: 'same-origin',
+                                    body: addressFormData});
+        let fourthResponse = await fetch(fourthRequest);
+        let fourthResponseJson = await fourthResponse.json();
+
+        editProfileModal.parentElement.previousElementSibling.innerHTML = fourthResponseJson.profile;
+        refreshDomElementVariables();
+        executeAllPageAddListenerFunctions();
+        executeAllHomePageAddListenersFunctions();
+        //close edit profile modal
+        editProfileModal.firstElementChild.firstElementChild.firstElementChild.click();
+    }
+    
+    // update 'edit profile modal' forms
+    editPersonalInfoForm.innerHTML = firstResponseJson.form;
+    editAddressForm.innerHTML = secondResponseJson.form;
+    refreshDomElementVariables();
+    executeAllPageAddListenerFunctions();
+    executeAllHomePageAddListenersFunctions();
+    } 
+    catch (error) {
+        console.error(error.message);
+    }
+}
+
+
+// JS Section: Page specific executed code
+
+// all pages:
+executeAllPageAddListenerFunctions();
+
+// landing page
+if (document.getElementsByTagName('title')[0].textContent === 'Eventabase') {
+    // Initial delay so that initally displayed image does not fade out immediately
+    setTimeout(slideshowHandler, 8000);
+    executeAllLandingPageAddListenersFunctions();
+}
+
+// homepage
+if (document.getElementsByTagName('title')[0].textContent === 'Home') {
+    executeAllHomePageAddListenersFunctions();    
+}
+
+// JS Section: code for jest testing
 
 // uncommented during testing
 // module.exports = {
 //     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
 //     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
 //     helpText, matchingIcons, signupButton, signinButton, expandIcons, editButton, modalContainers, modals,
-//     closeModalButtons
+//     closeModalButtons, editProfileModal, editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners
 // };
