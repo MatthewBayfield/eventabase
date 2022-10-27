@@ -1,11 +1,9 @@
 <div class="modal_container" tabindex="0" {% if first_login%}style="display:block"{% endif %}>
     <div id="{{modal}}" class="modal" role="dialog" aria-modal="true" tabindex="0" aria-label="edit profile modal">
         <div>
-            {% if not first_login %}
-                <div class="close_button">
+                <div class="close_button" {% if first_login %}style="display:hidden"{% endif %}>
                     <span tabindex="0" aria-label="close modal" role="button"><i class="fa-solid fa-xmark"></i> </span> 
                 </div>
-            {% endif %}
             <h2>{% block modal_title %}Modal{% endblock %}</h2>
         </div>
         {% block main %}
