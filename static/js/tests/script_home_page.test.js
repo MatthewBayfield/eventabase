@@ -8,7 +8,7 @@ let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_home_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
 let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
-     modalContainers, modals, editButton, closeModalButtons} = require('../script.js');
+     modalContainers, modals, editButton, closeModalButtons, modalButtons, editProfileModalDoneButton, editProfileModal} = require('../script.js');
 // mock functions
 const log = jest.fn();
 
@@ -329,7 +329,7 @@ describe('Test that the close modal buttons work', () => {
         // scrollbar is hidden when a modal is open.
         document.body.style.overflowY = 'hidden';
         // only edit profile modal exists at the moment
-        let button = editButton;
+        let button = editProfileModal.firstElementChild.firstElementChild;
         let clickableButtonRegion = button.firstElementChild;
         clickableButtonRegion.click();
         expect(document.activeElement).toBe(editButton);
@@ -355,4 +355,45 @@ describe("Test that the 'trap focus within open modal' event listeners work", ()
          expect(document.activeElement).toBe(modal);
         }
      })
+})
+
+describe('Test that the cancel modal buttons work', () => {
+    beforeEach(() => {
+        // simulate open modal containers
+        for (let container of modalContainers) {
+            container.style.display = 'block';
+        }
+    })
+
+    test('that the modal container is no longer visible', () => {
+        for (let button of modalButtons) {
+            if (button.getAttribute('name') === 'Cancel') {
+                // scrollbar is hidden when a modal is open.
+                document.body.style.overflowY = 'hidden';
+                let buttonModalContainer = button.parentElement.parentElement;
+                button.click();
+                expect(buttonModalContainer.hasAttribute('style')).toBe(false);
+            }
+        }
+    })
+
+    test('that the body scrollbar is no longer hidden', () => {
+        for (let button of modalButtons) {
+            if (button.getAttribute('name') === 'Cancel') {
+                // scrollbar is hidden when a modal is open.
+                document.body.style.overflowY = 'hidden';
+                button.click();
+                expect(document.body.hasAttribute('style')).toBe(false);
+            }
+        }    
+    })
+
+    test('that the open modal button has focus after the modal is closed', () => {
+        let editProfileModalCancelButon = editProfileModalDoneButton.nextElementSibling
+        // scrollbar is hidden when a modal is open.
+        document.body.style.overflowY = 'hidden';
+        // only edit profile modal exists at the moment
+        editProfileModalCancelButon.click();
+        expect(document.activeElement).toBe(editButton);
+    })
 })

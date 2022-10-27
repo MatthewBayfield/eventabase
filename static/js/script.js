@@ -23,8 +23,9 @@ let editPersonalInfoForm = document.getElementById('personal_info_form');
 let editAddressForm = document.getElementById('address_form');
 let editProfileModal = document.getElementById('edit_profile_modal');
 if (editProfileModal) {
-    var editProfileModalDoneButton = editProfileModal.lastElementChild.children[0]
+    var editProfileModalDoneButton = editProfileModal.lastElementChild.children[0];
 }
+let modalButtons = [...document.getElementsByClassName('modal_button')];
 
 // JS Section: Event listeners:
 
@@ -261,6 +262,24 @@ function closeModalButtonListeners() {
     }
 }
 
+/**
+ * @summary Adds click listener to modal cancel buttons to close modals.
+ */
+function createModalCancelButtonListeners() {
+    for (let button of modalButtons) {
+        if (button.getAttribute('name') === 'Cancel') {
+            button.addEventListener('click', () => {
+                let parentModalContainer = button.parentElement.parentElement.parentElement;
+                parentModalContainer.removeAttribute('style');
+                document.body.removeAttribute('style');
+                if (parentModalContainer.firstElementChild.id === 'edit_profile_modal') {
+                editButton.focus(); 
+                }
+            })
+        }
+    }
+}
+
 /** Adds blur event listener to the last button in a modal. Ensures focus remains on
  * elements within the modal, and cannot exit it by pressing the tab key.
  * @summary Creates event listeners that trap focus within an open modal.
@@ -280,7 +299,10 @@ function trapFocusModalListeners() {
         })
     }
 }
-
+/** Adds click event listener to the edit profile modal done
+ * button, to act as the form submission button.
+ * @summary Click listener to submit form.
+ */
 function addEditProfileModalDonebuttonListeners() {
     editProfileModalDoneButton.addEventListener('click', editProfileFormFetchHandler)
 }
@@ -398,6 +420,7 @@ function executeAllHomePageAddListenersFunctions() {
     closeModalButtonListeners();
     trapFocusModalListeners();
     addEditProfileModalDonebuttonListeners();
+    createModalCancelButtonListeners();
 }
 
 /**Recreates all the event listeners
@@ -440,7 +463,8 @@ function refreshDomElementVariables() {
     editProfileModal = document.getElementById('edit_profile_modal');
     if (editProfileModal) {
         editProfileModalDoneButton = editProfileModal.lastElementChild.children[0];
-    }  
+    }
+    modalButtons = [...document.getElementsByClassName('modal_button')];  
 }
 
 // JS Subsection: Fetch requests:
@@ -550,9 +574,10 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 // JS Section: code for jest testing
 
 // uncommented during testing
-module.exports = {
-    moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
-    slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
-    helpText, matchingIcons, signupButton, signinButton, expandIcons, editButton, modalContainers, modals,
-    closeModalButtons, editProfileModal, editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners
-};
+// module.exports = {
+//     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
+//     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
+//     helpText, matchingIcons, signupButton, signinButton, expandIcons, editButton, modalContainers, modals,
+//     closeModalButtons, editProfileModal, editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
+//     modalButtons
+// };
