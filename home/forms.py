@@ -61,14 +61,18 @@ class EditAddress(ModelForm, FormFieldMixin):
         url = f'https://api.geoapify.com/v1/geocode/search?text={text_param_url_safe}&lang=en&filter=countrycode:gb&format=json&apiKey={API_KEY}'
         headers = CaseInsensitiveDict()
         headers["Accept"] = "application/json"
-
-        response = requests.get(url, headers=headers)
-        # First result used. Accuracy very much depends on the provided user address validity. May filter results further in the future.
-        first_result = response.json()['results'][0]
+        try:
+            response = requests.get(url, headers=headers)
+            # First result used. Accuracy very much depends on the provided user address validity. May filter results further in the future.
+            first_result = response.json()['results'][0]
+        except (IndexError, KeyError, AttributeError) as error:
+            print(error)
+            return True
         latitude = round(float(first_result['lat']), 4)
         longitude = round(float(first_result['lon']), 4)
         self.instance.latitude = latitude
         self.instance.longitude = longitude
+
 
 
 class EditPersonalInfo(ModelForm, FormFieldMixin):

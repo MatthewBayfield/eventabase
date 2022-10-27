@@ -4,7 +4,6 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.core.exceptions import ObjectDoesNotExist
 from django.template.loader import get_template, render_to_string
 from allauth.account.decorators import verified_email_required
 from .forms import EditAddress, EditPersonalInfo
@@ -29,10 +28,9 @@ class HomeViewsMixin():
             ObjectDoesNotExist: if a profile does not exist.
         """
         user = self.request.user
-        try:
+        if UserProfile.objects.filter(user=user).exists():
             return user.profile
-        except ObjectDoesNotExist:
-            return None
+        return None
             
     def render_profile_template(self, to_string=False):
         """
@@ -53,10 +51,18 @@ class HomeViewsMixin():
             self.first_login = False
             self.further_context['first_login'] = self.first_login
             user_profile_data.pop('user')
-            user_address = user_profile_data.pop('address')
-            user_address_data = user_address.retrieve_field_data()
-            for field in ['user profile', 'latitude', 'longitude']:
-                user_address_data.pop(field)
+            if UserAddress.objects.filter(user_profile=user_profile).exists():
+                user_profile_data.pop('address')
+                user_address = UserAddress.objects.get(user_profile=user_profile)
+                user_address_data = user_address.retrieve_field_data()
+                for field in ['user profile', 'latitude', 'longitude']:
+                    user_address_data.pop(field)
+            else:
+                user_address = user_profile_data.pop('address')
+                user_address_data = UserAddress.retrieve_field_names()
+                user_address_data = {key: '' for key in user_address_data}
+                for field in ['user profile', 'latitude', 'longitude']:
+                    user_address_data.pop(field)
         else:
             self.first_login = True
             user_profile_data = UserProfile.retrieve_field_names()
@@ -261,11 +267,17 @@ class ProfileFormView(FormView, HomeViewsMixin):
             else:
                 if form.has_changed():
                     form.post_clean_processing(user_profile=user_profile)
-                    form.set_coordintes()
-                    form.save()
+                    error = form.set_coordintes()
+                    if not error:
+                        form.save()
+                    else:
+                        if self.first_login:
+                            user_profile.delete()
+                        data.update({'error': 'true'})
                 rendered_profile_template = self.render_profile_template(to_string=True)[0]
                 trimmed_rendered_profile_template = rendered_profile_template[rendered_profile_template.index('<div class="left'):-6]
                 data.update({'profile': trimmed_rendered_profile_template})
+
         rendered_form = render_to_string(template_name='home/edit_profile_form.html', context=form.get_context(), request=request)
         data.update({'form': rendered_form, 'valid': 'false'})
         return JsonResponse(data)

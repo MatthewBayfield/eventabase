@@ -1,9 +1,13 @@
 from django.test import TestCase
 from django.test import Client
+from django.urls import reverse
 from allauth.account.models import EmailAddress
 from landing_page.models import CustomUserModel
 from ..models import UserAddress, UserProfile
 from ..forms import EditAddress, EditPersonalInfo
+from ..views import HomeViewsMixin
+import html
+
 
 
 # Create your tests here.
@@ -13,6 +17,7 @@ class TestHomeViews(TestCase):
     """
     Tests for all home app views.
     """
+    maxDiff = None
     data = {'email': 'tommypaul147@gmail.com',
             'email2': 'tommypaul147@gmail.com',
             'password1': 'holly!123',
@@ -24,6 +29,16 @@ class TestHomeViews(TestCase):
              'password1': 'holly!1234',
              'password2': 'holly!1234',
              'username': 'jimmy1479'}
+    
+    info = {'first_name': 'mark',
+            'last_name': 'taylor',
+            'date_of_birth': '19/11/1993',
+            'sex': 'male',
+            'bio': 'I like sports'}
+    address = {'address_line_one': '58 Stanley Avenue',
+               'city_or_town': 'GIdea Park',
+               'county': 'ESSEX',
+               'postcode': 'Rm26Bt'}
 
     @classmethod
     def setUpClass(cls):
@@ -176,7 +191,7 @@ class TestHomeViews(TestCase):
                        'button1_name': 'Done',
                        'button2_name': 'Cancel'}
         for key, value in sub_context.items():
-            with self.subTest(key):
+            with self.subTest(msg=key):
                 self.assertEqual(response.context[key], value)
     
     def test_profile_template_rendering_first_login(self):
@@ -311,3 +326,213 @@ class TestHomeViews(TestCase):
                      password=self.data['password1'])
         response = client.get('/home/profile_form/', follow=True)
         self.assertRedirects(response, '/home/')
+
+    def test_response_post_request_profile_form_view_invalid_forms_new_user(self):
+        """
+        Tests that a post request with invalid form data, and using a new user, receives the expected responses.
+        """
+        client = Client()
+        # new_user sign-in with data2
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        info_form_data = self.info.copy()
+        info_form_data['first_name'] = '!'
+        rendered_personal_info_form = EditPersonalInfo(info_form_data).render()
+        info_form_data.update({'validate': 'true'})
+        # submit first component form
+        response = client.post(reverse('home:profile_form_view'), data=info_form_data, mode='same_origin')
+        response_json = response.json()
+        # check response 
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_json['valid'], 'false')
+        self.assertHTMLEqual(response_json['form'], rendered_personal_info_form)
+        address_form_data = self.address.copy()
+        address_form_data['county'] = '!'
+        address_form_data.update({'validate': 'true'})
+        rendered_address_form_data = EditAddress(address_form_data).render()
+        # submit second component form
+        response = client.post(reverse('home:profile_form_view'), data=address_form_data, mode='same_origin')
+        response_json = response.json()
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_json['valid'], 'false')
+        self.assertHTMLEqual(response_json['form'], rendered_address_form_data)
+        
+    def test_response_post_request_profile_form_view_valid_forms_new_user(self):
+        """
+        Tests that a post request with valid form data, and using a new user, receives the expected responses.
+        """
+        client = Client()
+        # new_user sign-in with data2
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        info_form_data = self.info.copy()
+        rendered_personal_info_form = EditPersonalInfo(info_form_data).render()
+        info_form_data.update({'validate': 'true'})
+        # submit first component form
+        response = client.post(reverse('home:profile_form_view'), data=info_form_data, mode='same_origin')
+        response_json = response.json()
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_json['valid'], 'true')
+        self.assertHTMLEqual(response_json['form'], rendered_personal_info_form)
+        address_form_data = self.address.copy()
+        address_form_data.update({'validate': 'true'})
+        rendered_address_form_data = EditAddress(address_form_data).render()
+        # submit second component form
+        response = client.post(reverse('home:profile_form_view'), data=address_form_data, mode='same_origin')
+        response_json = response.json()
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_json['valid'], 'true')
+        self.assertHTMLEqual(response_json['form'], rendered_address_form_data)
+        info_form_data['validate'] = 'false'
+        # send requests to save modelform instances for both valid component forms
+        response = client.post(reverse('home:profile_form_view'), data=info_form_data, mode='same_origin')
+        response_json = response.json()
+        self.assertEqual(response.status_code, 200)
+        address_form_data['validate'] = 'false'
+        response = client.post(reverse('home:profile_form_view'), data=address_form_data, mode='same_origin')
+        response_json = response.json()
+        self.assertEqual(response.status_code, 200)
+        # check the user profile section, and thus the various models, have been updated.
+        rendered_home_page = client.get('/home/')
+        self.assertContains(rendered_home_page, response_json['profile'], html=True)
+
+    def test_response_post_request_profile_form_view_valid_forms_existing_user(self):
+        """
+        Tests that a post request with valid form data, and using an existing user, receives the expected responses.
+        """
+        client = Client()
+        # existing user sign-in with data
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        # submitting both forms unchanged to test all code bracnhes across all tests.
+        info_form_data = self.info.copy()
+        rendered_personal_info_form = EditPersonalInfo(info_form_data).render()
+        info_form_data.update({'validate': 'true'})
+        # submit first component form
+        response = client.post(reverse('home:profile_form_view'), data=info_form_data, mode='same_origin')
+        response_json = response.json()
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_json['valid'], 'true')
+        self.assertHTMLEqual(response_json['form'], rendered_personal_info_form)
+        address_form_data = self.address.copy()
+        address_form_data.update({'validate': 'true'})
+        rendered_address_form_data = EditAddress(address_form_data).render()
+        # submit second component form
+        response = client.post(reverse('home:profile_form_view'), data=address_form_data, mode='same_origin')
+        response_json = response.json()
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_json['valid'], 'true')
+        self.assertHTMLEqual(response_json['form'], rendered_address_form_data)
+        info_form_data['validate'] = 'false'
+        # send requests to save modelform instances for both valid component forms
+        response = client.post(reverse('home:profile_form_view'), data=info_form_data, mode='same_origin')
+        response_json = response.json()
+        self.assertEqual(response.status_code, 200)
+        address_form_data['validate'] = 'false'
+        response = client.post(reverse('home:profile_form_view'), data=address_form_data, mode='same_origin')
+        response_json = response.json()
+        self.assertEqual(response.status_code, 200)
+        # check the user profile section, and thus the various models, have been updated.
+        rendered_home_page = client.get('/home/')
+        self.assertContains(rendered_home_page, response_json['profile'], html=True)
+        
+    def test_response_post_request_profile_form_view_invalid_forms_existing_user(self):
+        """
+        Tests that a post request with invalid form data, and using an existing user, receives the expected responses.
+        """
+        client = Client()
+        # existing user sign-in with data
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        info_form_data = self.info.copy()
+        info_form_data['first_name'] = '!'
+        rendered_personal_info_form = EditPersonalInfo(info_form_data).render()
+        info_form_data.update({'validate': 'true'})
+        # submit first component form
+        response = client.post(reverse('home:profile_form_view'), data=info_form_data, mode='same_origin')
+        response_json = response.json()
+        # check response 
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_json['valid'], 'false')
+        self.assertHTMLEqual(response_json['form'], rendered_personal_info_form)
+        address_form_data = self.address.copy()
+        address_form_data['county'] = '!'
+        address_form_data.update({'validate': 'true'})
+        rendered_address_form_data = EditAddress(address_form_data).render()
+        # submit second component form
+        response = client.post(reverse('home:profile_form_view'), data=address_form_data, mode='same_origin')
+        response_json = response.json()
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_json['valid'], 'false')
+        self.assertHTMLEqual(response_json['form'], rendered_address_form_data)
+
+    def test_response_post_request_profile_form_view_by_existing_user_for_api_error_(self):
+        """
+        Tests that a post request with valid form data for existing user, during an API related error, receives the expected responses.
+        """
+        client = Client()
+        # existing user sign-in with data
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        info_form_data = self.info.copy()
+        info_form_data.update({'validate': 'true', 'bio': 'I like comedy events.'})
+        # submit first component form
+        response = client.post(reverse('home:profile_form_view'), data=info_form_data, mode='same_origin')
+        response_json = response.json()
+        address_form_data = self.address.copy()
+        address_form_data.update({'validate': 'true', 'county': 20*'f', 'city_or_town': 20*'f',
+                                  'address_line_one': 20*'f'})
+        # submit second component form
+        response = client.post(reverse('home:profile_form_view'), data=address_form_data, mode='same_origin')
+        response_json = response.json()
+        info_form_data['validate'] = 'false'
+        # send requests to save modelform instances for both valid component forms
+        response = client.post(reverse('home:profile_form_view'), data=info_form_data, mode='same_origin')
+        response_json = response.json()
+        self.assertEqual(response.status_code, 200)
+        address_form_data['validate'] = 'false'
+        response = client.post(reverse('home:profile_form_view'), data=address_form_data, mode='same_origin')
+        response_json = response.json()
+        self.assertEqual(response.status_code, 200)
+        # check the user profile section, only has the personal info fields updated (user address fields should not change as instance not saved.)
+        rendered_home_page = client.get('/home/')
+        self.assertContains(rendered_home_page, response_json['profile'], html=True)
+        
+    def test_response_post_request_profile_form_view_by_new_user_for_api_error(self):
+        """
+        Tests that a post request with valid form data for new user, during an API related error, receives the expected responses.
+        """
+        client = Client()
+        # new user sign-in with data2
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        info_form_data = self.info.copy()
+        info_form_data.update({'validate': 'true', 'bio': 'I like comedy events.'})
+        # submit first component form
+        response = client.post(reverse('home:profile_form_view'), data=info_form_data, mode='same_origin')
+        response_json = response.json()
+        address_form_data = self.address.copy()
+        address_form_data.update({'validate': 'true', 'county': 20*'f', 'city_or_town': 20*'f',
+                                  'address_line_one': 20*'f'})
+        # submit second component form
+        response = client.post(reverse('home:profile_form_view'), data=address_form_data, mode='same_origin')
+        response_json = response.json()
+        info_form_data['validate'] = 'false'
+        # send requests to save modelform instances for both valid component forms
+        response = client.post(reverse('home:profile_form_view'), data=info_form_data, mode='same_origin')
+        response_json = response.json()
+        self.assertEqual(response.status_code, 200)
+        address_form_data['validate'] = 'false'
+        response = client.post(reverse('home:profile_form_view'), data=address_form_data, mode='same_origin')
+        response_json = response.json()
+        self.assertEqual(response.status_code, 200)
+        # check the user profile section unchanged as user profile instance deleted and user address instance not saved and so created.)
+        rendered_home_page = client.get('/home/')
+        self.assertContains(rendered_home_page, response_json['profile'], html=True)
+        
