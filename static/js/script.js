@@ -527,13 +527,24 @@ is valid and try again; If the address is valid, try another address; if the pro
         editPersonalInfoForm.innerHTML = firstResponseJson.form;
         if (!issue) {
             editAddressForm.innerHTML = secondResponseJson.form;
+            if (editProfileModal.firstElementChild.firstElementChild.hasAttribute('style')) {
+                editProfileModal.firstElementChild.firstElementChild.removeAttribute('style');
+            }
+            if (editProfileModal.lastElementChild.children.length < 2) {
+                let cancelButton = document.createElement('button');
+                editProfileModal.lastElementChild.appendChild(cancelButton);
+                cancelButton.outerHTML = '<button class="modal_button" type="button" name="Cancel">Cancel</button>'
+            }
         }
         editProfileModal.parentElement.previousElementSibling.innerHTML = fourthResponseJson.profile;
         refreshDomElementVariables();
         executeAllPageAddListenerFunctions();
         executeAllHomePageAddListenersFunctions();
-        //close edit profile modal
-        editProfileModal.firstElementChild.firstElementChild.firstElementChild.click();
+        if (!issue) {
+            //close edit profile modal
+            editProfileModal.firstElementChild.firstElementChild.firstElementChild.click();
+        }
+        
     }
     
     // update 'edit profile modal' forms
@@ -573,7 +584,7 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 
 // JS Section: code for jest testing
 
-// uncommented during testing
+//uncommented during testing
 // module.exports = {
 //     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
 //     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
