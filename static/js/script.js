@@ -456,6 +456,7 @@ function refreshDomElementVariables() {
     personalInfoFormData.append('validate', 'true');
     let addressFormData = new FormData(editAddressForm);
     addressFormData.append('validate', 'true');
+    let issue = false;
     try {
         // For aquiring the form csrf token
     const csrftoken = Cookies.get('csrftoken');
@@ -493,7 +494,16 @@ function refreshDomElementVariables() {
                                     body: addressFormData});
         let fourthResponse = await fetch(fourthRequest);
         let fourthResponseJson = await fourthResponse.json();
-
+        if (fourthResponseJson.hasOwnProperty('error')) {
+            errMsg = `There was a problem processing your submitted address, please check that the address information you entered
+is valid and try again; If the address is valid, try another address; if the problem persists, try again later.`;
+            alert(errMsg);
+            issue = true;
+        }
+        editPersonalInfoForm.innerHTML = firstResponseJson.form;
+        if (!issue) {
+            editAddressForm.innerHTML = secondResponseJson.form;
+        }
         editProfileModal.parentElement.previousElementSibling.innerHTML = fourthResponseJson.profile;
         refreshDomElementVariables();
         executeAllPageAddListenerFunctions();
@@ -503,8 +513,13 @@ function refreshDomElementVariables() {
     }
     
     // update 'edit profile modal' forms
-    editPersonalInfoForm.innerHTML = firstResponseJson.form;
-    editAddressForm.innerHTML = secondResponseJson.form;
+    if (firstResponseJson.valid === 'false') {
+        editPersonalInfoForm.innerHTML = firstResponseJson.form;
+    }
+
+    if (secondResponseJson.valid === 'false') {
+        editAddressForm.innerHTML = secondResponseJson.form;
+    }
     refreshDomElementVariables();
     executeAllPageAddListenerFunctions();
     executeAllHomePageAddListenersFunctions();
@@ -535,9 +550,9 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 // JS Section: code for jest testing
 
 // uncommented during testing
-// module.exports = {
-//     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
-//     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
-//     helpText, matchingIcons, signupButton, signinButton, expandIcons, editButton, modalContainers, modals,
-//     closeModalButtons, editProfileModal, editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners
-// };
+module.exports = {
+    moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
+    slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
+    helpText, matchingIcons, signupButton, signinButton, expandIcons, editButton, modalContainers, modals,
+    closeModalButtons, editProfileModal, editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners
+};
