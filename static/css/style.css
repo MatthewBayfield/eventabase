@@ -396,6 +396,11 @@ span.more_menu_button {
     grid-column-end: 3;
 }
 
+.both_columns {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
 .top_row {
     grid-row-start: 1;
     grid-row-end: 2;
