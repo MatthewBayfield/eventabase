@@ -27,5 +27,8 @@ class PostEventsView(FormView):
         """
         Handles GET request for rendered events_template
         """
+        if request.path != reverse('home:user_homepage'):
+            return redirect(reverse('home:user_homepage'))
+            
         rendered_post_events_section_template = self.post_events_section_template.render()
         return rendered_post_events_section_template

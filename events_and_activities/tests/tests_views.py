@@ -6,7 +6,7 @@ from landing_page.models import CustomUserModel
 from home.models import UserAddress, UserProfile
 
 
-class PostEventsView(TestCase):
+class TestPostEventsView(TestCase):
     """
     Tests for PostEventsView.
     """
