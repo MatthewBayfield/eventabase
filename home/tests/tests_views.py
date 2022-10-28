@@ -5,9 +5,6 @@ from allauth.account.models import EmailAddress
 from landing_page.models import CustomUserModel
 from ..models import UserAddress, UserProfile
 from ..forms import EditAddress, EditPersonalInfo
-from ..views import HomeViewsMixin
-import html
-
 
 
 # Create your tests here.

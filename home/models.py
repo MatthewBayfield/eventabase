@@ -87,6 +87,9 @@ class UserProfile(ProfileMixin):
                            validators=[MaxLengthValidator(500)],
                            blank=True)
 
+    def __str__(self):
+        return self.user
+
     objects = models.Manager()
 
 
@@ -143,5 +146,8 @@ class UserAddress(ProfileMixin):
     longitude = models.DecimalField(max_digits=8, decimal_places=4,
                                     blank=False,
                                     validators=[DecimalValidator(8, 4)])
+
+    def __str__(self):
+        return self.user_profile
 
     objects = models.Manager()

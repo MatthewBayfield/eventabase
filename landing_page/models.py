@@ -53,5 +53,8 @@ class CustomUserModel(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
+    def __str__(self):
+        return self.username
+
     class Meta:
         db_table = 'registered_users'
