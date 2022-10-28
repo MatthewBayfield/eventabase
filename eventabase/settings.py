@@ -33,7 +33,7 @@ DEBUG = development
 
 if development:
     ALLOWED_HOSTS = ['localhost']
-    CSRF_TRUSTED_ORIGINS = ['https://8000-matthewbayfi-eventabase-lxfe72ybebg.ws-eu72.gitpod.io']
+    CSRF_TRUSTED_ORIGINS = ['https://8000-matthewbayfi-eventabase-lxfe72ybebg.ws-eu73.gitpod.io']
     # Email settings
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'landing_page',
     'home',
+    'events_and_activities',
     'allauth',
     'allauth.account',
     'allauth.socialaccount'
