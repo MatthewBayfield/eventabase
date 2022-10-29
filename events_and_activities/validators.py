@@ -14,6 +14,17 @@ def check_date_has_not_occured(date):
     """
     current_date_time = datetime.now().strftime("%H:%M, %d/%m/%y")
     current_date_time_object = datetime.strptime(current_date_time, "%H:%M, %d/%m/%y")
-    input_date_object = datetime.strptime(date, "%H:%M, %d/%m/%y")
-    if input_date_object < current_date_time_object:
+    if date < current_date_time_object:
         raise ValidationError('This date and time is in the past.', 'invalid date')
+
+
+def compare_dates(closing_date, when):
+    """
+    Compares event advert closing date with its occurence datetime.
+
+    Raises:
+        if 'closing_data' > 'when' raises a validation error.
+    """
+    if closing_date > when:
+        raise ValidationError('The closing advert date and time cannot be after when the event occurs.',
+                              'invalid datetime-pair')

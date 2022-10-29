@@ -57,8 +57,8 @@ class EventsActivities(ProfileMixin):
     keywords = models.CharField(max_length=75,
                                 blank=True,
                                 validators=[MaxLengthValidator(75),
-                                            RegexValidator(regex=r"^([\w]+,{0,1})\b[^\s]+",
-                                                           message="Must contain comma separated words containing only the characters [a-zA-Z0-9_], with no spaces.")])
+                                            RegexValidator(regex=r"^([a-zA-Z0-9]+,{1})+[a-zA-Z0-9]+",
+                                                           message="Must contain comma separated words containing only the characters [a-zA-Z0-9], with no spaces.")])
     
     description = models.TextField(blank=False, max_length=500, validators=[MaxLengthValidator(500)])
     
