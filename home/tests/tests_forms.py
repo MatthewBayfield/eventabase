@@ -287,7 +287,7 @@ class TestEditAddressForm(TestCase):
         valid = new_form.is_valid()
         self.assertFalse(valid)
         self.assertFormError(new_form, 'county', "Must contain only standard alphabetic characters, with single spaces between words.")
-        #test maxlength validator
+        # test maxlength validator
         address['county'] = 51*'t'
         new_form = EditAddress(data=address)
         valid = new_form.is_valid()
