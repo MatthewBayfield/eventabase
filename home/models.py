@@ -59,6 +59,10 @@ class UserProfile(ProfileMixin):
         Sex (character field)
         Bio (text field): User biography.
     """
+    class Meta:
+        verbose_name = 'User Profile'
+        verbose_name_plural = 'User Profiles'
+
     user = models.OneToOneField(CustomUserModel, on_delete=models.CASCADE,
                                 verbose_name='user',
                                 to_field='username', primary_key=True,
@@ -88,7 +92,7 @@ class UserProfile(ProfileMixin):
                            blank=True)
 
     def __str__(self):
-        return self.user
+        return str(self.user)
 
     objects = models.Manager()
 
@@ -106,6 +110,10 @@ class UserAddress(ProfileMixin):
         latitude (decimal field): latitude of the user's address
         longitude (text field): longitude of user's address
     """
+    class Meta:
+        verbose_name = 'User Address'
+        verbose_name_plural = 'User Addresses'
+
     user_profile = models.OneToOneField(UserProfile, on_delete=models.CASCADE,
                                         to_field='user', primary_key=True,
                                         related_name='address',
@@ -148,6 +156,6 @@ class UserAddress(ProfileMixin):
                                     validators=[DecimalValidator(8, 4)])
 
     def __str__(self):
-        return self.user_profile
+        return str(self.user_profile)
 
     objects = models.Manager()

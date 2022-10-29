@@ -27,9 +27,12 @@ class CustomUserModel(AbstractBaseUser, PermissionsMixin):
         USERNAME_FIELD (str): specifies name of field that acts as username.
         REQUIRED_FIELDS (str): specifies required fields other than password and USERNAME-FIELD.
         objects (obj): model user manager instance.
-
-
     """
+    class Meta:
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
+        db_table = 'registered_users'
+
     username = models.CharField(max_length=150, unique=True,
                                 help_text="Required. 150 characters or fewer."
                                           "Letters, digits and @/./+/-/_ only.",
@@ -56,5 +59,3 @@ class CustomUserModel(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
 
-    class Meta:
-        db_table = 'registered_users'

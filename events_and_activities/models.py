@@ -29,6 +29,9 @@ class EventsActivities(ProfileMixin):
         postcode (character field): UK postcode for the event/activity.
 :        
     """
+    class Meta:
+        verbose_name = 'Events and Activities'
+        verbose_name_plural = 'Events and Activities'
 
     host_user = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE,
                                   verbose_name='host',
