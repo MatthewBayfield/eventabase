@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from django.db import models
 from django.core.validators import (RegexValidator,
                                     MaxLengthValidator)
@@ -7,6 +8,43 @@ from home.models import ProfileMixin
 from .validators import check_date_has_not_occured
 
 # Create your models here.
+
+
+class ChangeExpiredEvents(models.Manager):
+    """
+    Exists to filter out and delete or update expired events.
+    """
+    def delete_expired(self, user=None):
+        """
+        Deletes events that have already occured.
+        """
+        current_date_time = datetime.now().strftime("%H:%M, %d/%m/%y")
+        current_date_time_object = datetime.strptime(current_date_time, "%H:%M, %d/%m/%y")
+
+        if not user:
+            expired_events = self.filter(when__lt=current_date_time_object)
+            if len(expired_events):
+                expired_events.delete()
+        else:
+            expired_events = self.filter(host_user=user, when__lt=current_date_time_object)
+            if len(expired_events):
+                expired_events.delete()
+
+    def update_expired(self, user=None):
+        """
+        Alters the status of events whose closing advert date has expired.
+        """
+        current_date_time = datetime.now().strftime("%H:%M, %d/%m/%y")
+        current_date_time_object = datetime.strptime(current_date_time, "%H:%M, %d/%m/%y")
+
+        if not user:
+            expired_events = self.filter(closing_date__lt=current_date_time_object)
+            if len(expired_events):
+                expired_events.update(status='confirmed')
+        else:
+            expired_events = self.filter(host_user=user, closing_date__lt=current_date_time_object)
+            if len(expired_events):
+                expired_events.update(status='confirmed')
 
 
 class EventsActivities(ProfileMixin):
@@ -27,7 +65,6 @@ class EventsActivities(ProfileMixin):
         city_or_town (character field): for the event/activity.
         county (character field): for the event/activity.
         postcode (character field): UK postcode for the event/activity.
-:        
     """
     class Meta:
         verbose_name = 'Events and Activities'
@@ -54,7 +91,7 @@ class EventsActivities(ProfileMixin):
 
     closing_date = models.DateTimeField(blank=False, verbose_name='closing date',
                                         validators=[check_date_has_not_occured])
-    
+
     max_attendees = models.IntegerField(blank=False, verbose_name='max no. of attendees')
 
     keywords = models.CharField(max_length=75,
@@ -62,30 +99,30 @@ class EventsActivities(ProfileMixin):
                                 validators=[MaxLengthValidator(75),
                                             RegexValidator(regex=r"^([a-zA-Z0-9]+,{1})+[a-zA-Z0-9]+",
                                                            message="Must contain comma separated words containing only the characters [a-zA-Z0-9], with no spaces.")])
-    
+
     description = models.TextField(blank=False, max_length=500, validators=[MaxLengthValidator(500)])
-    
+
     requirements = models.TextField(blank=False, max_length=500, validators=[MaxLengthValidator(500)])
-    
+
     address_line_one = models.CharField(max_length=100, verbose_name='Address line 1',
                                         validators=[RegexValidator(regex=r"^([a-zA-Z0-9]+\s{0,1}[a-zA-Z0-9]+)+\Z",
                                                     message="Must contain only standard alphabetic characters and numbers, with single spaces between words.",
                                                     flags=re.MULTILINE),
                                                     MaxLengthValidator(100)],
                                         blank=False)
-    
+
     city_or_town = models.CharField(max_length=50, verbose_name='City/Town',
                                     validators=[RegexValidator(regex=r"^([a-zA-Z]+\s{0,1}[a-zA-Z]+)+\Z",
                                                                message="Must contain only standard alphabetic characters, with single spaces between words."),
                                                 MaxLengthValidator(50)],
                                     blank=False)
-    
+
     county = models.CharField(max_length=50, verbose_name='County',
                               validators=[RegexValidator(regex=r"^([a-zA-Z]+\s{0,1}[a-zA-Z]+)+\Z",
                                                          message="Must contain only standard alphabetic characters, with single spaces between words."),
                                           MaxLengthValidator(50)],
                               blank=False)
-    
+
     # taken from https://stackoverflow.com/questions/164979/regex-for-matching-uk-postcodes/17024047#17024047
     UK_POSTCODE_REGREX_EXPRESSION = r"^(([gG][iI][rR] {0,}0[aA]{2})|((([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y]?[0-9][0-9]?)|(([a-pr-uwyzA-PR-UWYZ][0-9][a-hjkstuwA-HJKSTUW])|([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y][0-9][abehmnprv-yABEHMNPRV-Y]))) {0,}[0-9][abd-hjlnp-uw-zABD-HJLNP-UW-Z]{2}))$"
 
@@ -103,8 +140,9 @@ class EventsActivities(ProfileMixin):
     # longitude = models.DecimalField(max_digits=8, decimal_places=4,
     #                                 blank=False,
     #                                 validators=[DecimalValidator(8, 4)])
-    
+
     def __str__(self):
-        return self.id
+        return str(self.id)
 
     objects = models.Manager()
+    expired = ChangeExpiredEvents()
