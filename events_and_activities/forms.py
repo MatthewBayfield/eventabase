@@ -1,6 +1,3 @@
-import re
-from pprint import pprint
-from datetime import datetime
 from django.forms.models import ModelForm
 from django.forms.widgets import HiddenInput
 from django.forms.fields import DateTimeField
@@ -28,19 +25,17 @@ class EventsActivitiesForm(ModelForm, FormFieldMixin):
                   'county', 'postcode']
         widgets = {'host_user': HiddenInput()}
         error_messages = {'host_user': {'unique_for_date': 'You are already advertising or hosting an event on this date.'}}
-        help_text = {'keywords': 'Enter a comma separated list of descriptive summary keywords.',
-                     'description': 'Describe the event or activity.',
-                     'requirements': 'Detail any significant requirements for attending the event/activity, for example costs, travel arrangements, physical demands.',
-                     'closing_date': 'When the advert should close.',
-                     'when': 'date and time for the event/activity'}
+        help_texts = {'keywords': 'Enter a comma separated list of descriptive keywords.',
+                      'description': 'Describe the event or activity.',
+                      'requirements': 'Detail any significant requirements for attending the event/activity, for example costs, travel arrangements, physical demands.'}
 
     when = DateTimeField(input_formats=["%H:%M, %d/%m/%y"], label='When',
-                         help_text="Enter a date and time in the format '00:00, dd/mm/yy'.",
+                         help_text="Enter a date & time for the event: e.g. '07:30, 10/11/23'.",
                          error_messages={'invalid': 'Enter a valid datetime format.'},
                          validators=[check_date_has_not_occured])
 
     closing_date = DateTimeField(input_formats=["%H:%M, %d/%m/%y"], label='Closing Date',
-                                 help_text="Enter a date and time in the format '00:00, dd/mm/yy'.",
+                                 help_text="Enter a date & time when the advert should end: e.g. '07:30, 10/11/23'.",
                                  error_messages={'invalid': 'Enter a valid datetime format.'},
                                  validators=[check_date_has_not_occured])
 
