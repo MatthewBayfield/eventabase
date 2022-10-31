@@ -12,6 +12,7 @@ from .models import UserProfile, UserAddress
 
 # Create your views here.
 
+
 class HomeViewsMixin():
     """
     Features methods for retrieving a user's profile from a request, and for rendering the profile template.
@@ -155,9 +156,16 @@ class UserHomePage(TemplateView, HomeViewsMixin):
             kwargs.update({'edit_profile_modal': rendered_edit_profile_modal})
 
             # post events view section:
-            rendered_post_events_section_template = PostEventsView.as_view()(request, *args, **kwargs)
-            kwargs.update({'post_events': rendered_post_events_section_template})
-
+            rendered_post_events_section_template = PostEventsView.as_view()(request,
+                                                                             *args,
+                                                                             get_modal=False,
+                                                                             **kwargs)
+            rendered_post_events_modal = PostEventsView.as_view()(request,
+                                                                  *args,
+                                                                  get_modal=True,
+                                                                  modal='post_events_modal',
+                                                                  **kwargs)
+            kwargs.update({'post_events': rendered_post_events_section_template, 'post_events_modal': rendered_post_events_modal})
             return super().get(request, *args, **kwargs)
 
 @method_decorator(verified_email_required, name='dispatch')
