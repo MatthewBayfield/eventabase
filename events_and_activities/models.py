@@ -24,11 +24,11 @@ class ChangeExpiredEvents(models.Manager):
         if not user:
             expired_events = self.filter(when__lt=current_date_time_object)
             if len(expired_events):
-                expired_events.delete()
+                return expired_events.delete()
         else:
             expired_events = self.filter(host_user=user, when__lt=current_date_time_object)
             if len(expired_events):
-                expired_events.delete()
+                return expired_events.delete()
 
     def update_expired(self, user=None):
         """

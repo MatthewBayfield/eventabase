@@ -153,3 +153,149 @@ class TestEventsActivitiesModel(TestCase):
                          'address_line_one': 'mayhem paintball', 'city_or_town': 'adbridge', 'county': 'essex',
                          'postcode': 'rm4 1AA'}
         self.assertEqual(new_event.retrieve_field_data(False), expected_data)
+
+    def test_change_expired_events_manager_with_no_user_param(self):
+        """
+        Tests the manager methods work as expected when no user param is given.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        # create identical events varying in either their title, 'closing date' and or 'when' values.
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event1',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2028-12-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1AA')
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event2',
+                                        when="2022-10-30 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1AA')
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event3',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1AA')
+        all_events = EventsActivities.objects.all()
+        self.assertEqual(len(all_events), 3)
+        deleted = EventsActivities.expired.delete_expired()
+        self.assertEqual(deleted[0], 1)
+        self.assertFalse(EventsActivities.objects.filter(title='event2').exists())
+        all_events = EventsActivities.objects.all()
+        self.assertEqual(len(all_events), 2)
+        EventsActivities.expired.update_expired()
+        EventsActivities.objects.filter(status='confirmed')
+        self.assertEqual(len(EventsActivities.objects.filter(status='confirmed')), 1)
+        self.assertTrue(EventsActivities.objects.filter(status='confirmed', title='event3').exists())
+        
+    def test_change_expired_events_manager_with_user_param(self):
+        """
+        Tests the manager methods work as expected when user param is given.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+        # create identical events varying in either their title, 'closing date' and or 'when' values.
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event1',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2028-12-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1AA')
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event2',
+                                        when="2022-10-30 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1AA')
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event3',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1AA')
+        EventsActivities.objects.create(host_user=user2,
+                                        status="advertised",
+                                        title='event4',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1AA')
+        EventsActivities.objects.create(host_user=user2,
+                                        status="advertised",
+                                        title='event5',
+                                        when="2022-10-30 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1AA')
+        all_events = EventsActivities.objects.all()
+        self.assertEqual(len(all_events), 5)
+        deleted = EventsActivities.expired.delete_expired(user)
+        self.assertEqual(deleted[0], 1)
+        self.assertFalse(EventsActivities.objects.filter(title='event2').exists())
+        all_events = EventsActivities.objects.all()
+        self.assertEqual(len(all_events), 4)
+        EventsActivities.expired.update_expired(user)
+        EventsActivities.objects.filter(status='confirmed')
+        self.assertEqual(len(EventsActivities.objects.filter(status='confirmed')), 1)
+        self.assertTrue(EventsActivities.objects.filter(status='confirmed', title='event3').exists())
+        
+
+
+
+
