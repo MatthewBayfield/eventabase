@@ -3,17 +3,10 @@
     <div class="left_column top_row">
         <h3 class="profile_display">Personal Info</h3>
     {% for field_name, field_value in user_profile_data %}
-        {% if forloop.counter|divisibleby:'2' %}
-            <div class="profile_display">
-                <span>{{field_name|title}} :</span>
-                <span>{{field_value}}</span>
-            </div>
-        {% else%}
-            <div class="profile_display">
-                <span>{{field_name|title}} :</span>
-                <span>{{field_value}}</span>
-            </div>
-        {% endif %}
+        <div class="profile_display">
+            <span>{{field_name|title}} :</span>
+            <span>{{field_value}}</span>
+        </div>
     {% endfor %}
     </div>
     <div class="right_column top_row">
@@ -27,7 +20,7 @@
     </div>
     <div id="profile_flex" class="bottom_row">
         {% with modal='edit_profile_modal' %}
-            <div id="edit" role="button" aria-label="edit profile" aria-controls="{{modal}}" tabindex="0">
+            <div id="edit" class="open_modal_button" role="button" aria-label="edit profile" aria-controls="{{modal}}" tabindex="0">
                 <span>Edit <i class="fa-solid fa-pen-to-square"></i></span>
             </div>
         {% endwith %}
