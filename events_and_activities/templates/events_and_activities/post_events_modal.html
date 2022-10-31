@@ -1,0 +1,11 @@
+{% extends 'base_modal.html' %}
+{% block modal_title%}Post event or activity{% endblock %}
+{% block main %}
+    <p>Complete the following form to post an advert for your event or activity.</p>
+    {% with form_id='post_events_form' %}
+    <form id={{form_id}} method="post" action="post_events/">
+        {% csrf_token %}
+        {{ post_events_form }}
+    </form>
+    {% endwith %}
+{% endblock %}
