@@ -34,7 +34,7 @@ h1 {
     display: inline-block;
 }
 
-h2,h3 {
+h2,h3, h4, h5 {
     font-family: 'Loved by the King', cursive;
     width: fit-content;
     margin: 0.5rem auto;
@@ -382,7 +382,7 @@ span.more_menu_button {
     margin: 0;
 }
 
-.profile_display {
+.profile_display, .details_display {
     margin: 1rem 1rem;
 }
 
@@ -417,6 +417,16 @@ span.more_menu_button {
     padding-left: 0.5rem;
 }
 
+.event_container > div {
+    flex-basis: 50%;
+    border-top: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+}
+
+#post_events .hidden {
+    display: None;
+}
+
 #home_page button {
     width: fit-content;
     height: fit-content;
@@ -424,7 +434,7 @@ span.more_menu_button {
     display: inline-block;
 }
 
-#profile_flex {
+#profile_flex, .event_container {
     display: flex;
 }
 
@@ -449,6 +459,22 @@ span.more_menu_button {
     flex-basis: 25%;
     align-self: center;
     cursor: default;
+}
+
+#post_button > button {
+    width: fit-content;
+    margin: 0 auto;
+    display: block;
+}
+
+[type = 'radio'] {
+    width:fit-content;
+    margin: 0.5rem 1rem 1.5rem 1rem;  
+}
+
+#post_events h5 {
+    font-family: 'Josefin Slab', serif;
+    margin: 0.5rem;
 }
 
 /* CSS Subsection: Media queries: */

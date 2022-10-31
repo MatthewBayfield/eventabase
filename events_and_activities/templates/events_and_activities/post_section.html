@@ -5,51 +5,79 @@
             View and manage the events & activities you are advertising to host and or have upcoming. Post as many new adverts
             as you wish!
         </p>
-    </div>
-    <div class="bottom_row left column">
-
-    </div>
-    <div class="bottom_row right_column">
-
-    </div>
-        <!-- <h3 class="profile_display">Personal Info</h3>
-    {% for field_name, field_value in user_profile_data %}
-        {% if forloop.counter|divisibleby:'2' %}
-            <div class="profile_display">
-                <span>{{field_name|title}} :</span>
-                <span>{{field_value}}</span>
-            </div>
-        {% else%}
-            <div class="profile_display">
-                <span>{{field_name|title}} :</span>
-                <span>{{field_value}}</span>
-            </div>
-        {% endif %}
-    {% endfor %}
-    </div>
-    <div class="right_column top_row">
-        <h3 class="profile_display">Address</h3>
-    {% for field_name, field_value in user_address_data %}
-        <div class="profile_display">
-            <span>{{field_name|title}} :</span>
-            <span>{{field_value}}</span>
-        </div>
-    {% endfor %}
-    </div>
-    <div id="profile_flex" class="bottom_row">
-        {% with modal='edit_profile_modal' %}
-            <div id="edit" role="button" aria-label="edit profile" aria-controls="{{modal}}" tabindex="0">
-                <span>Edit <i class="fa-solid fa-pen-to-square"></i></span>
+        {% with modal='post_events_modal' %}
+            <div id="post_button">
+                <button class="open_modal_button" aria-controls="{{modal}}">Post New</button>
             </div>
         {% endwith %}
-        <div id="report_issue">
-            <div>
-                <button type="button" name="report_issue">Report Issue</button>
-                <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
+    </div>
+    <div class="both_column bottom_row">
+        <h4>Your Advertised and Upcoming Events or Activities</h4>
+        <input id='advertised' name='event_type' type="radio" value="advertised" checked >
+        <label for="advertised">Advertised</label>
+        <input id='upcoming' name='event_type' type="radio" value="upcoming">
+        <label for="upcoming">Upcoming</label>
+        {% for event in advertised_hosting_events_data %}
+            <div class="event_container advertised" region role="region" aria-label="event" tabindex="0">
+                <div>
+                    <h5>No. of users attending so far: {{event_count}}</h5>
+                    {% for field_name, value in event.items %}
+                        {% if forloop.counter0 <= 8 %}
+                            <div class="details_display">
+                                <span>{{field_name|title}} :</span>
+                                <span>{{value}}</span>
+                            </div>
+                        {% endif%}
+                    {% endfor %}  
+                </div>
+                <div>
+                    {% for field_name, value in event.items %}
+                        {% if forloop.counter0 >= 9 %}
+                            <div class="details_display">
+                                <span>{{field_name|title}} :</span>
+                                <span>{{value}}</span>
+                            </div>
+                        {% endif%}
+                    {% endfor %}
+                    <button>Delete Advert</button>
+                </div>
             </div>
-            <div class="help_text">
-                Report any issues, about the site, your account etc.
+        {% empty %}
+            <div class="event_container advertised" region role="region" aria-label="event" tabindex="0">
+                <p>You currenty have no adverts for hosting events or activities.</p>
             </div>
-        </div> 
-    </div> -->
+        {% endfor %}
+        {% for event in upcoming_hosting_events_data %}
+            <div class="event_container upcoming" region role="region" aria-label="event" tabindex="0">
+                <div>
+                    <h5>No. of users attending: {{event_count}}</h5>
+                    {% for field_name,value in event.items %}
+                        {% if forloop.counter0 <= 8 %}
+                            <div class="details_display">
+                                <span>{{field_name|title}} :</span>
+                                <span>{{value}}</span>
+                            </div>
+                        {% endif%}
+                    {% endfor %}  
+                </div>
+                <div>
+                    {% for field_name, value in event.items %}
+                        {% if forloop.counter0 >= 9 %}
+                            <div class="details_display">
+                                <span>{{field_name|title}} :</span>
+                                <span>{{value}}</span>
+                            </div>
+                        {% endif%}
+                    {% endfor %}
+                    <button>Cancel</button>
+                    <button>Message Attendees</button>
+                </div>
+            </div>
+        {% empty %}
+            <div class="event_container upcoming" region role="region" aria-label="event" tabindex="0">
+                <p>You currenty have no upcoming events or activities that are you are confirmed to host. An event becomes confirmed once the closing advert date has passed.</p>
+            </div>
+        {% endfor %}
+    </div>
 </div>
+    
