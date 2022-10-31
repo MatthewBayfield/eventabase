@@ -15,7 +15,6 @@ let helpTextIcons = [...document.querySelectorAll('[data-icon-type = "help"]')];
 let helpText = [...document.getElementsByClassName('help_text')];
 let matchingIcons = [...document.getElementsByClassName('matching_icon')];
 let expandIcons = [...document.querySelectorAll('[data-icon-type ^= "expand"]')];
-let editButton = document.getElementById('edit');
 let modalContainers = [...document.getElementsByClassName('modal_container')];
 let modals = [...document.getElementsByClassName('modal')]
 let closeModalButtons = [...document.getElementsByClassName('close_button')];
@@ -26,6 +25,15 @@ if (editProfileModal) {
     var editProfileModalDoneButton = editProfileModal.lastElementChild.children[0];
 }
 let modalButtons = [...document.getElementsByClassName('modal_button')];
+let openModalButtons = [...document.getElementsByClassName('open_modal_button')];
+let postEventModal = document.getElementById('post_events_modal');
+let postEventForm = document.getElementById('post_events_form');
+if (postEventModal) {
+    var postEventFormDoneButton = document.getElementById('post_events_modal').querySelector('.modal_button').children[0];
+}
+let advertisedEvents = [...document.getElementsByClassName('advertised')];
+let upcomingEvents = [...document.getElementsByClassName('upcoming')];
+let radioInputs = [...document.querySelectorAll("[type = 'radio']")];
 
 // JS Section: Event listeners:
 
@@ -172,21 +180,40 @@ function expandIconListeners() {
     }
 }
 
-/** Adds a click event listener to the edit profile button.
- * When clicked the edit profile modal is opened with focus, and the background
+/** Adds a click event listener to all open modal buttons.
+ * When clicked the matching modal is opened with focus, and the background
  * scrollbar is hidden.
- * @summary Gives the edit profile button its button functionality.
+ * @summary Gives the open modal buttons their button functionality.
  */
-function editButtonListeners() {
-    editButton.addEventListener('click', () => {
-    let profileModalContainer = modalContainers[0];
-    let profileModal = modals[0];
-    if (window.getComputedStyle(profileModalContainer).getPropertyValue('display') === 'none') {
-        profileModalContainer.style.display = 'block';
-        profileModal.focus();
-        document.body.style.overflowY = 'hidden';
+function openModalButtonListeners() {
+    for (let i=0; i < openModalButtons.length; i++) {
+        openModalButtons[i].addEventListener('click', () => {
+            if (window.getComputedStyle(modalContainers[i]).getPropertyValue('display') === 'none') {
+                modalContainers[i].style.display = 'block';
+                modals[i].focus();
+                document.body.style.overflowY = 'hidden';
+            }
+        })
     }
-    })
+}
+
+
+/** Adds input event listeners to the post
+ * events section radio inputs to control
+ * which type of events are displayed
+ * @summary Adds radio input listeners to control which events are visible.
+ */
+function addRadioInputListeners() {
+
+    for (let input of radioInputs) {
+        if (input.value === 'advertised') {
+            input.click();
+            updateVisibleEvents(input);
+        }
+        input.addEventListener('change', () => {
+            updateVisibleEvents(input);
+        })
+    }
 }
 
 // JS Subsection: form related event listeners 
@@ -256,7 +283,7 @@ function closeModalButtonListeners() {
             parentModalContainer.removeAttribute('style');
             document.body.removeAttribute('style');
             if (parentModalContainer.firstElementChild.id === 'edit_profile_modal') {
-                editButton.focus(); 
+                openModalButtons[0].focus(); 
             }
         })
     }
@@ -273,7 +300,7 @@ function createModalCancelButtonListeners() {
                 parentModalContainer.removeAttribute('style');
                 document.body.removeAttribute('style');
                 if (parentModalContainer.firstElementChild.id === 'edit_profile_modal') {
-                editButton.focus(); 
+                openModalButtons[0].focus(); 
                 }
             })
         }
@@ -392,6 +419,43 @@ function slideshowHandler() {
     imageFadeIn(nextImage, currentImage);
 }
 
+/**
+ * 
+ */
+function updateVisibleEvents(input) {
+    if (input.value === 'advertised') {
+        for (let eventContainer of advertisedEvents) {
+            if (eventContainer.classList.contains('hidden')) {
+                eventContainer.classList.remove('hidden');
+            }
+        }
+        for (let eventContainer of upcomingEvents) {
+            if (eventContainer.classList.contains('hidden')) {
+
+            }
+            else {
+                eventContainer.classList.add('hidden');
+            }
+        }
+    }
+    else {
+        for (let eventContainer of advertisedEvents) {
+            if (eventContainer.classList.contains('hidden')) {
+
+            }
+            else {
+                eventContainer.classList.add('hidden');
+            }
+        }
+        for (let eventContainer of upcomingEvents) {
+            if (eventContainer.classList.contains('hidden')) {
+                eventContainer.classList.remove('hidden');
+            }
+        }
+    }
+}
+
+
 /**Recreates all the event listeners
  * for shared elements across all pages.
  * Necessary when the DOM is dynamically
@@ -416,11 +480,12 @@ function executeAllPageAddListenerFunctions() {
  * @summary Recreates event listeners for the HomePage.
  */
 function executeAllHomePageAddListenersFunctions() {
-    editButtonListeners();
+    openModalButtonListeners();
     closeModalButtonListeners();
     trapFocusModalListeners();
     addEditProfileModalDonebuttonListeners();
     createModalCancelButtonListeners();
+    addRadioInputListeners();
 }
 
 /**Recreates all the event listeners
@@ -454,7 +519,6 @@ function refreshDomElementVariables() {
     helpText = [...document.getElementsByClassName('help_text')];
     matchingIcons = [...document.getElementsByClassName('matching_icon')];
     expandIcons = [...document.querySelectorAll('[data-icon-type ^= "expand"]')];
-    editButton = document.getElementById('edit');
     modalContainers = [...document.getElementsByClassName('modal_container')];
     modals = [...document.getElementsByClassName('modal')]
     closeModalButtons = [...document.getElementsByClassName('close_button')];
@@ -464,7 +528,16 @@ function refreshDomElementVariables() {
     if (editProfileModal) {
         editProfileModalDoneButton = editProfileModal.lastElementChild.children[0];
     }
-    modalButtons = [...document.getElementsByClassName('modal_button')];  
+    modalButtons = [...document.getElementsByClassName('modal_button')];
+    openModalButtons = [...document.getElementsByClassName('open_modal_button')];
+    postEventModal = document.getElementById('post_events_modal');
+    if (postEventModal) {
+        postEventFormDoneButton = document.getElementById('post_events_modal').querySelector('.modal_buttons').children[0];
+    }
+    postEventForm = document.getElementById('post_events_form');
+    advertisedEvents = [...document.getElementsByClassName('advertised')];
+    upcomingEvents = [...document.getElementsByClassName('upcoming')];
+    radioInputs = [...document.getElementsByTagName('input')].querySelectorAll('[type = "radio"]');
 }
 
 // JS Subsection: Fetch requests:
@@ -483,85 +556,123 @@ function refreshDomElementVariables() {
     let issue = false;
     try {
         // For aquiring the form csrf token
-    const csrftoken = Cookies.get('csrftoken');
+        const csrftoken = Cookies.get('csrftoken');
     
-    // first two requests to check each form's validity
-    let firstRequest = new Request('profile_form/',
-                                   {method: 'POST', headers: {'X-CSRFToken': csrftoken},
-                                   mode: 'same-origin',
-                                   body: personalInfoFormData});
-    let firstResponse = await fetch(firstRequest);
-    let firstResponseJson = await firstResponse.json();
-
-    let secondRequest = new Request('profile_form/',
+        // first two requests to check each form's validity
+        let firstRequest = new Request('profile_form/',
                                     {method: 'POST', headers: {'X-CSRFToken': csrftoken},
                                     mode: 'same-origin',
-                                    body: addressFormData});
-    let secondResponse = await fetch(secondRequest);
-    let secondResponseJson = await secondResponse.json();
-    
-    // If both forms are valid submit both forms again to be postprocessed and saved.
-    // Update profile section.
-    if (firstResponseJson.valid === 'true' && secondResponseJson.valid === 'true') {
-        personalInfoFormData.set('validate', 'false');
-        addressFormData.set('validate', 'false')
-        let thirdRequest = new Request('profile_form/',
-                                   {method: 'POST', headers: {'X-CSRFToken': csrftoken},
-                                   mode: 'same-origin',
-                                   body: personalInfoFormData});
-        let thirdResponse = await fetch(thirdRequest);
-        let thirdResponseJson = await thirdResponse.json();
+                                    body: personalInfoFormData});
+        let firstResponse = await fetch(firstRequest);
+        let firstResponseJson = await firstResponse.json();
 
-        let fourthRequest = new Request('profile_form/',
+        let secondRequest = new Request('profile_form/',
+                                        {method: 'POST', headers: {'X-CSRFToken': csrftoken},
+                                        mode: 'same-origin',
+                                        body: addressFormData});
+        let secondResponse = await fetch(secondRequest);
+        let secondResponseJson = await secondResponse.json();
+        
+        // If both forms are valid submit both forms again to be postprocessed and saved.
+        // Update profile section.
+        if (firstResponseJson.valid === 'true' && secondResponseJson.valid === 'true') {
+            personalInfoFormData.set('validate', 'false');
+            addressFormData.set('validate', 'false')
+            let thirdRequest = new Request('profile_form/',
                                     {method: 'POST', headers: {'X-CSRFToken': csrftoken},
                                     mode: 'same-origin',
-                                    body: addressFormData});
-        let fourthResponse = await fetch(fourthRequest);
-        let fourthResponseJson = await fourthResponse.json();
-        if (fourthResponseJson.hasOwnProperty('error')) {
-            errMsg = `There was a problem processing your submitted address, please check that the address information you entered
-is valid and try again; If the address is valid, try another address; if the problem persists, try again later.`;
-            alert(errMsg);
-            issue = true;
+                                    body: personalInfoFormData});
+            let thirdResponse = await fetch(thirdRequest);
+            let thirdResponseJson = await thirdResponse.json();
+
+            let fourthRequest = new Request('profile_form/',
+                                        {method: 'POST', headers: {'X-CSRFToken': csrftoken},
+                                        mode: 'same-origin',
+                                        body: addressFormData});
+            let fourthResponse = await fetch(fourthRequest);
+            let fourthResponseJson = await fourthResponse.json();
+            if (fourthResponseJson.hasOwnProperty('error')) {
+                errMsg = `There was a problem processing your submitted address, please check that the address information you entered
+    is valid and try again; If the address is valid, try another address; if the problem persists, try again later.`;
+                alert(errMsg);
+                issue = true;
+            }
+            editPersonalInfoForm.innerHTML = firstResponseJson.form;
+            if (!issue) {
+                editAddressForm.innerHTML = secondResponseJson.form;
+                if (editProfileModal.firstElementChild.firstElementChild.hasAttribute('style')) {
+                    editProfileModal.firstElementChild.firstElementChild.removeAttribute('style');
+                }
+                if (editProfileModal.lastElementChild.children.length < 2) {
+                    let cancelButton = document.createElement('button');
+                    editProfileModal.lastElementChild.appendChild(cancelButton);
+                    cancelButton.outerHTML = '<button class="modal_button" type="button" name="Cancel">Cancel</button>'
+                }
+            }
+            editProfileModal.parentElement.previousElementSibling.innerHTML = fourthResponseJson.profile;
+            refreshDomElementVariables();
+            executeAllPageAddListenerFunctions();
+            executeAllHomePageAddListenersFunctions();
+            if (!issue) {
+                //close edit profile modal
+                editProfileModal.firstElementChild.firstElementChild.firstElementChild.click();
+            }
+            
         }
-        editPersonalInfoForm.innerHTML = firstResponseJson.form;
-        if (!issue) {
+        
+        // update 'edit profile modal' forms
+        if (firstResponseJson.valid === 'false') {
+            editPersonalInfoForm.innerHTML = firstResponseJson.form;
+        }
+
+        if (secondResponseJson.valid === 'false') {
             editAddressForm.innerHTML = secondResponseJson.form;
-            if (editProfileModal.firstElementChild.firstElementChild.hasAttribute('style')) {
-                editProfileModal.firstElementChild.firstElementChild.removeAttribute('style');
-            }
-            if (editProfileModal.lastElementChild.children.length < 2) {
-                let cancelButton = document.createElement('button');
-                editProfileModal.lastElementChild.appendChild(cancelButton);
-                cancelButton.outerHTML = '<button class="modal_button" type="button" name="Cancel">Cancel</button>'
-            }
         }
-        editProfileModal.parentElement.previousElementSibling.innerHTML = fourthResponseJson.profile;
         refreshDomElementVariables();
         executeAllPageAddListenerFunctions();
         executeAllHomePageAddListenersFunctions();
-        if (!issue) {
-            //close edit profile modal
-            editProfileModal.firstElementChild.firstElementChild.firstElementChild.click();
-        }
-        
     }
-    
-    // update 'edit profile modal' forms
-    if (firstResponseJson.valid === 'false') {
-        editPersonalInfoForm.innerHTML = firstResponseJson.form;
+    catch(error) {
+        console.error(error);
     }
+}
 
-    if (secondResponseJson.valid === 'false') {
-        editAddressForm.innerHTML = secondResponseJson.form;
+/** Fetch POST request handler for submitting
+ *  the post event form. Updates page
+ *  when a valid form is submitted.
+ * @summary Fetch POST request handler for edit profile form submission.
+ */
+ async function postEventFormFetchHandler() {
+    // form data for request
+    let formData = new FormData(postEventForm);
+
+    try {
+        // For aquiring the form csrf token
+        const csrftoken = Cookies.get('csrftoken');
+    
+        // make request to submit form and check response
+
+        let request = new Request('post_events/',
+                                    {method: 'POST', headers: {'X-CSRFToken': csrftoken},
+                                    mode: 'same-origin',
+                                    body: formData});
+        let response = await fetch(request);
+        let responseJSON = await response.json();
+        if (responseJSON.valid === 'true') {
+            // update displayed events
+
+            //close modal
+            postEventModal.firstElementChild.firstElementChild.firstElementChild.click();
+
+        }
+        postEventForm.innerHTML = responseJSON.form;
+        refreshDomElementVariables();
+        executeAllPageAddListenerFunctions();
+        executeAllHomePageAddListenersFunctions();
     }
-    refreshDomElementVariables();
-    executeAllPageAddListenerFunctions();
-    executeAllHomePageAddListenersFunctions();
-    } 
-    catch (error) {
-        console.error(error.message);
-    }
+    catch(error) {
+        console.error(error);
+    }     
 }
 
 
@@ -588,7 +699,7 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 // module.exports = {
 //     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
 //     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
-//     helpText, matchingIcons, signupButton, signinButton, expandIcons, editButton, modalContainers, modals,
+//     helpText, matchingIcons, signupButton, signinButton, expandIcons, modalContainers, modals,
 //     closeModalButtons, editProfileModal, editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
-//     modalButtons
+//     modalButtons, openModalButtons, postEventModal
 // };

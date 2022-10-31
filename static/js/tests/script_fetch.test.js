@@ -8,7 +8,7 @@ let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_home_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
 let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
-     modalContainers, modals, editButton, closeModalButtons, editProfileModal, editProfileModalDoneButton,
+     modalContainers, modals, closeModalButtons, editProfileModal, editProfileModalDoneButton,
      editProfileFormFetchHandler, addEditProfileModalDonebuttonListeners} = require('../script.js');
 // mock functions
 const get = jest.fn()
@@ -219,9 +219,9 @@ describe('test the ProfileFormView fetch request works', () => {
         expect(Request).toHaveBeenCalledTimes(4);
         expect(fetch).toHaveBeenCalledTimes(4);
         expect(alert).toHaveBeenCalledTimes(1);
-        const msg = `There was a problem processing your submitted address, please check that the address information you entered
-is valid and try again; If the address is valid, try another address; if the problem persists, try again later.`;
-        expect(alert).toHaveBeenCalledWith(msg);
+        errMsg = `There was a problem processing your submitted address, please check that the address information you entered
+    is valid and try again; If the address is valid, try another address; if the problem persists, try again later.`;
+        expect(alert).toHaveBeenCalledWith(errMsg);
         
     })        
 

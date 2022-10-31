@@ -8,7 +8,8 @@ let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_home_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
 let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
-     modalContainers, modals, editButton, closeModalButtons, modalButtons, editProfileModalDoneButton, editProfileModal} = require('../script.js');
+     modalContainers, modals, closeModalButtons, modalButtons, editProfileModalDoneButton, editProfileModal,
+     openModalButtons, postEventModal} = require('../script.js');
 // mock functions
 const log = jest.fn();
 
@@ -224,16 +225,14 @@ describe('Test the functionality of the help text icon event listeners', ( () =>
 }))
 
 describe('Test that the expand less and more icons work', () => {
-    let grid_containers = [...document.getElementsByClassName('grid_container')];
     // initial css styling: elements of class grid container are left with their jsdom default of 'block'
     // for the purpose of testing as oppose to 'none'. Likewise the expand_less and expand_more icons
     // will have default jsdom inline element display of ''. In reality stylesheet styling has expand_more:'inline-block', expand_less:'none'.
             
     test('that after being clicked an icon is no longer visible, whilst its counterpart becomes visible', () => {
-            for (let i=0; i < 2*grid_containers.length; ++i) {
-                // not all grid containers neccesarily exist yet, so some tests may fail if i >= length
+            for (let i=0; i < expandIcons.length; ++i) {
                 if ((Boolean((i + 1) % 2))) {
-                    // ith even element is an expand more icon
+                    // ith even element and zero is an expand more icon
                     let expandLessIcon = expandIcons[i].nextElementSibling;
                     expect(window.getComputedStyle(expandIcons[i]).getPropertyValue('display')).toBe('');
                     expect(window.getComputedStyle(expandLessIcon).getPropertyValue('display')).toBe('');
@@ -249,10 +248,9 @@ describe('Test that the expand less and more icons work', () => {
     })
 
     test('that the grid containers become visible when the expand_more icons are clicked, and invisible when the expand_less icons are clicked', () => {
-        for (let i=0; i < 2*grid_containers.length; ++i) {
-            // not all grid containers neccesarily exist yet, so some tests may fail if i >= length
+        for (let i=0; i < expandIcons.length; ++i) {
             if ((Boolean((i + 1) % 2))) {
-                // ith even element is an expand more icon
+                // ith even element and zero is an expand more icon
                 let parentGrid = expandIcons[i].parentElement.parentElement.children[1];
                 let expandLessIcon = expandIcons[i].nextElementSibling;
                 expect(window.getComputedStyle(parentGrid).getPropertyValue('display')).toBe('block');
@@ -266,10 +264,9 @@ describe('Test that the expand less and more icons work', () => {
     })
 
     test('that the now visible grid container receives focus after the expand icon is clicked', () => {
-        for (let i=0; i < 2*grid_containers.length; ++i) {
-            // not all grid containers neccesarily exist yet, so some tests may fail if i >= length
+        for (let i=0; i < expandIcons.length; ++i) {
             if ((Boolean((i + 1) % 2))) {
-                // ith even element is an expand more icon
+                // ith even element and zero is an expand more icon
                 let parentGrid = expandIcons[i].parentElement.parentElement.children[1];
                 expandIcons[i].click();
                 expect(document.activeElement).toBe(parentGrid);
@@ -278,20 +275,21 @@ describe('Test that the expand less and more icons work', () => {
     })
 })
 
-describe('Test that the edit profile button works', () => {
+describe('Test that the open modal buttons work', () => {
     beforeEach(() => {
-        // setting intitial profile modal container styling
-        modalContainers[0].style.display = 'none';
+        for (let container of modalContainers) {
+            container.style.display = 'none';
+        }
     })
 
     test('that the container becomes visible, the modal gains focus, and background scrollbar is hidden', () => {
-        const profileModalContainer = modalContainers[0];
-        const profileModal = modals[0];
-        expect(window.getComputedStyle(profileModalContainer).getPropertyValue('display')).toBe('none');
-        editButton.click();
-        expect(window.getComputedStyle(profileModalContainer).getPropertyValue('display')).toBe('block');
-        expect(document.activeElement).toBe(profileModal);
-        expect(document.body.style.overflowY).toBe('hidden');
+        for (let i=0; i < modalContainers.length; i++) {
+            expect(window.getComputedStyle(modalContainers[i]).getPropertyValue('display')).toBe('none');
+            openModalButtons[i].click();
+            expect(window.getComputedStyle(modalContainers[i]).getPropertyValue('display')).toBe('block');
+            expect(document.activeElement).toBe(modals[i]);
+            expect(document.body.style.overflowY).toBe('hidden');
+        }  
     })
 
 })
@@ -332,7 +330,7 @@ describe('Test that the close modal buttons work', () => {
         let button = editProfileModal.firstElementChild.firstElementChild;
         let clickableButtonRegion = button.firstElementChild;
         clickableButtonRegion.click();
-        expect(document.activeElement).toBe(editButton);
+        expect(document.activeElement).toBe(openModalButtons[0]);
     })
 })
 
@@ -394,6 +392,6 @@ describe('Test that the cancel modal buttons work', () => {
         document.body.style.overflowY = 'hidden';
         // only edit profile modal exists at the moment
         editProfileModalCancelButon.click();
-        expect(document.activeElement).toBe(editButton);
+        expect(document.activeElement).toBe(openModalButtons[0]);
     })
 })
