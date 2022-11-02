@@ -4,6 +4,8 @@ from django.urls import reverse
 from allauth.account.models import EmailAddress
 from landing_page.models import CustomUserModel
 from home.models import UserAddress, UserProfile
+from ..forms import EventsActivitiesForm
+from ..models import EventsActivities
 
 
 class TestPostEventsView(TestCase):
@@ -91,7 +93,116 @@ class TestPostEventsView(TestCase):
         response = client.get('/home/post_events/', follow=True)
         self.assertRedirects(response, '/home/')
 
-    
+    def test_post_events_modal_and_form_rendering(self):
+        """
+        Tests that the post events modal is rendered as expected, with a blank form instance.
+        """
+        client = Client()
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        response = client.get('/home/')
+        self.assertTemplateUsed(response, 'events_and_activities/post_events_modal.html')
+        self.assertTemplateUsed(response, 'events_and_activities/post_events_form.html')
+        sub_context = {'post_events_form': EventsActivitiesForm()}
+        for key, value in sub_context.items():
+            with self.subTest(key):
+                self.assertHTMLEqual(str(response.context[key]), str(value))
+        self.assertContains(response, str(EventsActivitiesForm()), html=True)
 
-
-
+    def test_the_post_events_section_view_related_logic_and_rendering(self):
+        """
+        Tests PostEventsView GET method for generating the context for the post events section template and rendering the template.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+        # create identical events varying in either their host, title, 'closing date' and or 'when' values.
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event1',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2028-12-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event2',
+                                        when="2022-10-30 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event3',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.create(host_user=user2,
+                                        status="advertised",
+                                        title='event4',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.create(host_user=user2,
+                                        status="advertised",
+                                        title='event5',
+                                        when="2022-10-30 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        # expected data
+        expected_advertised_event_data = [{'ID': 1, 'host': user, 'title': 'event1',
+                                           'when': '12:00, 23/12/30', 'closing date': '12:00, 15/12/28',
+                                           'max no. of attendees': 20, 'keywords': 'outdoors,paintballing,competitive',
+                                           'description': 'Paintballing dayout, followed by lunch.',
+                                           'requirements': 'min £50 per person. wear suitable shoes. Need to be physically fit.',
+                                           'Address line 1': 'mayhem paintball', 'City/Town': 'adbridge',
+                                           'County': 'essex', 'Postcode': 'rm4 1aa'}]
+        expected_upcoming_event_data = [{'ID': 3, 'host': user, 'title': 'event3',
+                                         'when': '12:00, 23/12/30', 'closing date': '12:00, 15/10/22',
+                                         'max no. of attendees': 20, 'keywords': 'outdoors,paintballing,competitive',
+                                         'description': 'Paintballing dayout, followed by lunch.',
+                                         'requirements': 'min £50 per person. wear suitable shoes. Need to be physically fit.',
+                                         'Address line 1': 'mayhem paintball', 'City/Town': 'adbridge',
+                                         'County': 'essex', 'Postcode': 'rm4 1aa'}]
+        client = Client()
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        response = client.get('/home/')
+        self.assertTemplateUsed(response, 'events_and_activities/post_section.html')
+        sub_context = {'advertised_hosting_events_data': expected_advertised_event_data,
+                       'upcoming_hosting_events_data': expected_upcoming_event_data}
+        for key, value in sub_context.items():
+            with self.subTest(key):
+                self.assertEqual(response.context[key], value)

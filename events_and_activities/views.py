@@ -27,7 +27,7 @@ class PostEventsView(FormView):
 
     def get(self, request, *args, **kwargs):
         """
-        Handles GET request for rendered events_template
+        Handles GET requests for rendered post_section and post_events_modal templates.
         """
         if request.path != reverse('home:user_homepage'):
             return redirect(reverse('home:user_homepage'))
