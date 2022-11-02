@@ -419,8 +419,10 @@ function slideshowHandler() {
     imageFadeIn(nextImage, currentImage);
 }
 
-/**
- * 
+/** Event handler for the radioInput event listeners.
+ *  Alters whether advertised or upcoming events
+ * are displayed in the post events section.
+ * @summary event handler for radioInput listeners. Alters which events are displayed.
  */
 function updateVisibleEvents(input) {
     if (input.value === 'advertised') {
@@ -701,5 +703,5 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 //     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
 //     helpText, matchingIcons, signupButton, signinButton, expandIcons, modalContainers, modals,
 //     closeModalButtons, editProfileModal, editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
-//     modalButtons, openModalButtons, postEventModal
+//     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents
 // };

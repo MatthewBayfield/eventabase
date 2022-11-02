@@ -9,7 +9,7 @@ let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/re
 document.documentElement.innerHTML = fileContents;
 let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
      modalContainers, modals, closeModalButtons, modalButtons, editProfileModalDoneButton, editProfileModal,
-     openModalButtons, postEventModal} = require('../script.js');
+     openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents} = require('../script.js');
 // mock functions
 const log = jest.fn();
 
@@ -393,5 +393,34 @@ describe('Test that the cancel modal buttons work', () => {
         // only edit profile modal exists at the moment
         editProfileModalCancelButon.click();
         expect(document.activeElement).toBe(openModalButtons[0]);
+    })
+})
+
+describe('test that the post events section radio input affects the events displayed', () => {
+    test('that toggling the selected radio input changes the types of events displayed', () => {
+        let advertsiedOption = radioInputs[0];
+        let upcomingOption = radioInputs[1];
+        // advertised is checked on page load.
+        expect(advertsiedOption.checked).toBe(true);
+        for (let event of advertisedEvents) {
+            expect(event.classList.contains('hidden')).toBe(false);
+        }
+        for (let event of upcomingEvents) {
+            expect(event.classList.contains('hidden')).toBe(true);
+        }
+        upcomingOption.click();
+        for (let event of advertisedEvents) {
+            expect(event.classList.contains('hidden')).toBe(true);
+        }
+        for (let event of upcomingEvents) {
+            expect(event.classList.contains('hidden')).toBe(false);
+        }
+        advertsiedOption.click();
+        for (let event of advertisedEvents) {
+            expect(event.classList.contains('hidden')).toBe(false);
+        }
+        for (let event of upcomingEvents) {
+            expect(event.classList.contains('hidden')).toBe(true);
+        }
     })
 })
