@@ -1,0 +1,25 @@
+<div class="event_container advertised" region role="region" aria-label="event" tabindex="0">
+    <div>
+        <h5>No. of users attending: {{event_count}}</h5>
+        {% for field_name,value in event.items %}
+            {% if forloop.counter0 <= 8 %}
+                <div class="details_display">
+                    <span>{{field_name|title}} :</span>
+                    <span>{{value}}</span>
+                </div>
+            {% endif%}
+        {% endfor %}  
+    </div>
+    <div>
+        {% for field_name, value in event.items %}
+            {% if forloop.counter0 >= 9 %}
+                <div class="details_display">
+                    <span>{{field_name|title}} :</span>
+                    <span>{{value}}</span>
+                </div>
+            {% endif%}
+        {% endfor %}
+        <button>Cancel</button>
+        <button>Message Attendees</button>
+    </div>
+</div>
