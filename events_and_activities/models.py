@@ -69,6 +69,7 @@ class EventsActivities(ProfileMixin):
     class Meta:
         verbose_name = 'Events and Activities'
         verbose_name_plural = 'Events and Activities'
+        ordering = ['-closing_date']
 
     host_user = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE,
                                   verbose_name='host',
