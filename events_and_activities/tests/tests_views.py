@@ -206,3 +206,69 @@ class TestPostEventsView(TestCase):
         for key, value in sub_context.items():
             with self.subTest(key):
                 self.assertEqual(response.context[key], value)
+    
+    def test_post_events_form_handling_and_processing(self):
+        """
+        Tests the POST method of the PostEventsView, that is responsible for handling the post events form submission.
+        """
+        event = {'status': 'advertised',
+                 'title': 'paintballing',
+                 'when': '13:30, 19/01/23',
+                 'closing_date': '11:00, 01/01/23',
+                 'max_attendees': 20,
+                 'keywords': 'outdoors,fun',
+                 'description': 'painballing then lunch.',
+                 'requirements': '£50 per person',
+                 'address_line_one': '58 StanLey Avenue',
+                 'city_or_town': 'GIdea Park',
+                 'county': 'ESSEX',
+                 'postcode': 'Rm26Bt'}
+        expected_rendered_event = '''<div class="event_container advertised" region role="region" aria-label="event" tabindex="0">
+                                     <div><h5>No. of users attending: </h5><div class="details_display"><span>Id :</span><span>1</span>
+                                     </div><div class="details_display"><span>Host :</span><span>jimmy147</span></div>
+                                     <div class="details_display"><span>Title :</span><span>paintballing</span></div>
+                                     <div class="details_display"><span>When :</span><span>13:30, 19/01/23</span>
+                                     </div><div class="details_display"><span>Closing Date :</span><span>11:00, 01/01/23</span>
+                                     </div><div class="details_display"><span>Max No. Of Attendees :</span><span>20</span>
+                                     </div><div class="details_display"><span>Keywords :</span><span>outdoors,fun</span>
+                                     </div><div class="details_display"><span>Description :</span><span>painballing then lunch.</span>
+                                     </div><div class="details_display"><span>Requirements :</span><span>£50 per person</span>
+                                     </div></div><div><div class="details_display"><span>Address Line 1 :</span>
+                                     <span>58 Stanley Avenue</span></div><div class="details_display">
+                                     <span>City/Town :</span><span>Gidea Park</span></div><div class="details_display">
+                                     <span>County :</span><span>Essex</span></div><div class="details_display"><span>Postcode :</span>
+                                     <span>rm26bt</span></div><button>Cancel</button><button>Message Attendees</button></div></div>'''
+        # test for valid form:
+
+        client = Client()
+        # user sign-in
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        event['host_user'] = CustomUserModel.objects.get(email=self.data['email'])
+        # submit form
+        response = client.post(reverse('home:post_events_view'), data=event, mode='same_origin')
+        response_json = response.json()
+        # check response 
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_json['valid'], 'true')
+        self.assertHTMLEqual(response_json['event'], expected_rendered_event)
+        self.assertHTMLEqual(response_json['form'], str(EventsActivitiesForm()))
+        # test for invalid form:
+
+        client = Client()
+        # user sign-in
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        event['host_user'] = CustomUserModel.objects.get(email=self.data['email'])
+        event['when'] = '13:30'
+        new_form = EventsActivitiesForm(event)
+        rendered_form = new_form.render(context=new_form.get_context())
+        # submit form
+        response = client.post(reverse('home:post_events_view'), data=event, mode='same_origin')
+        response_json = response.json()
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_json['valid'], 'false')
+        self.assertHTMLEqual(response_json['form'], rendered_form)
+
+        
