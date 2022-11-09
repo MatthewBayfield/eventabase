@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from allauth.account.decorators import verified_email_required
 from .models import EventsActivities
 from .forms import EventsActivitiesForm
@@ -13,10 +13,19 @@ from .forms import EventsActivitiesForm
 @method_decorator(verified_email_required, name='dispatch')
 class PostEventsView(FormView):
     """
+    Responsible for retrieving and displaying a user's advertised or upcoming events that they are hosting
+    in the post events section of their homepage. Also responsible for handling the post events form
+    creation and submission.
+
+    Attributes:
+        post_events_section_template: template for the post events section of the homepage.
+        post_events_modal_template: template for the post events form modal.
+        further_context (dict): context dictionary.
+        form_class (obj): form class for the post events form.
     """
     post_events_section_template = get_template('events_and_activities/post_section.html')
-    post_events_modal_template = get_template('events_and_activities/post_events_modal.html')
-    
+    post_events_modal_template = get_template('events_and_activities/post_events_modal.html')    
+
     def __init__(self, **kwargs):
         """
         Calls the TemplateView constructor. Sets initial context.
@@ -64,3 +73,34 @@ class PostEventsView(FormView):
         kwargs.update({'post_events_form': post_events_form})
         rendered_post_events_modal_template = self.post_events_modal_template.render(kwargs, request)
         return rendered_post_events_modal_template
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handles the post events form submission via a fetch request.
+
+        Returns:
+            A JSON response with with either the submitted form instance with error feedback, if the submitted form was
+            invalid; or a rendered string of the event template with context generated from the newly created event data,
+            if the form is valid.
+        """
+        data = {}
+
+        form_data = request.POST
+        new_event_form = EventsActivitiesForm(data=form_data)
+        valid = new_event_form.is_valid()
+        if valid:
+            new_event_form.post_clean_processing()
+            new_event = new_event_form.save()
+            new_event_data = new_event.retrieve_field_data()
+            new_event_data.pop('status')
+            new_event_data['closing date'] = new_event_data['closing date'].strftime("%H:%M, %d/%m/%y")
+            new_event_data['when'] = new_event_data['when'].strftime("%H:%M, %d/%m/%y")
+            rendered_event = render_to_string(template_name='events_and_activities/event.html',
+                                              context={'event': new_event_data},
+                                              request=request)
+            rendered_blank_form = str(EventsActivitiesForm())
+            data.update({'event': rendered_event, 'valid': 'true', 'form': rendered_blank_form})
+        else:
+            rendered_form = render_to_string(template_name='events_and_activities/post_events_form.html', context=new_event_form.get_context(), request=request)
+            data.update({'form': rendered_form, 'valid': 'false'})
+        return JsonResponse(data)
