@@ -9,7 +9,9 @@ let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/re
 document.documentElement.innerHTML = fileContents;
 let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
      modalContainers, modals, closeModalButtons, editProfileModal, editProfileModalDoneButton,
-     editProfileFormFetchHandler, addEditProfileModalDonebuttonListeners} = require('../script.js');
+     editProfileFormFetchHandler, addEditProfileModalDonebuttonListeners, postEventModal,
+     postEventFormFetchHandler, postEventForm,
+     editAddressForm, editPersonalInfoForm} = require('../script.js');
 // mock functions
 const get = jest.fn()
 global.Cookies = {'get': get};
@@ -19,202 +21,63 @@ global.fetch = jest.fn(() => Promise.resolve({
     json: () => Promise.resolve(json_data)
 }));
 global.alert = jest.fn();
-
-let initialProfile = editProfileModal.parentElement.previousElementSibling.innerHTML;
-let profile = `<div class="left_column top_row">
-    <h3 class="profile_display">Personal Info</h3>
-
-    
-        <div class="profile_display">
-            <span>First Name :</span>
-            <span>matthewq</span>
-        </div>
-    
-
-    
-        <div class="profile_display">
-            <span>Last Name :</span>
-            <span>bayfield</span>
-        </div>
-    
-
-    
-        <div class="profile_display">
-            <span>Date Of Birth :</span>
-            <span>19/11/1993</span>
-        </div>
-    
-
-    
-        <div class="profile_display">
-            <span>Sex :</span>
-            <span>male</span>
-        </div>
-    
-
-    
-        <div class="profile_display">
-            <span>Bio :</span>
-            <span>I like to have fun.</span>
-        </div>
-    
-
-</div>
-<div class="right_column top_row">
-    <h3 class="profile_display">Address</h3>
-
-    <div class="profile_display">
-        <span>Address Line 1 :</span>
-        <span>11 rise park boulevard</span>
-    </div>
-
-    <div class="profile_display">
-        <span>City/Town :</span>
-        <span>romford</span>
-    </div>
-
-    <div class="profile_display">
-        <span>County :</span>
-        <span>essex</span>
-    </div>
-
-    <div class="profile_display">
-        <span>Postcode :</span>
-        <span>rm14pp</span>
-    </div>
-
-</div>
-<div id="profile_flex" class="bottom_row">
-    
-        <div id="edit" role="button" aria-label="edit profile" aria-controls="edit_profile_modal" tabindex="0">
-            <span>Edit <i class="fa-solid fa-pen-to-square"></i></span>
-        </div>
-    
-    <div id="report_issue">
-        <div>
-            <button type="button" name="report_issue">Report Issue</button>
-            <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
-        </div>
-        <div class="help_text">
-            Report any issues, about the site, your account etc.
-        </div>
-    </div> 
-</div>`;
-
-let profile_after_error = `
-    <div class="left_column top_row">
-        <h3 class="profile_display">Personal Info</h3>
-    
-        
-            <div class="profile_display">
-                <span>First Name :</span>
-                <span>matthew</span>
-            </div>
-        
-    
-        
-            <div class="profile_display">
-                <span>Last Name :</span>
-                <span>bayfield</span>
-            </div>
-        
-    
-        
-            <div class="profile_display">
-                <span>Date Of Birth :</span>
-                <span>19/11/1993</span>
-            </div>
-        
-    
-        
-            <div class="profile_display">
-                <span>Sex :</span>
-                <span>male</span>
-            </div>
-        
-    
-        
-            <div class="profile_display">
-                <span>Bio :</span>
-                <span>I like to have fun sometimes.</span>
-            </div>
-        
-    
-    </div>
-    <div class="right_column top_row">
-        <h3 class="profile_display">Address</h3>
-    
-        <div class="profile_display">
-            <span>Address Line 1 :</span>
-            <span>11 rise park boulevard</span>
-        </div>
-    
-        <div class="profile_display">
-            <span>City/Town :</span>
-            <span>romford</span>
-        </div>
-    
-        <div class="profile_display">
-            <span>County :</span>
-            <span>essex</span>
-        </div>
-    
-        <div class="profile_display">
-            <span>Postcode :</span>
-            <span>rm14pp</span>
-        </div>
-    
-    </div>
-    <div id="profile_flex" class="bottom_row">
-        
-            <div id="edit" role="button" aria-label="edit profile" aria-controls="edit_profile_modal" tabindex="0">
-                <span>Edit <i class="fa-solid fa-pen-to-square"></i></span>
-            </div>
-        
-        <div id="report_issue">
-            <div>
-                <button type="button" name="report_issue">Report Issue</button>
-                <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
-            </div>
-            <div class="help_text">
-                Report any issues, about the site, your account etc.
-            </div>
-        </div> 
-    </div>`
-
+// global variables needed for some tests
+let initialPostEventsSection = postEventModal.parentElement.previousElementSibling.innerHTML;
+let initialPostEventForm = postEventForm.innerHTML;
+let initialProfileSection = editProfileModal.parentElement.previousElementSibling.innerHTML;
+let initialAddressForm = editAddressForm.innerHTML;
+let initialPersonalInfoForm =  editPersonalInfoForm.innerHTML;
 
 describe('test the ProfileFormView fetch request works', () => {
     beforeEach(() => {
-        editProfileModal.style.display = 'block';
+        editProfileModal.parentElement.style.display = 'block';
     })
     afterEach(() => {
         Request.mockClear();
         fetch.mockClear();
         alert.mockClear();
-        editProfileModal.parentElement.previousElementSibling.innerHTML = initialProfile;
+        // reset html content
+        editProfileModal.parentElement.previousElementSibling.innerHTML = initialProfileSection;
+        editAddressForm.innerHTML = initialAddressForm;
+        editPersonalInfoForm.innerHTML = initialPersonalInfoForm;
     })
 
     test('only two requests are made if the submitted forms are invalid, and the profile content does not change', async () => {
-        json_data = {'valid': 'false', 'profile': profile}
-        expect(editProfileModal.parentElement.previousElementSibling.innerHTML.replace(/[\r\n\s]+/gm, "")).not.toBe(profile.replace(/[\r\n\s]+/gm, ""));
+        json_data = {'valid': 'false', 'profile': 'profile', 'form': 'form'}
+        expect(editProfileModal.parentElement.hasAttribute('style')).toBe(true);
+        expect(editAddressForm.innerHTML).not.toBe('form');
+        expect(editPersonalInfoForm.innerHTML).not.toBe('form');
+        expect(editProfileModal.parentElement.previousElementSibling.innerHTML).not.toBe('profile');
+        // call handler
         await editProfileFormFetchHandler();
         expect(Request).toHaveBeenCalledTimes(2);
         expect(fetch).toHaveBeenCalledTimes(2);
-        expect(editProfileModal.parentElement.previousElementSibling.innerHTML.replace(/[\r\n\s]+/gm, "")).not.toBe(profile.replace(/[\r\n\s]+/gm, ""));
+        expect(editAddressForm.innerHTML).toBe('form');
+        expect(editPersonalInfoForm.innerHTML).toBe('form');
+        expect(editProfileModal.parentElement.previousElementSibling.innerHTML).not.toBe('profile');
+        // check modal is still open
+        expect(editProfileModal.parentElement.hasAttribute('style')).toBe(true);
     })
 
-
     test('four requests are made if the submitted forms are valid, and the profile content is updated', async () => {
-        json_data = {'valid': 'true', 'profile': profile}
-        expect(editProfileModal.parentElement.previousElementSibling.innerHTML.replace(/[\r\n\s]+/gm, "")).not.toBe(profile.replace(/[\r\n\s]+/gm, ""));
+        json_data = {'valid': 'true', 'profile': 'profile', 'form': 'form'}
+        expect(editProfileModal.parentElement.hasAttribute('style')).toBe(true);
+        expect(editProfileModal.parentElement.previousElementSibling.innerHTML).not.toBe('profile');
+        expect(editAddressForm.innerHTML).not.toBe('form');
+        expect(editPersonalInfoForm.innerHTML).not.toBe('form');
+        // call handler
         await editProfileFormFetchHandler();
         expect(Request).toHaveBeenCalledTimes(4);
         expect(fetch).toHaveBeenCalledTimes(4);
-        expect(editProfileModal.parentElement.previousElementSibling.innerHTML.replace(/[\r\n\s]+/gm, "")).toBe(profile.replace(/[\s\r\n]+/gm, ""));
+        expect(editAddressForm.innerHTML).toBe('form');
+        expect(editPersonalInfoForm.innerHTML).toBe('form');
+        expect(editProfileModal.parentElement.previousElementSibling.innerHTML).toBe('profile');
+        // check modal is closed
+        expect(editProfileModal.parentElement.hasAttribute('style')).toBe(false);
     })
 
     test('that an alert is raised when the related python exception occurs', async () => {
-        json_data = {'valid': 'true', 'profile': profile_after_error, 'error': 'true'}
+        json_data = {'valid': 'true', 'profile': 'profile', 'error': 'true', 'form': 'form'}
         await editProfileFormFetchHandler();
         expect(Request).toHaveBeenCalledTimes(4);
         expect(fetch).toHaveBeenCalledTimes(4);
@@ -225,12 +88,81 @@ describe('test the ProfileFormView fetch request works', () => {
         
     })        
 
-    test('that the profile is updated as expected when the error occurs', async () => {
-        json_data = {'valid': 'true', 'profile': profile_after_error, 'error': 'true'}
-        expect(editProfileModal.parentElement.previousElementSibling.innerHTML.replace(/[\r\n\s]+/gm, "")).not.toBe(profile_after_error.replace(/[\r\n\s]+/gm, ""));
+    test('that the profile is updated when the error occurs', async () => {
+        json_data = {'valid': 'true', 'profile': 'profile', 'error': 'true', 'form': 'form'}
+        expect(editProfileModal.parentElement.previousElementSibling.innerHTML).not.toBe('profile');
+        // call handler
         await editProfileFormFetchHandler();
         expect(Request).toHaveBeenCalledTimes(4);
         expect(fetch).toHaveBeenCalledTimes(4);
-        expect(editProfileModal.parentElement.previousElementSibling.innerHTML.replace(/[\r\n\s]+/gm, "")).toBe(profile_after_error.replace(/[\s\r\n]+/gm, ""));
+        expect(editProfileModal.parentElement.previousElementSibling.innerHTML).toBe('profile');
+        // check modal is still open
+        expect(editProfileModal.parentElement.hasAttribute('style')).toBe(true);
+    })
+})
+
+describe('test the post events form fetch request operates as expected', () => {
+    beforeEach(() => {
+        // modal container styling
+        postEventModal.parentElement.style.display = 'block';
+    })
+    afterEach(() => {
+        Request.mockClear();
+        fetch.mockClear();
+        // reset html content
+        postEventModal.parentElement.previousElementSibling.innerHTML = initialPostEventsSection;
+        postEventForm.innerHTML = initialPostEventForm;
+    })
+
+    test('check request and response/actions when a valid form is submitted', async () => {
+        json_data = {'valid': 'true', 'form': 'form', 'event': '<div class="event_container advertised">event</div>'};
+        expect(postEventModal.parentElement.hasAttribute('style')).toBe(true);
+        expect(document.querySelectorAll('.event_container.advertised').length).toBe(1);
+        // add no_event_msg p element for the sake of testing
+        let div = document.createElement('div');
+        document.querySelectorAll('.event_container.advertised')[0].parentElement.appendChild(div);
+        div.outerHTML = "<div class='advertised event_container'><p></p></div>";
+        expect(document.querySelectorAll('.event_container.advertised').length).toBe(2);
+        expect(document.querySelectorAll('.event_container.advertised > p').length).toBe(1);
+        // call the handler
+        await postEventFormFetchHandler();
+        expect(Request).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['post_events/']));
+        expect(document.querySelectorAll('.event_container.advertised').length).toBe(2);
+        // check event has been added
+        expect(document.querySelectorAll('.event_container.advertised')[0].innerHTML).toBe('event');
+        // check message has been removed
+        expect(document.querySelectorAll('.event_container.advertised > p').length).toBe(0);
+        // check form content updated
+        expect(postEventForm.innerHTML).toBe('form');
+        // check modal has been closed
+        expect(postEventModal.parentElement.hasAttribute('style')).toBe(false);
+    })
+
+    test('check request and response/actions when an invalid form is submitted', async () => {
+        json_data = {'valid': 'false', 'form': 'form', 'event': '<div class="event_container advertised">event</div>'};
+        expect(postEventModal.parentElement.hasAttribute('style')).toBe(true);
+        expect(document.querySelectorAll('.event_container.advertised').length).toBe(1);
+        // add no_event_msg p element for the sake of testing
+        let div = document.createElement('div');
+        document.querySelectorAll('.event_container.advertised')[0].parentElement.appendChild(div);
+        div.outerHTML = "<div class='advertised event_container'><p></p></div>";
+        expect(document.querySelectorAll('.event_container.advertised').length).toBe(2);
+        expect(document.querySelectorAll('.event_container.advertised > p').length).toBe(1);
+        // call the handler
+        await postEventFormFetchHandler();
+        expect(Request).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['post_events/']));
+        expect(document.querySelectorAll('.event_container.advertised').length).toBe(2);
+        // check message still present
+        expect(document.querySelectorAll('.event_container.advertised > p').length).toBe(1);
+        // check no new event has been added
+        expect(document.querySelectorAll('.event_container.advertised')[0].innerHTML).not.toBe('event');
+        // check form content updated
+        expect(postEventForm.innerHTML).toBe('form');
+        // check modal is still open
+        expect(postEventModal.parentElement.hasAttribute('style')).toBe(true);
     })
 })

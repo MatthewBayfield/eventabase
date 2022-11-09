@@ -21,16 +21,12 @@ let closeModalButtons = [...document.getElementsByClassName('close_button')];
 let editPersonalInfoForm = document.getElementById('personal_info_form');
 let editAddressForm = document.getElementById('address_form');
 let editProfileModal = document.getElementById('edit_profile_modal');
-if (editProfileModal) {
-    var editProfileModalDoneButton = editProfileModal.lastElementChild.children[0];
-}
+let editProfileModalDoneButton = editProfileModal ? editProfileModal.lastElementChild.children[0] : null;
 let modalButtons = [...document.getElementsByClassName('modal_button')];
 let openModalButtons = [...document.getElementsByClassName('open_modal_button')];
 let postEventModal = document.getElementById('post_events_modal');
 let postEventForm = document.getElementById('post_events_form');
-if (postEventModal) {
-    var postEventFormDoneButton = document.getElementById('post_events_modal').querySelector('.modal_button').children[0];
-}
+let postEventFormDoneButton = document.getElementById('post_events_modal') ? document.getElementById('post_events_modal').querySelector('.modal_button').children[0] : null;
 let advertisedEvents = [...document.getElementsByClassName('advertised')];
 let upcomingEvents = [...document.getElementsByClassName('upcoming')];
 let radioInputs = [...document.querySelectorAll("[type = 'radio']")];
@@ -527,19 +523,15 @@ function refreshDomElementVariables() {
     editPersonalInfoForm = document.getElementById('personal_info_form');
     editAddressForm = document.getElementById('address_form');
     editProfileModal = document.getElementById('edit_profile_modal');
-    if (editProfileModal) {
-        editProfileModalDoneButton = editProfileModal.lastElementChild.children[0];
-    }
+    editProfileModalDoneButton = editProfileModal ? editProfileModal.lastElementChild.children[0] : null;
     modalButtons = [...document.getElementsByClassName('modal_button')];
     openModalButtons = [...document.getElementsByClassName('open_modal_button')];
     postEventModal = document.getElementById('post_events_modal');
-    if (postEventModal) {
-        postEventFormDoneButton = document.getElementById('post_events_modal').querySelector('.modal_buttons').children[0];
-    }
+    postEventFormDoneButton = document.getElementById('post_events_modal') ? document.getElementById('post_events_modal').querySelector('.modal_button').children[0] : null;
     postEventForm = document.getElementById('post_events_form');
     advertisedEvents = [...document.getElementsByClassName('advertised')];
     upcomingEvents = [...document.getElementsByClassName('upcoming')];
-    radioInputs = [...document.getElementsByTagName('input')].querySelectorAll('[type = "radio"]');
+    radioInputs = [...document.querySelectorAll("[type = 'radio']")];
 }
 
 // JS Subsection: Fetch requests:
@@ -642,7 +634,7 @@ function refreshDomElementVariables() {
 /** Fetch POST request handler for submitting
  *  the post event form. Updates page
  *  when a valid form is submitted.
- * @summary Fetch POST request handler for edit profile form submission.
+ * @summary Fetch POST request handler for post events form submission.
  */
  async function postEventFormFetchHandler() {
     // form data for request
@@ -662,7 +654,15 @@ function refreshDomElementVariables() {
         let responseJSON = await response.json();
         if (responseJSON.valid === 'true') {
             // update displayed events
-
+            let allEventContainer = document.getElementById('post_events').querySelector('.both_columns.bottom_row');
+            let first_event_container = document.getElementsByClassName('event_container advertised')[0];
+            let new_event = document.createElement('div');
+            allEventContainer.insertBefore(new_event, first_event_container);
+            new_event.outerHTML = responseJSON.event;
+            let no_events_msg = allEventContainer.querySelector('.advertised.event_container > p');
+            if (no_events_msg !== null) {
+                no_events_msg.parentElement.remove();
+            }
             //close modal
             postEventModal.firstElementChild.firstElementChild.firstElementChild.click();
 
@@ -702,6 +702,7 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 //     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
 //     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
 //     helpText, matchingIcons, signupButton, signinButton, expandIcons, modalContainers, modals,
-//     closeModalButtons, editProfileModal, editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
-//     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents
+//     closeModalButtons, editProfileModal, editPersonalInfoForm, editAddressForm,
+//     editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
+//     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm
 // };
