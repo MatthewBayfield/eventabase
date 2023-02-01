@@ -213,8 +213,8 @@ class TestPostEventsView(TestCase):
         """
         event = {'status': 'advertised',
                  'title': 'paintballing',
-                 'when': '13:30, 19/01/23',
-                 'closing_date': '11:00, 01/01/23',
+                 'when': '13:30, 19/01/30',
+                 'closing_date': '11:00, 01/01/30',
                  'max_attendees': 20,
                  'keywords': 'outdoors,fun',
                  'description': 'painballing then lunch.',
@@ -227,8 +227,8 @@ class TestPostEventsView(TestCase):
                                      <div><h5>No. of users attending: </h5><div class="details_display"><span>Id :</span><span>1</span>
                                      </div><div class="details_display"><span>Host :</span><span>jimmy147</span></div>
                                      <div class="details_display"><span>Title :</span><span>paintballing</span></div>
-                                     <div class="details_display"><span>When :</span><span>13:30, 19/01/23</span>
-                                     </div><div class="details_display"><span>Closing Date :</span><span>11:00, 01/01/23</span>
+                                     <div class="details_display"><span>When :</span><span>13:30, 19/01/30</span>
+                                     </div><div class="details_display"><span>Closing Date :</span><span>11:00, 01/01/30</span>
                                      </div><div class="details_display"><span>Max No. Of Attendees :</span><span>20</span>
                                      </div><div class="details_display"><span>Keywords :</span><span>outdoors,fun</span>
                                      </div><div class="details_display"><span>Description :</span><span>painballing then lunch.</span>

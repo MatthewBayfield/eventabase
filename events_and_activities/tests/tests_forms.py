@@ -11,8 +11,8 @@ class TestEventsActivitiesForm(TestCase):
     """
     event = {'status': 'advertised',
              'title': 'paintballing',
-             'when': '13:30, 19/01/23',
-             'closing_date': '11:00, 01/01/23',
+             'when': '13:30, 19/01/30',
+             'closing_date': '11:00, 01/01/30',
              'max_attendees': 20,
              'keywords': 'outdoors,fun',
              'description': 'paintballing then lunch.',
@@ -42,8 +42,8 @@ class TestEventsActivitiesForm(TestCase):
         EventsActivities.objects.create(host_user=self.event['host_user'],
                                         status="advertised",
                                         title='Paintballing',
-                                        when="2023-01-19 13:30:00",
-                                        closing_date="2022-12-15 12:00:00",
+                                        when="2030-01-19 13:30:00",
+                                        closing_date="2029-12-15 12:00:00",
                                         max_attendees=20,
                                         keywords="outdoors,paintballing,competitive",
                                         description="Paintballing dayout, followed by lunch.",
@@ -280,8 +280,8 @@ class TestEventsActivitiesForm(TestCase):
         event = {'host_user': self.event['host_user'],
                  'status': 'advertised',
                  'title': 'paintballing',
-                 'when': '13:30, 19/01/23',
-                 'closing_date': '11:00, 01/01/23',
+                 'when': '13:30, 19/01/31',
+                 'closing_date': '11:00, 01/01/31',
                  'max_attendees': 20,
                  'keywords': 'outdoors,fun',
                  'description': 'painballing then lunch.',
@@ -294,8 +294,8 @@ class TestEventsActivitiesForm(TestCase):
         post_processed_data = {'host_user': self.event['host_user'],
                                'status': 'advertised',
                                'title': 'paintballing',
-                               'when': datetime.strptime('13:30, 19/01/23', "%H:%M, %d/%m/%y"),
-                               'closing_date': datetime.strptime('11:00, 01/01/23', "%H:%M, %d/%m/%y"),
+                               'when': datetime.strptime('13:30, 19/01/31', "%H:%M, %d/%m/%y"),
+                               'closing_date': datetime.strptime('11:00, 01/01/31', "%H:%M, %d/%m/%y"),
                                'max_attendees': 20,
                                'keywords': 'outdoors,fun',
                                'description': 'painballing then lunch.',
@@ -325,6 +325,7 @@ class TestEventsActivitiesForm(TestCase):
         new_form = EventsActivitiesForm(data=event)
         # check form is valid, as it should be.
         valid = new_form.is_valid()
+        print(new_form.errors)
         self.assertTrue(valid)
         new_form.post_clean_processing()
         # save the instance and check it now exits    
