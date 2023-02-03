@@ -99,6 +99,26 @@ describe('test the ProfileFormView fetch request works', () => {
         // check modal is still open
         expect(editProfileModal.parentElement.hasAttribute('style')).toBe(true);
     })
+
+    test('that the edit profile modal close/cancel button become available after first successful form submission', async () => {
+        json_data = {'valid': 'true', 'profile': 'profile', 'form': 'form'}
+        // close button is hidden on first login
+        editProfileModal.firstElementChild.firstElementChild.style = "visibility:hidden";
+        // no cancel button on first login
+        let cancelButton = editProfileModal.querySelector("[name = 'Cancel']");
+        cancelButton.remove();
+
+        // initial state
+        expect(editProfileModal.parentElement.hasAttribute('style')).toBe(true);
+        expect(editProfileModal.firstElementChild.firstElementChild.hasAttribute('style')).toBe(true);
+        expect(editProfileModal.lastElementChild.children.length < 2).toBe(true);
+        // call handler with valid form response
+        await editProfileFormFetchHandler();
+        // check cancel button exists, and close button is visible
+        expect(editProfileModal.parentElement.hasAttribute('style')).toBe(false);
+        expect(editProfileModal.lastElementChild.children.length < 2).toBe(false);
+        expect(editProfileModal.querySelector("[name = 'Cancel']")).not.toBe(null);
+    })
 })
 
 describe('test the post events form fetch request operates as expected', () => {
