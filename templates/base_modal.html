@@ -1,5 +1,5 @@
 <div class="modal_container" tabindex="0" {% if first_login and modal == 'edit_profile_modal' %}style="display:block"{% endif %}>
-    <div id="{{modal}}" class="modal" role="dialog" aria-modal="true" tabindex="0" aria-label="edit profile modal">
+    <div id="{{modal}}" class="modal" role="dialog" aria-modal="true" tabindex="0" aria-label="{{modal}}">
         <div>
                 <div class="close_button" {% if first_login and modal == 'edit_profile_modal' %} style="visibility:hidden"{% endif %}>
                     <span tabindex="0" aria-label="close modal" role="button"><i class="fa-solid fa-xmark"></i> </span> 
