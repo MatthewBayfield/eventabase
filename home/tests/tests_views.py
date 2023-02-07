@@ -1,3 +1,4 @@
+import re
 from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
@@ -532,4 +533,23 @@ class TestHomeViews(TestCase):
         # check the user profile section unchanged as user profile instance deleted and user address instance not saved and so created.)
         rendered_home_page = client.get('/home/')
         self.assertContains(rendered_home_page, response_json['profile'], html=True)
-        
+
+    def test_response_get_fetch_request_profile_form_view(self):
+        """
+        Tests that a GET request for form refreshing, after closing the modal or clicking cancel, receives the expected responses.
+        """
+        client = Client()
+        # existing user sign-in with data
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        # retrieving the original edit profile modal content
+        rendered_edit_profile_modal = client.get('/home/').context_data['edit_profile_modal']
+        # GET request to reload the prefilled form values for the user
+        response = client.get('/home/profile_form/?refresh=true&first_login=false', mode='same_origin')
+        response_json = response.json()
+        # checking the response status and its json payload
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('modal', response_json)
+        # Check that the prefilled values have been restored. CSRF's are different only.
+        self.assertHTMLEqual(re.sub("(<input).+(name=\"csrf).+>", "", rendered_edit_profile_modal),
+                             re.sub("(<input).+(name=\"csrf).+>", "", response_json['modal']))

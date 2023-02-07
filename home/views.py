@@ -60,6 +60,8 @@ class HomeViewsMixin():
                 for field in ['user profile', 'latitude', 'longitude']:
                     user_address_data.pop(field)
             else:
+                # this branch may be redundant, as if a user has a profile they will have an address as well,
+                # since both are created at the same time using the same form submission.
                 user_address = user_profile_data.pop('address')
                 user_address_data = UserAddress.retrieve_field_names()
                 user_address_data = {key: '' for key in user_address_data}
@@ -168,6 +170,7 @@ class UserHomePage(TemplateView, HomeViewsMixin):
             kwargs.update({'post_events': rendered_post_events_section_template, 'post_events_modal': rendered_post_events_modal})
             return super().get(request, *args, **kwargs)
 
+
 @method_decorator(verified_email_required, name='dispatch')
 class ProfileFormView(FormView, HomeViewsMixin):
     """
@@ -201,8 +204,18 @@ class ProfileFormView(FormView, HomeViewsMixin):
         Returns:
             Either an empty modal form, or a prepopulated form if the user already has a profile.
         """
+
         if request.path != reverse('home:user_homepage'):
-            return redirect(reverse('home:user_homepage'))
+            # establish whether it is a form refresh request
+            if request.environ['QUERY_STRING'] == 'refresh=true&first_login=false':
+                user = request.user
+                user_profile = user.profile
+                user_address = user_profile.address
+                kwargs.update({'user_profile': user_profile, 'user_address': user_address, 'first_login': False,
+                               'modal': 'edit_profile_modal', 'username': self.request.user.username,
+                               'button1_name': 'Done', 'button2_name': 'Cancel'})
+            else:
+                return redirect(reverse('home:user_homepage'))
 
         if not kwargs['first_login']:
             self.initial = kwargs['user_profile'].retrieve_field_data(False)
@@ -223,6 +236,8 @@ class ProfileFormView(FormView, HomeViewsMixin):
             kwargs.update({'address_form': form})
 
         rendered_modal_template = self.modal_template.render(kwargs, request)
+        if request.GET.get('refresh', ''):
+            return JsonResponse({'modal': rendered_modal_template})
         return rendered_modal_template
             
     def post(self, request, *args, **kwargs):
