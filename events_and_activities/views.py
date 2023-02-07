@@ -39,7 +39,12 @@ class PostEventsView(FormView):
         Handles GET requests for rendered post_section and post_events_modal templates.
         """
         if request.path != reverse('home:user_homepage'):
-            return redirect(reverse('home:user_homepage'))
+            # establish whether it is a form refresh request
+            if request.environ['QUERY_STRING'] == 'refresh=true':
+                kwargs.update({'get_modal': True, 'modal': 'post_events_modal',
+                               'button1_name': 'Done', 'button2_name': 'Cancel'})
+            else:
+                return redirect(reverse('home:user_homepage'))
 
         if not kwargs['get_modal']:
             EventsActivities.expired.delete_expired(request.user)
@@ -72,6 +77,8 @@ class PostEventsView(FormView):
         post_events_form = self.get_form()
         kwargs.update({'post_events_form': post_events_form})
         rendered_post_events_modal_template = self.post_events_modal_template.render(kwargs, request)
+        if request.GET.get('refresh', ''):
+            return JsonResponse({'modal': rendered_post_events_modal_template})
         return rendered_post_events_modal_template
 
     def post(self, request, *args, **kwargs):
