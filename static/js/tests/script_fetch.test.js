@@ -10,8 +10,41 @@ document.documentElement.innerHTML = fileContents;
 let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
      modalContainers, modals, closeModalButtons, editProfileModal, editProfileModalDoneButton,
      editProfileFormFetchHandler, addEditProfileModalDonebuttonListeners, postEventModal,
-     postEventFormFetchHandler, postEventForm,
+     postEventFormFetchHandler, postEventForm, refreshFormFetchHandler,
      editAddressForm, editPersonalInfoForm} = require('../script.js');
+// functions from script.js, but redefined in this scope; needed to update references to updated DOM.
+function refreshDomElementVariables() {
+    moreMenuContainer = document.getElementById('more_menu_container');
+    moreMenu = document.getElementById('more_menu');
+    moreMenuButtons = document.getElementsByClassName('more_menu_button');
+    menuItems = document.getElementsByClassName('menu_item');
+    signupButton = document.querySelector("[name = 'sign-up']");
+    signinButton = document.querySelector("[name = 'sign-in']");
+    slideshowImages = [...document.getElementsByClassName('slideshow_images')];
+    linksAndButtons = [...document.getElementsByTagName('a'), ...document.getElementsByTagName('button')];
+    focusable = [...linksAndButtons, ...document.querySelectorAll('[tabindex="0"]')];
+    uniqueFocusable = [...new Set(focusable)];
+    helpTextIcons = [...document.querySelectorAll('[data-icon-type = "help"]')];
+    helpText = [...document.getElementsByClassName('help_text')];
+    matchingIcons = [...document.getElementsByClassName('matching_icon')];
+    expandIcons = [...document.querySelectorAll('[data-icon-type ^= "expand"]')];
+    modalContainers = [...document.getElementsByClassName('modal_container')];
+    modals = [...document.getElementsByClassName('modal')]
+    closeModalButtons = [...document.getElementsByClassName('close_button')];
+    editPersonalInfoForm = document.getElementById('personal_info_form');
+    editAddressForm = document.getElementById('address_form');
+    editProfileModal = document.getElementById('edit_profile_modal');
+    editProfileModalDoneButton = editProfileModal ? editProfileModal.lastElementChild.children[0] : null;
+    modalButtons = [...document.getElementsByClassName('modal_button')];
+    openModalButtons = [...document.getElementsByClassName('open_modal_button')];
+    postEventModal = document.getElementById('post_events_modal');
+    postEventFormDoneButton = document.getElementById('post_events_modal') ? document.getElementById('post_events_modal').querySelector('.modal_button').children[0] : null;
+    postEventForm = document.getElementById('post_events_form');
+    advertisedEvents = [...document.getElementsByClassName('advertised')];
+    upcomingEvents = [...document.getElementsByClassName('upcoming')];
+    radioInputs = [...document.querySelectorAll("[type = 'radio']")];
+}
+
 // mock functions
 const get = jest.fn()
 global.Cookies = {'get': get};
@@ -28,7 +61,7 @@ let initialProfileSection = editProfileModal.parentElement.previousElementSiblin
 let initialAddressForm = editAddressForm.innerHTML;
 let initialPersonalInfoForm =  editPersonalInfoForm.innerHTML;
 
-describe('test the ProfileFormView fetch request works', () => {
+describe('test the ProfileFormView fetch POST request works', () => {
     beforeEach(() => {
         editProfileModal.parentElement.style.display = 'block';
     })
@@ -121,7 +154,7 @@ describe('test the ProfileFormView fetch request works', () => {
     })
 })
 
-describe('test the post events form fetch request operates as expected', () => {
+describe('test the post events form fetch POST request operates as expected', () => {
     beforeEach(() => {
         // modal container styling
         postEventModal.parentElement.style.display = 'block';
@@ -184,5 +217,80 @@ describe('test the post events form fetch request operates as expected', () => {
         expect(postEventForm.innerHTML).toBe('form');
         // check modal is still open
         expect(postEventModal.parentElement.hasAttribute('style')).toBe(true);
+    })
+})
+
+describe('test the ProfileFormView and PostEventsView fetch GET requests work', () => {
+    beforeEach(() => {
+        editProfileModal.parentElement.style.display = 'block';
+        postEventModal.parentElement.style.display = 'block';
+    })
+    afterEach(() => {
+        Request.mockClear();
+        fetch.mockClear();
+        alert.mockClear();
+        // reset html content
+        refreshDomElementVariables();
+        editProfileModal.parentElement.previousElementSibling.innerHTML = initialProfileSection;
+        editAddressForm.innerHTML = initialAddressForm;
+        editPersonalInfoForm.innerHTML = initialPersonalInfoForm;
+        postEventModal.parentElement.previousElementSibling.innerHTML = initialPostEventsSection;
+        postEventForm.innerHTML = initialPostEventForm;
+    })
+
+    test('that the edit_profile_modal is modified as expected for GET request triggered by clicking cancel', async () => {
+        // simulate json response
+        modalPlaceholder = editProfileModal.parentElement;
+        modalPlaceholder.setAttribute('data-dummy', 'test');
+        json_data = {'modal': modalPlaceholder.outerHTML};
+        // set target parameter
+        let editProfileModalCancelButton = editProfileModal.getElementsByClassName('modal_button')[1];
+        // call handler
+        await refreshFormFetchHandler(editProfileModalCancelButton);
+        expect(Request).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(editProfileModal.parentElement.outerHTML).toBe(modalPlaceholder.outerHTML);
+    })
+
+    test('that the edit_profile_modal is modified as expected for GET request triggered by clicking close', async () => {
+        // simulate json response
+        modalPlaceholder = editProfileModal.parentElement;
+        modalPlaceholder.setAttribute('data-dummy', 'test');
+        json_data = {'modal': modalPlaceholder.outerHTML};
+        // set target parameter
+        let editProfileModalCloseButton = editProfileModal.getElementsByClassName('close_button')[0].firstElementChild;
+        // call handler
+        await refreshFormFetchHandler(editProfileModalCloseButton);
+        expect(Request).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(editProfileModal.parentElement.outerHTML).toBe(modalPlaceholder.outerHTML);
+    })
+
+    test('that the post_events_modal is modified as expected for GET request triggered by clicking cancel', async () => {
+        // simulate json response
+        modalPlaceholder = postEventModal.parentElement;
+        modalPlaceholder.setAttribute('data-dummy', 'test');
+        json_data = {'modal': modalPlaceholder.outerHTML};
+        // set target parameter
+        let postEventModalCancelButton = postEventModal.getElementsByClassName('modal_button')[1];
+        // call handler
+        await refreshFormFetchHandler(postEventModalCancelButton);
+        expect(Request).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(postEventModal.parentElement.outerHTML).toBe(modalPlaceholder.outerHTML);
+    })
+
+    test('that the post_events_modal is modified as expected for GET request triggered by clicking close', async () => {
+        // simulate json response
+        modalPlaceholder = postEventModal.parentElement;
+        modalPlaceholder.setAttribute('data-dummy', 'test');
+        json_data = {'modal': modalPlaceholder.outerHTML};
+        // set target parameter
+        let postEventModalCloseButton = postEventModal.getElementsByClassName('close_button')[0].firstElementChild;
+        // call handler
+        await refreshFormFetchHandler(postEventModalCloseButton);
+        expect(Request).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(postEventModal.parentElement.outerHTML).toBe(modalPlaceholder.outerHTML);
     })
 })
