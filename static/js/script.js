@@ -274,14 +274,10 @@ function formFieldChangeListeners() {
  */
 function closeModalButtonListeners() {
     for (let button of closeModalButtons) {
-        button.firstElementChild.addEventListener('click', () => {
-            let parentModalContainer = button.parentElement.parentElement.parentElement;
-            parentModalContainer.removeAttribute('style');
-            document.body.removeAttribute('style');
-            if (parentModalContainer.firstElementChild.id === 'edit_profile_modal') {
-                openModalButtons[0].focus(); 
-            }
-        })
+        button.firstElementChild.removeEventListener('click', closeModal);
+        button.firstElementChild.removeEventListener('click', restoreForm);
+        button.firstElementChild.addEventListener('click', closeModal);
+        button.firstElementChild.addEventListener('click', restoreForm);
     }
 }
 
@@ -291,14 +287,10 @@ function closeModalButtonListeners() {
 function createModalCancelButtonListeners() {
     for (let button of modalButtons) {
         if (button.getAttribute('name') === 'Cancel') {
-            button.addEventListener('click', () => {
-                let parentModalContainer = button.parentElement.parentElement.parentElement;
-                parentModalContainer.removeAttribute('style');
-                document.body.removeAttribute('style');
-                if (parentModalContainer.firstElementChild.id === 'edit_profile_modal') {
-                openModalButtons[0].focus(); 
-                }
-            })
+            button.removeEventListener('click', closeModal);
+            button.removeEventListener('click', restoreForm);
+            button.addEventListener('click', closeModal);
+            button.addEventListener('click', restoreForm);
         }
     }
 }
@@ -415,6 +407,36 @@ function slideshowHandler() {
     imageFadeIn(nextImage, currentImage);
 }
 
+/** 
+ * @param {Object} input - eiher a dispatched event or cancel/close button element.
+ * @summary Event handler/function for closing a modal form.
+ */
+function closeModal(input) {
+    let target;
+    if (input.currentTarget) {
+        target = input.currentTarget;
+    }
+    else {
+        target = input;
+    }
+    
+    let parentModalContainer;
+    if (target.tagName === 'BUTTON') {
+        parentModalContainer = target.parentElement.parentElement.parentElement;
+    }
+    else {
+        parentModalContainer = target.parentElement.parentElement.parentElement.parentElement;
+    }
+            parentModalContainer.removeAttribute('style');
+            document.body.removeAttribute('style');
+            if (parentModalContainer.firstElementChild.id === 'edit_profile_modal') {
+                openModalButtons[0].focus(); 
+            }
+            // if (parentModalContainer.firstElementChild.id === 'post_event_modal') {
+            //     openModalButtons[0].focus(); 
+            // }
+}
+
 /** Event handler for the radioInput event listeners.
  *  Alters whether advertised or upcoming events
  * are displayed in the post events section.
@@ -453,8 +475,17 @@ function updateVisibleEvents(input) {
     }
 }
 
+/** Event handler that clears/restores modal forms
+ * after close or cancel button click.
+ *  @summary Event handler that clears/restores a modal form.
+ * @param {Object} event - the dispatched event.
+ */
+function restoreForm(event) {
+    let target = event.currentTarget;
+    refreshFormFetchHandler(target);
+}
 
-/**Recreates all the event listeners
+/** Recreates all the event listeners
  * for shared elements across all pages.
  * Necessary when the DOM is dynamically
  * updated.
@@ -609,7 +640,7 @@ function refreshDomElementVariables() {
             executeAllHomePageAddListenersFunctions();
             if (!issue) {
                 //close edit profile modal
-                editProfileModal.firstElementChild.firstElementChild.firstElementChild.click();
+                closeModal(editProfileModal.firstElementChild.firstElementChild.firstElementChild);
             }
             
         }
@@ -664,7 +695,7 @@ function refreshDomElementVariables() {
                 no_events_msg.parentElement.remove();
             }
             //close modal
-            postEventModal.firstElementChild.firstElementChild.firstElementChild.click();
+            closeModal(postEventModal.firstElementChild.firstElementChild.firstElementChild);
 
         }
         postEventForm.innerHTML = responseJSON.form;
@@ -677,6 +708,61 @@ function refreshDomElementVariables() {
     }     
 }
 
+/** Fetch GET request handler for refreshing
+ *  the edit profile and post event modal forms. Reloads
+ *  the database content for a prefilled form. 
+ * @summary Fetch GET request for refreshing certain forms.
+ * @param {Object} target - the event target that triggered the request.
+ */
+async function refreshFormFetchHandler(target) {
+    try {
+        // For aquiring the form csrf token
+        const csrftoken = Cookies.get('csrftoken');
+        //console.log(target.outerHTML);
+        let requestUrl;
+        let buttonType;
+        let modalContainer;
+
+        if (target.parentElement.parentElement.id === 'edit_profile_modal') {
+            requestUrl = 'profile_form/?refresh=true&first_login=false';
+            buttonType = 'cancel';
+        }
+        if (target.parentElement.parentElement.parentElement.id === 'edit_profile_modal') {
+            requestUrl = 'profile_form/?refresh=true&first_login=false';
+            buttonType = 'close';
+        }
+        
+        if (target.parentElement.parentElement.id === 'post_events_modal') {
+            requestUrl = 'post_events/?refresh=true';
+            buttonType = 'cancel';
+        }
+        if (target.parentElement.parentElement.parentElement.id === 'post_events_modal') {
+            requestUrl = 'post_events/?refresh=true';
+            buttonType = 'close';
+        }
+                                        
+
+        let getRequest = new Request(requestUrl,
+                                     {method: 'GET', headers: {'X-CSRFToken': csrftoken},
+                                      mode: 'same-origin'});
+        let response = await fetch(getRequest);
+        let responseJson = await response.json();
+        if (buttonType === 'cancel') {
+            modalContainer = target.parentElement.parentElement.parentElement;
+        } else {
+            modalContainer = target.parentElement.parentElement.parentElement.parentElement;
+        }
+        let modalReplacement = document.createElement('div');
+        modalReplacement.innerHTML = responseJson.modal;
+        modalContainer.parentElement.replaceChild(modalReplacement.firstElementChild, modalContainer);
+        refreshDomElementVariables();
+        executeAllPageAddListenerFunctions();
+        executeAllHomePageAddListenersFunctions();
+    }
+    catch(error) {
+        console.error(error);
+    }
+}
 
 // JS Section: Page specific executed code
 
@@ -704,5 +790,6 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 //     helpText, matchingIcons, signupButton, signinButton, expandIcons, modalContainers, modals,
 //     closeModalButtons, editProfileModal, editPersonalInfoForm, editAddressForm,
 //     editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
-//     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm
+//     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
+//     refreshFormFetchHandler
 // };
