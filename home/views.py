@@ -306,6 +306,7 @@ class ProfileFormView(FormView, HomeViewsMixin):
                             user_profile.delete()
                         data.update({'error': 'true'})
                 rendered_profile_template = self.render_profile_template(to_string=True)[0]
+                # retrieving the inner html of the grid container element
                 trimmed_rendered_profile_template = rendered_profile_template[rendered_profile_template.index('<div class="left'):-6]
                 data.update({'profile': trimmed_rendered_profile_template})
 
