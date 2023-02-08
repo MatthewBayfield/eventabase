@@ -3,7 +3,7 @@
     <div class="field_flex_container">
         <div{% with classes=field.css_classes %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>
         {% if field.label %}
-            <div>{{ field.label_tag|title }}{% if field.field.required %}*{% endif %}</div>
+            <div>{{ field.label_tag }}{% if field.field.required %}*{% endif %}</div>
         {% endif %}
         {{ field }}
         </div>

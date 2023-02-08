@@ -74,7 +74,6 @@ class EditAddress(ModelForm, FormFieldMixin):
         self.instance.longitude = longitude
 
 
-
 class EditPersonalInfo(ModelForm, FormFieldMixin):
     """
     User personal info model form.
