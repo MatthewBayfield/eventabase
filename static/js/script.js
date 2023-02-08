@@ -34,19 +34,13 @@ let radioInputs = [...document.querySelectorAll("[type = 'radio']")];
 // JS Section: Event listeners:
 
 /** Creates click event listeners for the 'more menu' hamburger button, and the 'more menu'
- * close button. Event handlers essentially close or open the menu.
+ * close button. Event handler essentially closes or opens the menu.
  */
 function createMoreMenuButtonsListeners() {
     for (let button of moreMenuButtons) {
-        button.addEventListener('click', function() {
-            let moreMenuContainerStyles = window.getComputedStyle(moreMenuContainer);
-            let moreMenuContainerDisplay = moreMenuContainerStyles.getPropertyValue('display');
-            if (moreMenuContainerDisplay === 'none') {
-                openMenu();
-            } else {
-                closeMenu();
-            }
-        })
+        // prevent listener duplication
+        button.removeEventListener('click', moreMenuButtonEventHandler);
+        button.addEventListener('click', moreMenuButtonEventHandler);
     }
 }
 
@@ -55,30 +49,25 @@ function createMoreMenuButtonsListeners() {
  * not on it. 
  */
 function createMoreMenuContainerListener() {
-    moreMenuContainer.addEventListener('click', function(event) {
-        let moreMenuContainerStyles = window.getComputedStyle(moreMenuContainer);
-        let moreMenuContainerDisplay = moreMenuContainerStyles.getPropertyValue('display');
-        if (moreMenuContainerDisplay != 'none') {
-            if (event.target === moreMenuContainer) {
-                closeMenu();
-            }
-        }
-    })
+    moreMenuContainer.removeEventListener('click', moreMenuContainerEventHandler);
+    moreMenuContainer.addEventListener('click', moreMenuContainerEventHandler);
 }
 
 /** Adds mousenter and mouseleave event listeners to the
  * more menu items to provide hover feedback. Feedback
  * entails a background colour change.
- * @summary Adds event listeners to the more menu items
+ * @summary Adds event listeners to the more menu items.
  */
  function menuItemHoverFeedbackListeners() {
+    // remove existing listeners to prevent duplication
     for (let item of menuItems) {
-        item.addEventListener('mouseenter', () => {
-            item.classList.add('active');
-        })
-        item.addEventListener('mouseleave', () => {
-            item.classList.remove('active');
-        })
+        item.removeEventListener('mouseenter', menuItemHoverFeedbackMouseenter);
+        item.removeEventListener('mouseleave', menuItemHoverFeedbackMouseleave);
+    }
+    // add new listeners
+    for (let item of menuItems) {
+        item.addEventListener('mouseenter', menuItemHoverFeedbackMouseenter); 
+        item.addEventListener('mouseleave', menuItemHoverFeedbackMouseleave);
     }
 }
 
@@ -87,13 +76,15 @@ function createMoreMenuContainerListener() {
  * @summary Adds click event listeners to chosen elements to provide clicked feedback.
  */
  function clickedFeedbackListeners() {
+    // remove exisitng listeners to prevent duplication
     for (let element of [...new Set([...menuItems, ...uniqueFocusable])]) {
-        element.addEventListener('mousedown', () => {
-            element.classList.add('clicked');
-        })
-        element.addEventListener('mouseup', () => {
-            setTimeout(() => element.classList.remove('clicked'), 100);
-        })
+        element.removeEventListener('mousedown', clickedFeedbackMousedown);
+        element.removeEventListener('mouseup', clickedFeedbackMouseup);
+    }
+    // add new listeners
+    for (let element of [...new Set([...menuItems, ...uniqueFocusable])]) {
+        element.addEventListener('mousedown', clickedFeedbackMousedown); 
+        element.addEventListener('mouseup', clickedFeedbackMouseup); 
     }
 }
 
@@ -103,19 +94,15 @@ function createMoreMenuContainerListener() {
  * @summary Adds enter key click equivalent event listeners to focusable elements.
  */
  function enterKeyListeners() {
+    // remove exisitng listeners to prevent duplication
     for (let element of uniqueFocusable) {
-        element.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                element.classList.add('clicked');
-            }
-
-        })
-        element.addEventListener('keyup', (event) => {
-            if (event.key === 'Enter') {
-                element.classList.remove('clicked');
-                element.click();
-            }
-        })
+        element.removeEventListener('keydown', enterKeyKeydown);
+        element.removeEventListener('keyup', enterKeyKeyup);
+    }
+    // add new listeners
+    for (let element of uniqueFocusable) {
+        element.addEventListener('keydown', enterKeyKeydown);
+        element.addEventListener('keyup', enterKeyKeyup); 
     }
 }
 
@@ -125,11 +112,10 @@ function createMoreMenuContainerListener() {
  * @summary Adds click event listener to sign-up button. Redirects to signup page.
  */
 function signupButtonEventListener() {
-    signupButton.addEventListener('click', () => {
-        let current_location = window.location.href;
-        let next_location = current_location + 'accounts/signup/';
-        window.location.assign(next_location);
-    })
+    // remove exisitng listeners to prevent duplication
+    signupButton.removeEventListener('click', signupButtonHandler);
+    // add new listeners
+    signupButton.addEventListener('click', signupButtonHandler); 
 }
 
 /** Adds click event listener to the sign-in button on the
@@ -138,11 +124,10 @@ function signupButtonEventListener() {
  * @summary Adds click event listener to sign-in button. Redirects to login page.
  */
  function signinButtonEventListener() {
-    signinButton.addEventListener('click', () => {
-        let current_location = window.location.href;
-        let next_location = current_location + 'accounts/login/';
-        window.location.assign(next_location);
-    })
+    // remove exisitng listeners to prevent duplication
+    signinButton.removeEventListener('click', signinButtonHandler);
+    // add new listeners
+    signinButton.addEventListener('click', signinButtonHandler); 
 }
 
 /** Adds click event Listeners to the expand more/less section icons.
@@ -150,29 +135,13 @@ function signupButtonEventListener() {
  * @summary Gives expand icons their functionality.
  */
 function expandIconListeners() {
+    // remove existing listeners to prevent duplication
     for (let icon of expandIcons) {
-        icon.addEventListener('click', () => {
-            if (icon.getAttribute('data-icon-type') === 'expand_more') {
-                icon.parentElement.parentElement.children[1].style.display = 'grid';
-                icon.parentElement.parentElement.children[1].focus();
-            }
-            else {
-                icon.parentElement.parentElement.children[1].removeAttribute('style');
-            }
-            if (icon.hasAttribute('style')) {
-                icon.removeAttribute('style');
-            }
-            else {
-                icon.style.display = 'none';
-            }
-            let siblingIcon = icon.nextElementSibling || icon.previousElementSibling;
-            if (siblingIcon.hasAttribute('style')) {
-                siblingIcon.removeAttribute('style');
-            }
-            else {
-                siblingIcon.style.display = 'inline-block'
-            }
-        })
+        icon.removeEventListener('click', expandIconHandler);
+    }
+    // add new listeners
+    for (let icon of expandIcons) {
+        icon.addEventListener('click', expandIconHandler)
     }
 }
 
@@ -182,14 +151,13 @@ function expandIconListeners() {
  * @summary Gives the open modal buttons their button functionality.
  */
 function openModalButtonListeners() {
+    // remove existing listeners to prevent duplication
     for (let i=0; i < openModalButtons.length; i++) {
-        openModalButtons[i].addEventListener('click', () => {
-            if (window.getComputedStyle(modalContainers[i]).getPropertyValue('display') === 'none') {
-                modalContainers[i].style.display = 'block';
-                modals[i].focus();
-                document.body.style.overflowY = 'hidden';
-            }
-        })
+        openModalButtons[i].removeEventListener('click', openModalButtonHandler);
+    }
+    // add new listeners
+    for (let i=0; i < openModalButtons.length; i++) {
+        openModalButtons[i].addEventListener('click', openModalButtonHandler); 
     }
 }
 
@@ -200,15 +168,17 @@ function openModalButtonListeners() {
  * @summary Adds radio input listeners to control which events are visible.
  */
 function addRadioInputListeners() {
-
+    // remove existing listeners to prevent duplication
+    for (let input of radioInputs) {
+        input.removeEventListener('change', radioInputHandler);
+    }
+    // add new listeners
     for (let input of radioInputs) {
         if (input.value === 'advertised') {
             input.click();
             updateVisibleEvents(input);
         }
-        input.addEventListener('change', () => {
-            updateVisibleEvents(input);
-        })
+        input.addEventListener('change', radioInputHandler);
     }
 }
 
@@ -219,29 +189,19 @@ function addRadioInputListeners() {
  * @summary Adds mouse event listeners to 'help icon' elements to display related field help text.
  */
 function helpTextIconsListeners() {
+    // remove existing listeners to prevent duplication
     for (let helpIcon of helpTextIcons) {
-        helpIcon.addEventListener('mouseenter', () => {
-            let helpTextIndex = helpTextIcons.indexOf(helpIcon);
-            helpText[helpTextIndex].style.display = 'block';
-        })
-
-        helpIcon.addEventListener('mouseleave', () => {
-            let helpTextIndex = helpTextIcons.indexOf(helpIcon);
-            helpText[helpTextIndex].removeAttribute('style');
-        })
+        helpIcon.removeEventListener('mouseenter', helpTextIconsMouseenter);   
+        helpIcon.removeEventListener('mouseleave', helpTextIconsMouseleave);  
+        helpIcon.removeEventListener('touchstart', helpTextIconsTouchstart);
+    }
+    // add new listeners
+    for (let helpIcon of helpTextIcons) {
+        helpIcon.addEventListener('mouseenter', helpTextIconsMouseenter);
+        helpIcon.addEventListener('mouseleave', helpTextIconsMouseleave); 
 
         // touchstart event listeners to trigger the same effects as the above mouseenter and mouseleave event listeners for touchscreens
-        helpIcon.addEventListener('touchstart', (event) => {
-            event.preventDefault();
-            let helpTextIndex = helpTextIcons.indexOf(helpIcon);
-            if (window.getComputedStyle(helpText[helpTextIndex]).getPropertyValue('display') === 'none') {
-                helpText[helpTextIndex].style.display = 'block';
-                setTimeout(() => {
-                    helpText[helpTextIndex].removeAttribute('style');
-                }, 8000)
-            }
-        })
-
+        helpIcon.addEventListener('touchstart', helpTextIconsTouchstart);
     }
 }
 
@@ -251,6 +211,7 @@ function helpTextIconsListeners() {
  * @summary Adds input event listeners to a pair of typed/retyped input fields.
  */
 function formFieldChangeListeners() {
+    // remove existing listeners to prevent duplication
     for (let matchingIcon of matchingIcons) {
         let noMatchIcon = matchingIcon.nextElementSibling;
         let secondField = matchingIcon.parentElement.firstElementChild.children[1];
@@ -258,9 +219,18 @@ function formFieldChangeListeners() {
         let fields = [firstField, secondField];
         let icons = [matchingIcon, noMatchIcon];
         for (let field of fields) {
-            field.addEventListener('input', () => {
-                compareFields(fields, icons);
-            })
+            field.removeEventListener('input', formFieldChangeHandler);
+        }
+    }
+    // add new event listeners
+    for (let matchingIcon of matchingIcons) {
+        let noMatchIcon = matchingIcon.nextElementSibling;
+        let secondField = matchingIcon.parentElement.firstElementChild.children[1];
+        let firstField = matchingIcon.parentElement.previousElementSibling.firstElementChild.children[1];
+        let fields = [firstField, secondField];
+        let icons = [matchingIcon, noMatchIcon];
+        for (let field of fields) {
+            field.addEventListener('input', formFieldChangeHandler); 
         }
     }
 }
@@ -300,29 +270,160 @@ function createModalCancelButtonListeners() {
  * @summary Creates event listeners that trap focus within an open modal.
  */
 function trapFocusModalListeners() {
+    // remove existing listeners to prevent duplication
     for (let modal of modals) {
         let modalId = modal.id;
         let querySelector = '#' + modalId + ' button';
         // The last modal button is its last focusable element.
         let lastButtonInModal = [...document.querySelectorAll(querySelector)].pop();
-        lastButtonInModal.addEventListener('blur', () => {
-            modal.focus();
-        })
+        lastButtonInModal.removeEventListener('blur', trapFocusModalBlur);
         let parentModalContainer = modal.parentElement
-        parentModalContainer.addEventListener('focus', () => {
-            modal.focus();
-        })
+        parentModalContainer.removeEventListener('focus', trapFocusModalFocus);
+    }
+    // add new listeners
+    for (let modal of modals) {
+        let modalId = modal.id;
+        let querySelector = '#' + modalId + ' button';
+        // The last modal button is its last focusable element.
+        let lastButtonInModal = [...document.querySelectorAll(querySelector)].pop();
+        lastButtonInModal.addEventListener('blur', trapFocusModalBlur); 
+        let parentModalContainer = modal.parentElement
+        parentModalContainer.addEventListener('focus', trapFocusModalFocus);
     }
 }
+
 /** Adds click event listener to the edit profile modal done
  * button, to act as the form submission button.
  * @summary Click listener to submit form.
  */
 function addEditProfileModalDonebuttonListeners() {
+    editProfileModalDoneButton.removeEventListener('click', editProfileFormFetchHandler)
     editProfileModalDoneButton.addEventListener('click', editProfileFormFetchHandler)
 }
 
 // JS Section: Functions:
+
+// hoisted event handlers
+
+var clickedFeedbackMousedown = (event) => {
+    let element = event.currentTarget;
+    element.classList.add('clicked')
+};
+var clickedFeedbackMouseup = (event) => {
+    let element = event.currentTarget
+    setTimeout(() => element.classList.remove('clicked'), 100)
+};
+var enterKeyKeydown = (event) => {
+    let element = event.currentTarget;
+    if (event.key === 'Enter') {
+        element.classList.add('clicked');
+    }
+};
+var enterKeyKeyup = (event) => {
+    let element = event.currentTarget;
+    if (event.key === 'Enter') {
+        element.classList.remove('clicked');
+        element.click();
+    }
+};
+var menuItemHoverFeedbackMouseenter = (event) => {
+    let item = event.currentTarget;
+    item.classList.add('active');
+};
+var menuItemHoverFeedbackMouseleave = (event) => {
+    let item = event.currentTarget;
+    item.classList.remove('active');
+};
+var expandIconHandler = (event) => {
+    let icon = event.currentTarget;
+    if (icon.getAttribute('data-icon-type') === 'expand_more') {
+        icon.parentElement.parentElement.children[1].style.display = 'grid';
+        icon.parentElement.parentElement.children[1].focus();
+    }
+    else {
+        icon.parentElement.parentElement.children[1].removeAttribute('style');
+    }
+    if (icon.hasAttribute('style')) {
+        icon.removeAttribute('style');
+    }
+    else {
+        icon.style.display = 'none';
+    }
+    let siblingIcon = icon.nextElementSibling || icon.previousElementSibling;
+    if (siblingIcon.hasAttribute('style')) {
+        siblingIcon.removeAttribute('style');
+    }
+    else {
+        siblingIcon.style.display = 'inline-block'
+    }
+};
+var openModalButtonHandler = (event) => {
+    let i = openModalButtons.indexOf(event.currentTarget);
+    if (window.getComputedStyle(modalContainers[i]).getPropertyValue('display') === 'none') {
+        modalContainers[i].style.display = 'block';
+        modals[i].focus();
+        document.body.style.overflowY = 'hidden';
+    }
+};
+var radioInputHandler = (event) => {
+    let input = event.currentTarget;
+    updateVisibleEvents(input);
+};
+var helpTextIconsMouseenter = (event) => {
+    let helpIcon = event.currentTarget;
+    let helpTextIndex = helpTextIcons.indexOf(helpIcon);
+    helpText[helpTextIndex].style.display = 'block';
+};
+var helpTextIconsMouseleave = (event) => {
+    let helpIcon = event.currentTarget;
+    let helpTextIndex = helpTextIcons.indexOf(helpIcon);
+    helpText[helpTextIndex].removeAttribute('style');
+};
+var helpTextIconsTouchstart  = (event) => {
+    let helpIcon = event.currentTarget;
+    event.preventDefault();
+    let helpTextIndex = helpTextIcons.indexOf(helpIcon);
+    if (window.getComputedStyle(helpText[helpTextIndex]).getPropertyValue('display') === 'none') {
+        helpText[helpTextIndex].style.display = 'block';
+        setTimeout(() => {
+            helpText[helpTextIndex].removeAttribute('style');
+        }, 8000)
+    }
+};
+var formFieldChangeHandler = (event) => {
+    let field = event.currentTarget;
+    let matchingIcon;
+    if (field.name.includes('2')) {
+        matchingIcon = field.parentElement.nextElementSibling;
+    }
+    else {
+        matchingIcon = field.parentElement.parentElement.nextElementSibling.children[1];
+    }
+    let noMatchIcon = matchingIcon.nextElementSibling;
+    let secondField = matchingIcon.parentElement.firstElementChild.children[1];
+    let firstField = matchingIcon.parentElement.previousElementSibling.firstElementChild.children[1];
+    let fields = [firstField, secondField];
+    let icons = [matchingIcon, noMatchIcon];
+    compareFields(fields, icons);
+};
+var signupButtonHandler = () => {
+    let current_location = window.location.href;
+    let next_location = current_location + 'accounts/signup/';
+    window.location.assign(next_location);
+};
+var signinButtonHandler = () => {
+    let current_location = window.location.href;
+    let next_location = current_location + 'accounts/login/';
+    window.location.assign(next_location);
+};
+var trapFocusModalBlur = (event) => {
+    let modal = event.currentTarget.parentElement.parentElement;
+    modal.focus();
+};
+var trapFocusModalFocus  = (event) => {
+    let modal = event.currentTarget.firstElementChild;
+    modal.focus();
+};
 
 /** An event handler that performs the DOM manipulations necessary
  *  to open the more menu, when the more menu hamburger button is
@@ -344,6 +445,36 @@ function closeMenu() {
     moreMenuButtons[0].setAttribute('aria-expanded', 'False');
     moreMenuContainer.style.removeProperty('display');
     moreMenu.blur();   
+}
+
+/** An event handler for the moreMenuButton click event listeners.
+ * Opens and closes the more menu container.
+ * @summary moreMenuButton event handler to open and close the more menu.
+ */
+function moreMenuButtonEventHandler() {
+    let moreMenuContainerStyles = window.getComputedStyle(moreMenuContainer);
+    let moreMenuContainerDisplay = moreMenuContainerStyles.getPropertyValue('display');
+    if (moreMenuContainerDisplay === 'none') {
+        openMenu();
+    } else {
+        closeMenu();
+    }
+}
+
+/** Event handler for the more menu container click event listener.
+ *  Clicking on the container outside of the more menu closes
+ *  the menu.
+ * @param {Object} event 
+ * @summary moreMenuContainer click event handler that closes the more menu.
+ */
+function moreMenuContainerEventHandler(event) {
+    let moreMenuContainerStyles = window.getComputedStyle(moreMenuContainer);
+    let moreMenuContainerDisplay = moreMenuContainerStyles.getPropertyValue('display');
+    if (moreMenuContainerDisplay != 'none') {
+        if (event.target === moreMenuContainer) {
+            closeMenu();
+        }
+    }
 }
 
 /** An event handler thar compares the values of two input text fields
