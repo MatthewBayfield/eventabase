@@ -561,11 +561,11 @@ function closeModal(input) {
             parentModalContainer.removeAttribute('style');
             document.body.removeAttribute('style');
             if (parentModalContainer.firstElementChild.id === 'edit_profile_modal') {
-                openModalButtons[0].focus(); 
+                document.querySelector(".open_modal_button[aria-controls='edit_profile_modal']").focus();
             }
-            // if (parentModalContainer.firstElementChild.id === 'post_event_modal') {
-            //     openModalButtons[0].focus(); 
-            // }
+            if (parentModalContainer.firstElementChild.id === 'post_events_modal') {
+                document.querySelector(".open_modal_button[aria-controls='post_events_modal']").focus();
+            }
 }
 
 /** Event handler for the radioInput event listeners.
@@ -915,12 +915,12 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 // JS Section: code for jest testing
 
 //uncommented during testing
-// module.exports = {
-//     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
-//     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
-//     helpText, matchingIcons, signupButton, signinButton, expandIcons, modalContainers, modals,
-//     closeModalButtons, editProfileModal, editPersonalInfoForm, editAddressForm,
-//     editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
-//     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
-//     refreshFormFetchHandler
-// };
+module.exports = {
+    moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
+    slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
+    helpText, matchingIcons, signupButton, signinButton, expandIcons, modalContainers, modals,
+    closeModalButtons, editProfileModal, editPersonalInfoForm, editAddressForm,
+    editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
+    modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
+    refreshFormFetchHandler
+};
