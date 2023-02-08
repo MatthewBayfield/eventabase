@@ -327,10 +327,18 @@ describe('Test that the close modal buttons work', () => {
         // scrollbar is hidden when a modal is open.
         document.body.style.overflowY = 'hidden';
         // only edit profile modal exists at the moment
-        let button = editProfileModal.firstElementChild.firstElementChild;
-        let clickableButtonRegion = button.firstElementChild;
-        clickableButtonRegion.click();
-        expect(document.activeElement).toBe(openModalButtons[0]);
+        for (let button of openModalButtons) {
+            if (button.getAttribute('aria-controls') === 'edit_profile_modal') {
+                let closeButton = editProfileModal.firstElementChild.firstElementChild.firstElementChild;
+                closeButton.click();
+                expect(document.activeElement).toBe(document.querySelector(".open_modal_button[aria-controls='edit_profile_modal']"));
+            }
+            else if (button.getAttribute('aria-controls') === 'post_events_modal') {
+                let closeButton = postEventModal.firstElementChild.firstElementChild.firstElementChild;
+                closeButton.click();
+                expect(document.activeElement).toBe(document.querySelector(".open_modal_button[aria-controls='post_events_modal']"));
+            }
+        }
     })
 })
 
