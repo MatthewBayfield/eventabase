@@ -224,21 +224,22 @@ class TestPostEventsView(TestCase):
                  'city_or_town': 'GIdea Park',
                  'county': 'ESSEX',
                  'postcode': 'Rm26Bt'}
-        expected_rendered_event = '''<div class="event_container advertised" region role="region" aria-label="event" tabindex="0">
-                                     <div><h5>No. of users attending: </h5><div class="details_display"><span>Id :</span><span>1</span>
-                                     </div><div class="details_display"><span>Host :</span><span>jimmy147</span></div>
-                                     <div class="details_display"><span>Title :</span><span>paintballing</span></div>
-                                     <div class="details_display"><span>When :</span><span>13:30, 19/01/30</span>
-                                     </div><div class="details_display"><span>Closing Date :</span><span>11:00, 01/01/30</span>
-                                     </div><div class="details_display"><span>Max No. Of Attendees :</span><span>20</span>
-                                     </div><div class="details_display"><span>Keywords :</span><span>outdoors,fun</span>
-                                     </div><div class="details_display"><span>Description :</span><span>painballing then lunch.</span>
-                                     </div><div class="details_display"><span>Requirements :</span><span>£50 per person</span>
+        expected_rendered_event = '''<div class="event_container advertised" role="region" aria-label="event item" tabindex="0">
+                                     <div><div class="details_display"><span>Id :</span><span>1.</span>
+                                     </div><div class="details_display"><span>Title :</span><span>paintballing.</span></div>
+                                     <div class="details_display"><span>Host :</span><span>jimmy147.</span></div>
+                                     <div class="details_display"><span>When :</span><span>13:30, 19/01/30.</span>
+                                     </div><div class="details_display"><span>Closing Date :</span><span>11:00, 01/01/30.</span>
+                                     </div><div class="details_display"><span>Max No. Of Attendees :</span><span>20.</span>
+                                     </div><div class="details_display"><span>Keywords :</span><span>outdoors,fun.</span>
+                                     </div><div class="details_display"><span>Description :</span><span>painballing then lunch..</span>
+                                     </div><div class="details_display"><span>Requirements :</span><span>£50 per person.</span>
                                      </div></div><div><div class="details_display"><span>Address Line 1 :</span>
-                                     <span>58 Stanley Avenue</span></div><div class="details_display">
-                                     <span>City/Town :</span><span>Gidea Park</span></div><div class="details_display">
-                                     <span>County :</span><span>Essex</span></div><div class="details_display"><span>Postcode :</span>
-                                     <span>rm26bt</span></div><button>Cancel</button><button>Message Attendees</button></div></div>'''
+                                     <span>58 Stanley Avenue.</span></div><div class="details_display">
+                                     <span>City/Town :</span><span>Gidea Park.</span></div><div class="details_display">
+                                     <span>County :</span><span>Essex.</span></div><div class="details_display"><span>Postcode :</span>
+                                     <span>rm26bt.</span></div><h5 aria-label="number of users attending so far">No. of users attending so far: .</h5>
+                                     <button>Cancel</button><button>Message Attendees</button></div></div>'''
         # test for valid form:
 
         client = Client()

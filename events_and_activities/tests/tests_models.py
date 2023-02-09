@@ -103,7 +103,7 @@ class TestEventsActivitiesModel(TestCase):
         Tests that the ProfileMixin methods work as expected for the EventsActivities model.
         """
         # testing retrieve_field_names class method
-        expected_verbose_names = ['ID', 'host', 'status', 'title',
+        expected_verbose_names = ['ID', 'title', 'host', 'status',
                                   'when', 'closing date', 'max no. of attendees',
                                   'keywords', 'description', 'requirements',
                                   'Address line 1',
@@ -111,8 +111,8 @@ class TestEventsActivitiesModel(TestCase):
                                   'County',
                                   'Postcode']
         self.assertEqual(EventsActivities.retrieve_field_names(), expected_verbose_names)
-        expected_names = ['id', 'host_user', 'status',
-                          'title', 'when', 'closing_date',
+        expected_names = ['id', 'title', 'host_user', 'status',
+                          'when', 'closing_date',
                           'max_attendees', 'keywords', 'description',
                           'requirements', 'address_line_one', 'city_or_town',
                           'county', 'postcode']
