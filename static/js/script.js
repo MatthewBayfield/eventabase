@@ -106,6 +106,22 @@ function createMoreMenuContainerListener() {
     }
 }
 
+/** Removes enterkey and clicked feedback event
+ * listeners from some elements with tabindex=0
+ * @summary Removes feedback event listeners from non-clickable elements.
+ */
+function removeFeedbackListeners() {
+    let nonClickableElements = [...document.getElementsByClassName('event_container')];
+    for (let element of nonClickableElements) {
+        if (element) {
+            element.removeEventListener('mousedown', clickedFeedbackMousedown);
+            element.removeEventListener('mouseup', clickedFeedbackMouseup);
+            element.removeEventListener('keydown', enterKeyKeydown);
+            element.removeEventListener('keyup', enterKeyKeyup);
+        }
+    }
+}
+
 /** Adds click event listener to the sign-up button on the
  * landing page. When clicked redirects the user to the
  * signup page.
@@ -631,6 +647,7 @@ function executeAllPageAddListenerFunctions() {
     expandIconListeners();
     helpTextIconsListeners();
     formFieldChangeListeners();
+    removeFeedbackListeners();
 }
 
 /**Recreates all the event listeners
@@ -646,6 +663,7 @@ function executeAllHomePageAddListenersFunctions() {
     addEditProfileModalDonebuttonListeners();
     createModalCancelButtonListeners();
     addRadioInputListeners();
+    removeFeedbackListeners();
 }
 
 /**Recreates all the event listeners
@@ -915,12 +933,12 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 // JS Section: code for jest testing
 
 //uncommented during testing
-module.exports = {
-    moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
-    slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
-    helpText, matchingIcons, signupButton, signinButton, expandIcons, modalContainers, modals,
-    closeModalButtons, editProfileModal, editPersonalInfoForm, editAddressForm,
-    editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
-    modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
-    refreshFormFetchHandler
-};
+// module.exports = {
+//     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
+//     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
+//     helpText, matchingIcons, signupButton, signinButton, expandIcons, modalContainers, modals,
+//     closeModalButtons, editProfileModal, editPersonalInfoForm, editAddressForm,
+//     editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
+//     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
+//     refreshFormFetchHandler
+// };

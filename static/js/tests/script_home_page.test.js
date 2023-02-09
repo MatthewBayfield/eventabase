@@ -111,14 +111,17 @@ describe('test more menu functionality', () => {
 
 describe('check all focusable elements give feedback when clicked directly or indirectly', () => {
     test('check all focusable elements give feedback when clicked', () => {
+        let nonClickableElements = [...document.getElementsByClassName('event_container')];
         for (let element of uniqueFocusable) {
-            let event = new Event('mousedown');
-            element.dispatchEvent(event);
-            expect(element.classList.contains('clicked')).toBe(true);
-            event = new Event('mouseup');
-            element.dispatchEvent(event);
-            jest.runOnlyPendingTimers();
-            expect(element.classList.contains('clicked')).toBe(false);
+            if (!nonClickableElements.includes(element)) {
+                let event = new Event('mousedown');
+                element.dispatchEvent(event);
+                expect(element.classList.contains('clicked')).toBe(true);
+                event = new Event('mouseup');
+                element.dispatchEvent(event);
+                jest.runOnlyPendingTimers();
+                expect(element.classList.contains('clicked')).toBe(false);
+            }
         }
     })
     
@@ -138,37 +141,43 @@ describe('check all focusable elements give feedback when clicked directly or in
     
         test('when a focusable element has focus and the enter key is pressed, the element is clicked', () => {
             let event;
+            let nonClickableElements = [...document.getElementsByClassName('event_container')];
             for (let element of uniqueFocusable) {
-                event = new KeyboardEvent('keyup', {key: 'Enter'} );
-                log.mockClear();
-                element.dispatchEvent(event);
-                expect(log).toHaveBeenCalledWith(element);
-                log.mockClear();
-                event = new KeyboardEvent('keyup', {key: 'Tab'});
-                element.dispatchEvent(event);
-                expect(log).not.toHaveBeenCalledWith(element);
-
+                if (!nonClickableElements.includes(element)) {
+                    event = new KeyboardEvent('keyup', {key: 'Enter'} );
+                    log.mockClear();
+                    element.dispatchEvent(event);
+                    expect(log).toHaveBeenCalledWith(element);
+                    log.mockClear();
+                    event = new KeyboardEvent('keyup', {key: 'Tab'});
+                    element.dispatchEvent(event);
+                    expect(log).not.toHaveBeenCalledWith(element);
+                }
             }
         })
     
         test('feedback is given when the enter key is pressed on a focused element', () => {
             let event;
+            let nonClickableElements = [...document.getElementsByClassName('event_container')];
             for (let element of uniqueFocusable) {
-                event = new KeyboardEvent('keydown', {key: 'Tab'});
-                element.dispatchEvent(event);
-                expect(element.classList.contains('clicked')).toBe(false);
-                event = new KeyboardEvent('keydown', {key: 'Enter'} );    
-                element.dispatchEvent(event);
-                expect(element.classList.contains('clicked')).toBe(true);
-                                    
+                if (!nonClickableElements.includes(element)) {
+                    event = new KeyboardEvent('keydown', {key: 'Tab'});
+                    element.dispatchEvent(event);
+                    expect(element.classList.contains('clicked')).toBe(false);
+                    event = new KeyboardEvent('keydown', {key: 'Enter'} );    
+                    element.dispatchEvent(event);
+                    expect(element.classList.contains('clicked')).toBe(true);
+                }                                    
             }
             for (let element of uniqueFocusable) {
-                event = new KeyboardEvent('keyup', {key: 'Tab'});
-                element.dispatchEvent(event);
-                expect(element.classList.contains('clicked')).toBe(true);
-                event = new KeyboardEvent('keyup', {key: 'Enter'} );   
-                element.dispatchEvent(event);
-                expect(element.classList.contains('clicked')).toBe(false);                  
+                if (!nonClickableElements.includes(element)) {
+                    event = new KeyboardEvent('keyup', {key: 'Tab'});
+                    element.dispatchEvent(event);
+                    expect(element.classList.contains('clicked')).toBe(true);
+                    event = new KeyboardEvent('keyup', {key: 'Enter'} );   
+                    element.dispatchEvent(event);
+                    expect(element.classList.contains('clicked')).toBe(false);           
+                }
             }
         })
     })
