@@ -18,9 +18,8 @@
         <input id='upcoming' name='event_type' type="radio" value="upcoming">
         <label for="upcoming">Upcoming</label>
         {% for event in advertised_hosting_events_data %}
-            <div class="event_container advertised" region role="region" aria-label="event" tabindex="0">
+            <div class="event_container advertised" role="region" aria-label="event item" tabindex="0">
                 <div>
-                    <h5>No. of users attending so far: {{event_count}}</h5>
                     {% for field_name, value in event.items %}
                         {% if forloop.counter0 <= 8 %}
                             <div class="details_display">
@@ -39,18 +38,18 @@
                             </div>
                         {% endif%}
                     {% endfor %}
+                    <h5 aria-label = 'number of users attending so far'>No. of users attending so far: {{event_count}}</h5>
                     <button>Delete Advert</button>
                 </div>
             </div>
         {% empty %}
-            <div class="event_container advertised" region role="region" aria-label="event" tabindex="0">
+            <div class="event_container advertised" role="region" aria-label="event item" tabindex="0">
                 <p>You currenty have no adverts for hosting events or activities.</p>
             </div>
         {% endfor %}
         {% for event in upcoming_hosting_events_data %}
-            <div class="event_container upcoming" region role="region" aria-label="event" tabindex="0">
+            <div class="event_container upcoming" role="region" aria-label="event item" tabindex="0">
                 <div>
-                    <h5>No. of users attending: {{event_count}}</h5>
                     {% for field_name,value in event.items %}
                         {% if forloop.counter0 <= 8 %}
                             <div class="details_display">
@@ -69,12 +68,13 @@
                             </div>
                         {% endif%}
                     {% endfor %}
+                    <h5 aria-label = 'number of users attending'>No. of users attending: {{event_count}}</h5>
                     <button>Cancel</button>
                     <button>Message Attendees</button>
                 </div>
             </div>
         {% empty %}
-            <div class="event_container upcoming" region role="region" aria-label="event" tabindex="0">
+            <div class="event_container upcoming" role="region" aria-label="event item" tabindex="0">
                 <p>You currenty have no upcoming events or activities that are you are confirmed to host. An event becomes confirmed once the closing advert date has passed.</p>
             </div>
         {% endfor %}
