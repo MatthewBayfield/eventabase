@@ -24,9 +24,9 @@
                         {% if forloop.counter0 <= 8 %}
                             <div class="details_display">
                                 <span>{{field_name|title}} :</span>
-                                <span>{{value}}</span>
+                                <span>{{value}}.</span>
                             </div>
-                        {% endif%}
+                        {% endif %}
                     {% endfor %}  
                 </div>
                 <div>
@@ -34,11 +34,11 @@
                         {% if forloop.counter0 >= 9 %}
                             <div class="details_display">
                                 <span>{{field_name|title}} :</span>
-                                <span>{{value}}</span>
+                                <span>{{value}}.</span>
                             </div>
                         {% endif%}
                     {% endfor %}
-                    <h5 aria-label = 'number of users attending so far'>No. of users attending so far: {{event_count}}</h5>
+                    <h5 aria-label = 'number of users attending so far'>No. of users attending so far: {{event_count}}.</h5>
                     <button>Delete Advert</button>
                 </div>
             </div>
@@ -50,11 +50,11 @@
         {% for event in upcoming_hosting_events_data %}
             <div class="event_container upcoming" role="region" aria-label="event item" tabindex="0">
                 <div>
-                    {% for field_name,value in event.items %}
+                    {% for field_name, value in event.items %}
                         {% if forloop.counter0 <= 8 %}
                             <div class="details_display">
                                 <span>{{field_name|title}} :</span>
-                                <span>{{value}}</span>
+                                <span>{{value}}.</span>
                             </div>
                         {% endif%}
                     {% endfor %}  
@@ -64,11 +64,11 @@
                         {% if forloop.counter0 >= 9 %}
                             <div class="details_display">
                                 <span>{{field_name|title}} :</span>
-                                <span>{{value}}</span>
+                                <span>{{value}}.</span>
                             </div>
                         {% endif%}
                     {% endfor %}
-                    <h5 aria-label = 'number of users attending'>No. of users attending: {{event_count}}</h5>
+                    <h5 aria-label = 'number of users attending'>No. of users attending: {{event_count}}.</h5>
                     <button>Cancel</button>
                     <button>Message Attendees</button>
                 </div>
