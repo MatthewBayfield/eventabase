@@ -71,6 +71,13 @@ class EventsActivities(ProfileMixin):
         verbose_name_plural = 'Events and Activities'
         ordering = ['-closing_date']
 
+    title = models.CharField(max_length=100,
+                             blank=False,
+                             validators=[RegexValidator(regex=r"^([a-zA-Z0-9,.!\/;:]+\s{0,1}[a-zA-Z0-9,.!\/;:]+)+\Z",
+                                                        message="Must contain only the characters [a-zA-Z0-9,.!/;:], with single spaces between words.",
+                                                        flags=re.MULTILINE),
+                                         MaxLengthValidator(100)])
+                                         
     host_user = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE,
                                   verbose_name='host',
                                   to_field='username',
@@ -79,13 +86,6 @@ class EventsActivities(ProfileMixin):
                                   unique_for_date='when')
     STATUS_CHOICES = [('confirmed', 'confirmed'), ('advertised', 'advertised'), ('completed', 'completed')]
     status = models.CharField(choices=STATUS_CHOICES, max_length=10, blank=False, default='advertised')
-
-    title = models.CharField(max_length=100,
-                             blank=False,
-                             validators=[RegexValidator(regex=r"^([a-zA-Z0-9,.!\/;:]+\s{0,1}[a-zA-Z0-9,.!\/;:]+)+\Z",
-                                                        message="Must contain only the characters [a-zA-Z0-9,.!/;:], with single spaces between words.",
-                                                        flags=re.MULTILINE),
-                                         MaxLengthValidator(100)])
 
     when = models.DateTimeField(blank=False,
                                 validators=[check_date_has_not_occured])
