@@ -239,7 +239,7 @@ class TestPostEventsView(TestCase):
                                      <span>City/Town :</span><span>Gidea Park.</span></div><div class="details_display">
                                      <span>County :</span><span>Essex.</span></div><div class="details_display"><span>Postcode :</span>
                                      <span>rm26bt.</span></div><h5 aria-label="number of users attending so far">No. of users attending so far: .</h5>
-                                     <button>Cancel</button><button>Message Attendees</button></div></div>'''
+                                     <button>Delete Advert</button></div></div>'''
         # test for valid form:
 
         client = Client()
