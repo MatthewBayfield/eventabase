@@ -13,6 +13,13 @@ let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcon
      restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler} = require('../script.js');
 // mock functions
 const log = jest.fn();
+let mockFetchEditProfile = jest.fn(() => {
+    // code taken from editProfileFormFetchHandler
+    closeModal(editProfileModal.firstElementChild.firstElementChild.firstElementChild);
+})
+let mockFetchEvent = jest.fn(() => {
+    closeModal(postEventModal.firstElementChild.firstElementChild.firstElementChild);
+})
 
 describe('test more menu functionality', () => {
     describe('check the more menu hamburger-style button works', () => {
@@ -370,10 +377,9 @@ describe('Test that the close modal buttons work (excluding fetch request)', () 
     })
 
     test('that the open modal button has focus after the modal is closed', () => {
-        // scrollbar is hidden when a modal is open.
-        document.body.style.overflowY = 'hidden';
-        // only edit profile modal exists at the moment
         for (let button of openModalButtons) {
+            // scrollbar is hidden when a modal is open.
+            document.body.style.overflowY = 'hidden';
             if (button.getAttribute('aria-controls') === 'edit_profile_modal') {
                 let closeButton = editProfileModal.firstElementChild.firstElementChild.firstElementChild;
                 closeButton.click();
@@ -385,6 +391,86 @@ describe('Test that the close modal buttons work (excluding fetch request)', () 
                 expect(document.activeElement).toBe(document.querySelector(".open_modal_button[aria-controls='post_events_modal']"));
             }
         }
+    })
+})
+
+describe('Test that Done modal buttons work (excluding fetch requests)', () => {
+    let orginalProfileHandler = editProfileFormFetchHandler;
+    let orginalEventHandler = postEventFormFetchHandler;
+    beforeEach(() => {
+        // simulate open modal containers
+        for (let container of modalContainers) {
+            container.style.display = 'block';
+        }
+    })  
+    beforeAll(() => {
+        editProfileModalDoneButton.removeEventListener('click', editProfileFormFetchHandler);
+        postEventFormDoneButton.removeEventListener('click', postEventFormFetchHandler);
+        // assigning handlers to mock functions
+        editProfileFormFetchHandler = mockFetchEditProfile;
+        postEventFormFetchHandler = mockFetchEvent;
+        // recreating listeners with mock handlers
+        editProfileModalDoneButton.addEventListener('click', editProfileFormFetchHandler);
+        postEventFormDoneButton.addEventListener('click', postEventFormFetchHandler);
+    })
+    afterAll(() => {
+        editProfileModalDoneButton.removeEventListener('click', editProfileFormFetchHandler);
+        postEventFormDoneButton.removeEventListener('click', postEventFormFetchHandler);
+        // assigning handlers to original functions
+        editProfileFormFetchHandler = orginalProfileHandler;
+        postEventFormFetchHandler = orginalEventHandler;
+        // recreating listeners with original handlers
+        editProfileModalDoneButton.addEventListener('click', editProfileFormFetchHandler);
+        postEventFormDoneButton.addEventListener('click', postEventFormFetchHandler);
+    })
+
+    test('that the modal container is no longer visible', () => {
+        for (let button of modalButtons) {
+            if (button.getAttribute('name') === 'Done') {
+                // scrollbar is hidden when a modal is open.
+                document.body.style.overflowY = 'hidden';
+                let buttonModalContainer = button.parentElement.parentElement;
+                button.click();
+                expect(buttonModalContainer.hasAttribute('style')).toBe(false);
+            }
+        }
+    })
+
+    test('that the body scrollbar is no longer hidden', () => {
+        for (let button of modalButtons) {
+            if (button.getAttribute('name') === 'Done') {
+                // scrollbar is hidden when a modal is open.
+                document.body.style.overflowY = 'hidden';
+                button.click();
+                expect(document.body.hasAttribute('style')).toBe(false);
+            }
+        }    
+    })
+
+    test('that the open modal button has focus after the modal is closed', () => {
+        let openEditProfileButton;
+        let openPostEventsButton;
+        for (let button of openModalButtons) {
+            if (button.getAttribute('aria-controls') === 'edit_profile_modal') {
+                openEditProfileButton = button;
+            }
+            else if (button.getAttribute('aria-controls') === 'post_events_modal') {
+                openPostEventsButton = button
+            }
+        }
+        // Edit Profile modal done button tests:
+
+        // scrollbar is hidden when a modal is open.
+        document.body.style.overflowY = 'hidden';
+        editProfileModalDoneButton.click();
+        expect(document.activeElement).toBe(openEditProfileButton);
+
+        // post event modal done button tests:
+
+        // scrollbar is hidden when a modal is open.
+        document.body.style.overflowY = 'hidden';
+        postEventFormDoneButton.click();
+        expect(document.activeElement).toBe(openPostEventsButton);
     })
 })
 
@@ -456,12 +542,29 @@ describe('Test that the cancel modal buttons work', () => {
     })
 
     test('that the open modal button has focus after the modal is closed', () => {
-        let editProfileModalCancelButon = editProfileModalDoneButton.nextElementSibling
+        let openEditProfileButton;
+        let openPostEventsButton;
+        for (let button of openModalButtons) {
+            if (button.getAttribute('aria-controls') === 'edit_profile_modal') {
+                openEditProfileButton = button;
+            }
+            else if (button.getAttribute('aria-controls') === 'post_events_modal') {
+                openPostEventsButton = button
+            }
+        }
+        // Edit Profile modal cancel button tests:
+
         // scrollbar is hidden when a modal is open.
         document.body.style.overflowY = 'hidden';
-        // only edit profile modal exists at the moment
-        editProfileModalCancelButon.click();
-        expect(document.activeElement).toBe(openModalButtons[0]);
+        editProfileModalDoneButton.nextElementSibling.click();
+        expect(document.activeElement).toBe(openEditProfileButton);
+        
+        // post event modal cancel button tests:
+
+        // scrollbar is hidden when a modal is open.
+        document.body.style.overflowY = 'hidden';
+        postEventFormDoneButton.nextElementSibling.click();
+        expect(document.activeElement).toBe(openPostEventsButton);
     })
 })
 
