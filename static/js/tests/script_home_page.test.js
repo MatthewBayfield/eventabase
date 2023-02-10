@@ -9,7 +9,8 @@ let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/re
 document.documentElement.innerHTML = fileContents;
 let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
      modalContainers, modals, closeModalButtons, modalButtons, editProfileModalDoneButton, editProfileModal,
-     openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents} = require('../script.js');
+     openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal,
+     restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler} = require('../script.js');
 // mock functions
 const log = jest.fn();
 
@@ -124,62 +125,87 @@ describe('check all focusable elements give feedback when clicked directly or in
             }
         }
     })
+})
     
-    describe("check that the 'enter key' event listeners work", () => {
-        const click = (event) => {log(event.target)};
-        beforeAll(() => {
-            for (let element of uniqueFocusable) {
-                element.addEventListener('click', click);
-            }
-        })
-        afterAll(() => {
-            for (let element of uniqueFocusable) {
-                element.removeEventListener('click', click);
-            }
-            log.mockClear();
-        })
-    
-        test('when a focusable element has focus and the enter key is pressed, the element is clicked', () => {
-            let event;
-            let nonClickableElements = [...document.getElementsByClassName('event_container')];
-            for (let element of uniqueFocusable) {
-                if (!nonClickableElements.includes(element)) {
-                    event = new KeyboardEvent('keyup', {key: 'Enter'} );
-                    log.mockClear();
-                    element.dispatchEvent(event);
-                    expect(log).toHaveBeenCalledWith(element);
-                    log.mockClear();
-                    event = new KeyboardEvent('keyup', {key: 'Tab'});
-                    element.dispatchEvent(event);
-                    expect(log).not.toHaveBeenCalledWith(element);
+describe("check that the 'enter key' event listeners work", () => {
+    const click = (event) => {log(event.target)};
+    beforeAll(() => {
+        for (let element of uniqueFocusable) {
+            element.addEventListener('click', click);
+        }
+        for (let button of closeModalButtons) {
+                    // dont want to call restoreForm handler in tests
+                    button.firstElementChild.removeEventListener('click', restoreForm);
                 }
+        for (let button of modalButtons) {
+                if (button.getAttribute('name') === 'Cancel') {
+                    // dont want to call restoreForm handler in tests
+                    button.removeEventListener('click', restoreForm);
             }
-        })
-    
-        test('feedback is given when the enter key is pressed on a focused element', () => {
-            let event;
-            let nonClickableElements = [...document.getElementsByClassName('event_container')];
-            for (let element of uniqueFocusable) {
-                if (!nonClickableElements.includes(element)) {
-                    event = new KeyboardEvent('keydown', {key: 'Tab'});
-                    element.dispatchEvent(event);
-                    expect(element.classList.contains('clicked')).toBe(false);
-                    event = new KeyboardEvent('keydown', {key: 'Enter'} );    
-                    element.dispatchEvent(event);
-                    expect(element.classList.contains('clicked')).toBe(true);
-                }                                    
+        }
+        // do not need these event listeners in these tests. removed to remove console errors.
+        editProfileModalDoneButton.removeEventListener('click', editProfileFormFetchHandler);
+        postEventFormDoneButton.removeEventListener('click', postEventFormFetchHandler);
+
+    })
+    afterAll(() => {
+        for (let element of uniqueFocusable) {
+            element.removeEventListener('click', click);
+        }
+        for (let button of closeModalButtons) {
+            button.firstElementChild.addEventListener('click', restoreForm);
+
+        }
+        for (let button of modalButtons) {
+            if (button.getAttribute('name') === 'Cancel') {
+                button.addEventListener('click', restoreForm);
             }
-            for (let element of uniqueFocusable) {
-                if (!nonClickableElements.includes(element)) {
-                    event = new KeyboardEvent('keyup', {key: 'Tab'});
-                    element.dispatchEvent(event);
-                    expect(element.classList.contains('clicked')).toBe(true);
-                    event = new KeyboardEvent('keyup', {key: 'Enter'} );   
-                    element.dispatchEvent(event);
-                    expect(element.classList.contains('clicked')).toBe(false);           
-                }
+        }
+        editProfileModalDoneButton.addEventListener('click', editProfileFormFetchHandler);
+        postEventFormDoneButton.addEventListener('click', postEventFormFetchHandler);
+        log.mockClear();
+    })
+
+    test('when a focusable element has focus and the enter key is pressed, the element is clicked', () => {
+        let event;
+        let nonClickableElements = [...document.getElementsByClassName('event_container')];
+        for (let element of uniqueFocusable) {
+            if (!nonClickableElements.includes(element)) {
+                event = new KeyboardEvent('keyup', {key: 'Enter'} );
+                log.mockClear();
+                element.dispatchEvent(event);
+                expect(log).toHaveBeenCalledWith(element);
+                log.mockClear();
+                event = new KeyboardEvent('keyup', {key: 'Tab'});
+                element.dispatchEvent(event);
+                expect(log).not.toHaveBeenCalledWith(element);
             }
-        })
+        }
+    })
+
+    test('feedback is given when the enter key is pressed on a focused element', () => {
+        let event;
+        let nonClickableElements = [...document.getElementsByClassName('event_container')];
+        for (let element of uniqueFocusable) {
+            if (!nonClickableElements.includes(element)) {
+                event = new KeyboardEvent('keydown', {key: 'Tab'});
+                element.dispatchEvent(event);
+                expect(element.classList.contains('clicked')).toBe(false);
+                event = new KeyboardEvent('keydown', {key: 'Enter'} );    
+                element.dispatchEvent(event);
+                expect(element.classList.contains('clicked')).toBe(true);
+            }                                    
+        }
+        for (let element of uniqueFocusable) {
+            if (!nonClickableElements.includes(element)) {
+                event = new KeyboardEvent('keyup', {key: 'Tab'});
+                element.dispatchEvent(event);
+                expect(element.classList.contains('clicked')).toBe(true);
+                event = new KeyboardEvent('keyup', {key: 'Enter'} );   
+                element.dispatchEvent(event);
+                expect(element.classList.contains('clicked')).toBe(false);           
+            }
+        }
     })
 })
 
@@ -303,11 +329,22 @@ describe('Test that the open modal buttons work', () => {
 
 })
 
-describe('Test that the close modal buttons work', () => {
+describe('Test that the close modal buttons work (excluding fetch request)', () => {
     beforeEach(() => {
         // simulate open modal containers
         for (let container of modalContainers) {
             container.style.display = 'block';
+        }
+    })  
+    beforeAll(() => {
+        for (let button of closeModalButtons) {
+            // dont want to call restoreForm handler in tests
+            button.firstElementChild.removeEventListener('click', restoreForm);
+        }
+    })
+    afterAll(() => {
+        for (let button of closeModalButtons) {
+            button.firstElementChild.addEventListener('click', restoreForm);
         }
     })
 
@@ -377,6 +414,21 @@ describe('Test that the cancel modal buttons work', () => {
         // simulate open modal containers
         for (let container of modalContainers) {
             container.style.display = 'block';
+        }
+    })
+    beforeAll(() => {
+        for (let button of modalButtons) {
+                if (button.getAttribute('name') === 'Cancel') {
+                    // dont want to call restoreForm handler in tests
+                    button.removeEventListener('click', restoreForm);
+                }
+        }
+    })
+    afterAll(() => {
+        for (let button of modalButtons) {
+                if (button.getAttribute('name') === 'Cancel') {
+                    button.addEventListener('click', restoreForm);
+                }
         }
     })
 

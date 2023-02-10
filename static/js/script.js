@@ -950,5 +950,5 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 //     closeModalButtons, editProfileModal, editPersonalInfoForm, editAddressForm,
 //     editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
 //     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
-//     refreshFormFetchHandler
+//     refreshFormFetchHandler, closeModal, restoreForm, postEventFormDoneButton
 // };
