@@ -117,7 +117,7 @@ class TestEventsActivitiesForm(TestCase):
         new_form = EventsActivitiesForm(data=event)
         valid = new_form.is_valid()
         self.assertFalse(valid)
-        self.assertFormError(new_form, 'keywords', "Must contain comma separated words containing only the characters [a-zA-Z0-9], with no spaces.")
+        self.assertFormError(new_form, 'keywords', "Must contain comma separated words containing only the characters [a-z,A-Z,0-9,-,_], with no spaces.")
         # test maxlength validator
         event['keywords'] = 76*'t'
         new_form = EventsActivitiesForm(data=event)
