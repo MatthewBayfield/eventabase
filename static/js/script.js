@@ -26,7 +26,7 @@ let modalButtons = [...document.getElementsByClassName('modal_button')];
 let openModalButtons = [...document.getElementsByClassName('open_modal_button')];
 let postEventModal = document.getElementById('post_events_modal');
 let postEventForm = document.getElementById('post_events_form');
-let postEventFormDoneButton = document.getElementById('post_events_modal') ? document.getElementById('post_events_modal').querySelector('.modal_button').children[0] : null;
+let postEventFormDoneButton = document.getElementById('post_events_modal') ? document.getElementById('post_events_modal').querySelector('.modal_button') : null;
 let advertisedEvents = [...document.getElementsByClassName('advertised')];
 let upcomingEvents = [...document.getElementsByClassName('upcoming')];
 let radioInputs = [...document.querySelectorAll("[type = 'radio']")];
@@ -313,8 +313,17 @@ function trapFocusModalListeners() {
  * @summary Click listener to submit form.
  */
 function addEditProfileModalDonebuttonListeners() {
-    editProfileModalDoneButton.removeEventListener('click', editProfileFormFetchHandler)
-    editProfileModalDoneButton.addEventListener('click', editProfileFormFetchHandler)
+    editProfileModalDoneButton.removeEventListener('click', editProfileFormFetchHandler);
+    editProfileModalDoneButton.addEventListener('click', editProfileFormFetchHandler);
+}
+
+/** Adds click event listener to the post events modal done
+ * button, to act as the form submission button.
+ * @summary Click listener to submit form.
+ */
+function addPostEventsModalDonebuttonListeners() {
+    postEventFormDoneButton.removeEventListener('click', postEventFormFetchHandler);
+    postEventFormDoneButton.addEventListener('click', postEventFormFetchHandler);
 }
 
 // JS Section: Functions:
@@ -661,6 +670,7 @@ function executeAllHomePageAddListenersFunctions() {
     closeModalButtonListeners();
     trapFocusModalListeners();
     addEditProfileModalDonebuttonListeners();
+    addPostEventsModalDonebuttonListeners();
     createModalCancelButtonListeners();
     addRadioInputListeners();
     removeFeedbackListeners();
@@ -707,7 +717,7 @@ function refreshDomElementVariables() {
     modalButtons = [...document.getElementsByClassName('modal_button')];
     openModalButtons = [...document.getElementsByClassName('open_modal_button')];
     postEventModal = document.getElementById('post_events_modal');
-    postEventFormDoneButton = document.getElementById('post_events_modal') ? document.getElementById('post_events_modal').querySelector('.modal_button').children[0] : null;
+    postEventFormDoneButton = document.getElementById('post_events_modal') ? document.getElementById('post_events_modal').querySelector('.modal_button') : null;
     postEventForm = document.getElementById('post_events_form');
     advertisedEvents = [...document.getElementsByClassName('advertised')];
     upcomingEvents = [...document.getElementsByClassName('upcoming')];
