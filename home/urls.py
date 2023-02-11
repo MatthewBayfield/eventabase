@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from events_and_activities.views import PostEventsView
+from events_and_activities.views import PostEventsView, UpdateEventsView
 
 app_name = 'home'
 urlpatterns = [
@@ -9,5 +9,6 @@ urlpatterns = [
          name='user_homepage'),
     path('profile_form/', views.ProfileFormView.as_view(),
          name='profile_form_view'),
-    path('post_events/', PostEventsView.as_view(), name='post_events_view')
+    path('post_events/', PostEventsView.as_view(), name='post_events_view'),
+    path('update_events/', UpdateEventsView.as_view(), name='update_events_view')
 ]
