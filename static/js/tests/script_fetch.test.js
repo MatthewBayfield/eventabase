@@ -10,8 +10,8 @@ document.documentElement.innerHTML = fileContents;
 let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
      modalContainers, modals, closeModalButtons, editProfileModal, editProfileModalDoneButton,
      editProfileFormFetchHandler, addEditProfileModalDonebuttonListeners, postEventModal,
-     postEventFormFetchHandler, postEventForm, refreshFormFetchHandler,
-     editAddressForm, editPersonalInfoForm, openModalButtons} = require('../script.js');
+     postEventFormFetchHandler, postEventForm, refreshFormFetchHandler, updateEventFetchHandler,
+     editAddressForm, editPersonalInfoForm, openModalButtons, deleteEventButtons, cancelEventButtons} = require('../script.js');
 // function from script.js, but redefined in this scope; needed to update references to updated DOM.
 function refreshDomElementVariables() {
     moreMenuContainer = document.getElementById('more_menu_container');
@@ -38,15 +38,16 @@ function refreshDomElementVariables() {
     modalButtons = [...document.getElementsByClassName('modal_button')];
     openModalButtons = [...document.getElementsByClassName('open_modal_button')];
     postEventModal = document.getElementById('post_events_modal');
-    postEventFormDoneButton = document.getElementById('post_events_modal') ? document.getElementById('post_events_modal').querySelector('.modal_button').children[0] : null;
+    postEventFormDoneButton = document.getElementById('post_events_modal') ? document.getElementById('post_events_modal').querySelector('.modal_button') : null;
     postEventForm = document.getElementById('post_events_form');
     advertisedEvents = [...document.getElementsByClassName('advertised')];
     upcomingEvents = [...document.getElementsByClassName('upcoming')];
     radioInputs = [...document.querySelectorAll("[type = 'radio']")];
+    deleteEventButtons = [...document.getElementsByClassName('delete_advert')];
+    cancelEventButtons = [...document.getElementsByClassName('cancel_event')];
 }
-
 // mock functions
-const get = jest.fn()
+const get = jest.fn();
 global.Cookies = {'get': get};
 global.Request = jest.fn();
 let json_data;
@@ -186,13 +187,13 @@ describe('test the post events form fetch POST request operates as expected', ()
         expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['post_events/']));
         expect(document.querySelectorAll('.event_container.advertised').length).toBe(2);
         // check event has been added
-        // expect(document.querySelectorAll('.event_container.advertised')[0].innerHTML).toBe('event');
+        expect(document.querySelectorAll('.event_container.advertised')[0].innerHTML).toBe('event');
         // check message has been removed
-        //expect(document.querySelectorAll('.event_container.advertised > p').length).toBe(0);
+        expect(document.querySelectorAll('.event_container.advertised > p').length).toBe(0);
         // check form content updated
-        //expect(postEventForm.innerHTML).toBe('form');
+        expect(postEventForm.innerHTML).toBe('form');
         // check modal has been closed
-        //expect(postEventModal.parentElement.hasAttribute('style')).toBe(false);
+        expect(postEventModal.parentElement.hasAttribute('style')).toBe(false);
     })
 
     test('check request and response/actions when an invalid form is submitted', async () => {
@@ -294,5 +295,99 @@ describe('test the ProfileFormView and PostEventsView fetch GET requests work', 
         expect(Request).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(postEventModal.parentElement.outerHTML).toBe(modalPlaceholder.outerHTML);
+    })
+})
+
+describe('test the update events fetch POST request operates as expected', () => {
+    beforeEach(() => {
+        // grid container styling
+        refreshDomElementVariables();
+        document.getElementById('post_events_grid').style.display = 'grid';
+        document.querySelectorAll('.event_container.advertised')[0].style.display = 'block';
+        document.querySelectorAll('.event_container.upcoming')[0].style.display = 'block';
+    })
+    afterEach(() => {
+        Request.mockClear();
+        fetch.mockClear();
+        alert.mockClear();
+        // reset html content
+        postEventModal.parentElement.previousElementSibling.innerHTML = initialPostEventsSection;
+        postEventForm.innerHTML = initialPostEventForm;
+    })
+
+    test('check request and response/actions when a successful cancel event request is submitted', async () => {
+        json_data = {'successful': 'true'};
+        expect(document.querySelectorAll('.event_container.upcoming').length).toBe(1);
+        // the event should be visible
+        expect(document.querySelectorAll('.event_container.upcoming')[0].style.display).toBe('block');
+        // call the handler
+        let cancelButton = cancelEventButtons[0];
+        let event = {currentTarget: cancelButton};
+        await updateEventFetchHandler(event);
+        expect(Request).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['update_events/?cancel=true']));
+        // check event has been hidden
+        expect(document.querySelectorAll('.event_container.upcoming').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.upcoming')[0].style.display).toBe('none');
+    })
+
+    test('check request and response/actions when a successful delete advert request is submitted', async () => {
+        json_data = {'successful': 'true'};
+        expect(document.querySelectorAll('.event_container.advertised').length).toBe(1);
+        // the event should be visible
+        expect(document.querySelectorAll('.event_container.advertised')[0].style.display).toBe('block');
+        // call the handler
+        let deleteButton = deleteEventButtons[0];
+        let event = {currentTarget: deleteButton};
+        await updateEventFetchHandler(event);
+        expect(Request).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['update_events/?cancel=false']));
+        // check event has been hidden
+        expect(document.querySelectorAll('.event_container.advertised').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.advertised')[0].style.display).toBe('none');
+    })
+
+    test('check request and response/actions when an unsuccessful cancel event request is submitted', async () => {
+        json_data = {'successful': 'false'};
+        expect(document.querySelectorAll('.event_container.upcoming').length).toBe(1);
+        // the event should be visible
+        expect(document.querySelectorAll('.event_container.upcoming')[0].style.display).toBe('block');
+        // call the handler
+        let cancelButton = cancelEventButtons[0];
+        let event = {currentTarget: cancelButton};
+        await updateEventFetchHandler(event);
+        expect(Request).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['update_events/?cancel=true']));
+        // check alert displayed
+        let message = `Unable to cancel the event at the moment, please try again later.
+If the problem persists, please report the issue to us.`;
+        expect(alert).toHaveBeenLastCalledWith(message);
+        // check event has not been hidden
+        expect(document.querySelectorAll('.event_container.upcoming').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.upcoming')[0].style.display).not.toBe('none');
+    })
+
+    test('check request and response/actions when an unsuccessful delete advert request is submitted', async () => {
+        json_data = {'successful': 'false'};
+        expect(document.querySelectorAll('.event_container.advertised').length).toBe(1);
+        // the event should be visible
+        expect(document.querySelectorAll('.event_container.advertised')[0].style.display).toBe('block');
+        // call the handler
+        let deleteButton = deleteEventButtons[0];
+        let event = {currentTarget: deleteButton};
+        await updateEventFetchHandler(event);
+        expect(Request).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['update_events/?cancel=false']));
+        // check alert displayed
+        let message = `Unable to delete advert at the moment, please try again later.
+If the problem persists, please report the issue to us.`
+        expect(alert).toHaveBeenLastCalledWith(message);
+        // check event has not been hidden
+        expect(document.querySelectorAll('.event_container.advertised').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.advertised')[0].style.display).not.toBe('none');
     })
 })

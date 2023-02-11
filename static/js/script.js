@@ -30,6 +30,8 @@ let postEventFormDoneButton = document.getElementById('post_events_modal') ? doc
 let advertisedEvents = [...document.getElementsByClassName('advertised')];
 let upcomingEvents = [...document.getElementsByClassName('upcoming')];
 let radioInputs = [...document.querySelectorAll("[type = 'radio']")];
+let deleteEventButtons = [...document.getElementsByClassName('delete_advert')];
+let cancelEventButtons = [...document.getElementsByClassName('cancel_event')];
 
 // JS Section: Event listeners:
 
@@ -195,6 +197,30 @@ function addRadioInputListeners() {
             updateVisibleEvents(input);
         }
         input.addEventListener('change', radioInputHandler);
+    }
+}
+
+ /** Adds click event listeners to the cancel event buttons.
+  *  Handler carries out a post fetch request to delete the
+  *  event. Makes the event no longer visible.
+ * @summary Click listeners added to cancel event buttons for event deletion.
+ */
+ function cancelEventListeners() {
+    for (let button of cancelEventButtons) {
+        button.removeEventListener('click', updateEventFetchHandler);
+        button.addEventListener('click', updateEventFetchHandler);
+    }
+}
+
+/**  Adds click event listeners to the delete advert buttons.
+  *  Handler carries out a post fetch request to delete the
+  *  event. Makes the event advert no longer visible.
+ * @summary Click listeners added to delete advert buttons for event deletion.
+ */
+function deleteEventListeners() {
+    for (let button of deleteEventButtons) {
+        button.removeEventListener('click', updateEventFetchHandler);
+        button.addEventListener('click', updateEventFetchHandler);
     }
 }
 
@@ -673,6 +699,8 @@ function executeAllHomePageAddListenersFunctions() {
     addPostEventsModalDonebuttonListeners();
     createModalCancelButtonListeners();
     addRadioInputListeners();
+    cancelEventListeners();
+    deleteEventListeners()
     removeFeedbackListeners();
 }
 
@@ -722,6 +750,8 @@ function refreshDomElementVariables() {
     advertisedEvents = [...document.getElementsByClassName('advertised')];
     upcomingEvents = [...document.getElementsByClassName('upcoming')];
     radioInputs = [...document.querySelectorAll("[type = 'radio']")];
+    deleteEventButtons = [...document.getElementsByClassName('delete_advert')];
+    cancelEventButtons = [...document.getElementsByClassName('cancel_event')];
 }
 
 // JS Subsection: Fetch requests:
@@ -829,7 +859,6 @@ function refreshDomElementVariables() {
  async function postEventFormFetchHandler() {
     // form data for request
     let formData = new FormData(postEventForm);
-
     try {
         // For aquiring the form csrf token
         const csrftoken = Cookies.get('csrftoken');
@@ -923,6 +952,56 @@ async function refreshFormFetchHandler(target) {
     }
 }
 
+/** Fetch POST request handler for updating
+ *  a host's advertsied or upcoming events.
+ *  Deletes advert or cancels upcoming event.
+ * @summary Fetch POST request handler for updating a host's event.
+ */
+async function updateEventFetchHandler(event) {
+    let target = event.currentTarget;
+    let requestUrl;
+    // Obtain event id
+    let eventID = target.parentElement.previousElementSibling.firstElementChild.lastElementChild.innerHTML.replace('.', '');
+    let buttonType = target.innerHTML;
+    
+    if (buttonType === 'Cancel') {
+        requestUrl = 'update_events/?cancel=true';
+    }
+    else {
+        requestUrl = 'update_events/?cancel=false';
+    }
+
+    try {
+        // For aquiring the csrf token
+        const csrftoken = Cookies.get('csrftoken');
+        // make request and check response
+        let request = new Request(requestUrl,
+                                    {method: 'POST', headers: {'X-CSRFToken': csrftoken},
+                                    mode: 'same-origin',
+                                    body: eventID});
+        let response = await fetch(request);
+        let responseJSON = await response.json();
+
+        if (responseJSON.successful === 'true') {
+            let event_container = target.parentElement.parentElement;
+            event_container.style.display = 'none';
+        }
+        else {
+            if (buttonType !== 'Cancel') {
+                window.alert(`Unable to delete advert at the moment, please try again later.
+If the problem persists, please report the issue to us.`);
+            }
+            else {
+                window.alert(`Unable to cancel the event at the moment, please try again later.
+If the problem persists, please report the issue to us.`);
+            }
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }     
+}
+
 // JS Section: Page specific executed code
 
 // all pages:
@@ -950,5 +1029,6 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 //     closeModalButtons, editProfileModal, editPersonalInfoForm, editAddressForm,
 //     editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
 //     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
-//     refreshFormFetchHandler, closeModal, restoreForm, postEventFormDoneButton
+//     refreshFormFetchHandler, closeModal, restoreForm, postEventFormDoneButton, updateEventFetchHandler,
+//     deleteEventButtons, cancelEventButtons
 // };
