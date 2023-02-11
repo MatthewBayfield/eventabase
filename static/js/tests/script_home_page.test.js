@@ -10,7 +10,8 @@ document.documentElement.innerHTML = fileContents;
 let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
      modalContainers, modals, closeModalButtons, modalButtons, editProfileModalDoneButton, editProfileModal,
      openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal,
-     restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler} = require('../script.js');
+     restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler,
+     refreshFormFetchHandler, updateEventFetchHandler, deleteEventButtons, cancelEventButtons} = require('../script.js');
 // mock functions
 const log = jest.fn();
 let mockFetchEditProfile = jest.fn(() => {
@@ -153,6 +154,12 @@ describe("check that the 'enter key' event listeners work", () => {
         // do not need these event listeners in these tests. removed to remove console errors.
         editProfileModalDoneButton.removeEventListener('click', editProfileFormFetchHandler);
         postEventFormDoneButton.removeEventListener('click', postEventFormFetchHandler);
+        for (let button of deleteEventButtons) {
+            button.removeEventListener('click', updateEventFetchHandler);
+        }
+        for ( let button of cancelEventButtons) {
+            button.removeEventListener('click', updateEventFetchHandler);
+        }
 
     })
     afterAll(() => {
@@ -170,6 +177,12 @@ describe("check that the 'enter key' event listeners work", () => {
         }
         editProfileModalDoneButton.addEventListener('click', editProfileFormFetchHandler);
         postEventFormDoneButton.addEventListener('click', postEventFormFetchHandler);
+        for (let button of deleteEventButtons) {
+            button.addEventListener('click', updateEventFetchHandler);
+        }
+        for ( let button of cancelEventButtons) {
+            button.addEventListener('click', updateEventFetchHandler);
+        }
         log.mockClear();
     })
 
