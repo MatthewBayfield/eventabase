@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +10,7 @@
 
 
     
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" type="text/css" href="/static/css/style.css">
     <title>Home</title>
 </head>
@@ -71,7 +72,7 @@
                     <div id="menu_items_container">
                         
                         <div role="menuitem" class="menu_item">
-                            <a href="" type="text/html"><b>T &amp; C</b></a>
+                            <a href="" type="text/html"><b>T & C</b></a>
                         </div>
                     </div>
                 </div>
@@ -153,10 +154,10 @@
         </div> 
     </div>
 </div>
-        <div class="modal_container" tabindex="0">
-    <div id="edit_profile_modal" class="modal" role="dialog" aria-modal="true" tabindex="0" aria-label="edit profile modal">
+        <div class="modal_container" tabindex="0" >
+    <div id="edit_profile_modal" class="modal" role="dialog" aria-modal="true" tabindex="0" aria-label="edit_profile_modal">
         <div>
-                <div class="close_button">
+                <div class="close_button" >
                     <span tabindex="0" aria-label="close modal" role="button"><i class="fa-solid fa-xmark"></i> </span> 
                 </div>
             <h2>Edit Profile</h2>
@@ -164,14 +165,14 @@
         
     
     
-    <form id="personal_info_form" method="post" action="profile_form/">
-        <input type="hidden" name="csrfmiddlewaretoken" value="6oyeln24oh78yScxyClsrvnRrjWeqoeuVJ6emLKSU1ihdcuZR23KcSJ72mg9j6UK">
+    <form id=personal_info_form method="post" action="profile_form/">
+        <input type="hidden" name="csrfmiddlewaretoken" value="ucODUF5KAI40Z41dAbLCpKd5ofHuVKVRGpkzUvHpPlGv8tICHliZR4G8ywakw4wT">
         <div class="field_flex_container">
         <div class="form_fields">
         
-            <div><label for="Id_First_Name">First Name:</label>*</div>
+            <div><label for="id_first_name">First name:</label>*</div>
         
-        <input type="text" name="first_name" value="matthew" maxlength="50" required="" id="id_first_name">
+        <input type="text" name="first_name" value="matthew" maxlength="50" required id="id_first_name">
         </div>
         
         <div>
@@ -183,9 +184,9 @@
     <div class="field_flex_container">
         <div class="form_fields">
         
-            <div><label for="Id_Last_Name">Last Name:</label>*</div>
+            <div><label for="id_last_name">Last name:</label>*</div>
         
-        <input type="text" name="last_name" value="bayfield" maxlength="50" required="" id="id_last_name">
+        <input type="text" name="last_name" value="bayfield" maxlength="50" required id="id_last_name">
         </div>
         
         <div>
@@ -197,9 +198,9 @@
     <div class="field_flex_container">
         <div class="form_fields">
         
-            <div><label for="Id_Date_Of_Birth">Date Of Birth:</label>*</div>
+            <div><label for="id_date_of_birth">Date of Birth:</label>*</div>
         
-        <input type="text" name="date_of_birth" value="19/11/1993" required="" id="id_date_of_birth">
+        <input type="text" name="date_of_birth" value="19/11/1993" required id="id_date_of_birth">
         </div>
         
             <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
@@ -215,12 +216,12 @@
     <div class="field_flex_container">
         <div class="form_fields">
         
-            <div><label for="Id_Sex">Sex:</label>*</div>
+            <div><label for="id_sex">Sex:</label>*</div>
         
-        <select name="sex" required="" id="id_sex">
+        <select name="sex" required id="id_sex">
   <option value="">---------</option>
 
-  <option value="male" selected="">male</option>
+  <option value="male" selected>male</option>
 
   <option value="female">female</option>
 
@@ -236,9 +237,10 @@
     <div class="field_flex_container">
         <div class="form_fields">
         
-            <div><label for="Id_Bio">Bio:</label></div>
+            <div><label for="id_bio">Bio:</label></div>
         
-        <textarea name="bio" cols="40" rows="10" maxlength="500" id="id_bio">I like cricket, I love it.</textarea>
+        <textarea name="bio" cols="40" rows="10" maxlength="500" id="id_bio">
+I like cricket, I love it.</textarea>
         </div>
         
             <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
@@ -253,14 +255,14 @@
     </form>
     
     
-    <form id="address_form" method="post" action="profile_form/">
-        <input type="hidden" name="csrfmiddlewaretoken" value="6oyeln24oh78yScxyClsrvnRrjWeqoeuVJ6emLKSU1ihdcuZR23KcSJ72mg9j6UK">
+    <form id=address_form method="post" action="profile_form/">
+        <input type="hidden" name="csrfmiddlewaretoken" value="ucODUF5KAI40Z41dAbLCpKd5ofHuVKVRGpkzUvHpPlGv8tICHliZR4G8ywakw4wT">
         <div class="field_flex_container">
         <div class="form_fields">
         
-            <div><label for="Id_Address_Line_One">Address Line 1:</label>*</div>
+            <div><label for="id_address_line_one">Address line 1:</label>*</div>
         
-        <input type="text" name="address_line_one" value="11 rise park boulevard" maxlength="100" required="" id="id_address_line_one">
+        <input type="text" name="address_line_one" value="11 rise park boulevard" maxlength="100" required id="id_address_line_one">
         </div>
         
         <div>
@@ -272,9 +274,9 @@
     <div class="field_flex_container">
         <div class="form_fields">
         
-            <div><label for="Id_City_Or_Town">City/Town:</label>*</div>
+            <div><label for="id_city_or_town">City/Town:</label>*</div>
         
-        <input type="text" name="city_or_town" value="romford" maxlength="50" required="" id="id_city_or_town">
+        <input type="text" name="city_or_town" value="romford" maxlength="50" required id="id_city_or_town">
         </div>
         
         <div>
@@ -286,9 +288,9 @@
     <div class="field_flex_container">
         <div class="form_fields">
         
-            <div><label for="Id_County">County:</label>*</div>
+            <div><label for="id_county">County:</label>*</div>
         
-        <input type="text" name="county" value="essex" maxlength="50" required="" id="id_county">
+        <input type="text" name="county" value="essex" maxlength="50" required id="id_county">
         </div>
         
         <div>
@@ -300,9 +302,9 @@
     <div class="field_flex_container">
         <div class="form_fields">
         
-            <div><label for="Id_Postcode">Postcode:</label>*</div>
+            <div><label for="id_postcode">Postcode:</label>*</div>
         
-        <input type="text" name="postcode" value="rm1 4pp" maxlength="10" required="" id="id_postcode">
+        <input type="text" name="postcode" value="rm1 4pp" maxlength="10" required id="id_postcode">
         </div>
         
         <div>
@@ -314,7 +316,7 @@
     
 
         <div class="modal_buttons_container">
-            <button class="modal_button" type="button" name="Done">Done</button>
+            <button class='modal_button' type="button" name="Done">Done</button>
             
                 <button class="modal_button" type="button" name="Cancel">Cancel</button>
             
@@ -322,22 +324,22 @@
     </div>
 </div>
         <div class="expand_icon">
-            <span tabindex="0" data-icon-type="expand_more" class="material-symbols-outlined">expand_more</span>
-            <span tabindex="0" data-icon-type="expand_less" class="material-symbols-outlined">expand_less</span>
+            <span tabindex="0" data-icon-type="expand_more" class="material-symbols-outlined" role="button">expand_more</span>
+            <span tabindex="0" data-icon-type="expand_less" class="material-symbols-outlined" role="button">expand_less</span>
         </div>
     </section>
     <section id="search_events" role="region" aria-label="search events and activities section">
         <!-- <div class="expand_icon">
-            <span tabindex="0" data-icon-type="expand_more" class="material-symbols-outlined">expand_more</span>
-            <span tabindex="0" data-icon-type="expand_less" class="material-symbols-outlined">expand_less</span>
+            <span tabindex="0" data-icon-type="expand_more" class="material-symbols-outlined" role="button">expand_more</span>
+            <span tabindex="0" data-icon-type="expand_less" class="material-symbols-outlined" role="button">expand_less</span>
         </div> -->
     </section>
     <section id="post_events" role="region" aria-label="post events or activities section">
-        <h2>Host Events &amp; Activities</h2>
-<div id="post_events_grid" class="grid_container" tabindex="-1">
+        <h2>Host Events & Activities</h2>
+<div id='post_events_grid' class="grid_container" tabindex="-1">
     <div class="top_row both_columns">
         <p>
-            View and manage the events &amp; activities you are advertising to host and or have upcoming. Post as many new adverts
+            View and manage the events & activities you are advertising to host and or have upcoming. Post as many new adverts
             as you wish!
         </p>
         
@@ -348,75 +350,74 @@
     </div>
     <div class="both_columns bottom_row">
         <h4>Your Advertised and Upcoming Events or Activities</h4>
-        <input id="advertised" name="event_type" type="radio" value="advertised" checked="">
+        <input id='advertised' name='event_type' type="radio" value="advertised" checked >
         <label for="advertised">Advertised</label>
-        <input id="upcoming" name="event_type" type="radio" value="upcoming">
+        <input id='upcoming' name='event_type' type="radio" value="upcoming">
         <label for="upcoming">Upcoming</label>
         
-            <div class="event_container advertised" region="" role="region" aria-label="event" tabindex="0">
+            <div class="event_container advertised" role="region" aria-label="event item" tabindex="0">
                 <div>
-                    <h5>No. of users attending so far: </h5>
                     
                         
                             <div class="details_display">
                                 <span>Id :</span>
-                                <span>1</span>
-                            </div>
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>Host :</span>
-                                <span>SubtleMatt147</span>
+                                <span>17.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Title :</span>
-                                <span>Tennis</span>
+                                <span>ggg.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Host :</span>
+                                <span>SubtleMatt147.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>When :</span>
-                                <span>12:00, 23/12/22</span>
+                                <span>13:30, 15/09/34.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Closing Date :</span>
-                                <span>12:00, 20/12/22</span>
+                                <span>13:30, 25/09/33.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Max No. Of Attendees :</span>
-                                <span>1</span>
+                                <span>4.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Keywords :</span>
-                                <span>practice,tennis</span>
+                                <span>4444.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Description :</span>
-                                <span>2hr hit</span>
+                                <span>444444.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Requirements :</span>
-                                <span>Be a fairly advanced player.</span>
+                                <span>444444.</span>
                             </div>
                         
                     
@@ -452,100 +453,100 @@
                         
                             <div class="details_display">
                                 <span>Address Line 1 :</span>
-                                <span>raphaels park</span>
+                                <span>444444R.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>City/Town :</span>
-                                <span>romford</span>
+                                <span>Ty.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>County :</span>
-                                <span>essex</span>
+                                <span>Ty.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Postcode :</span>
-                                <span>rm1 6pt</span>
+                                <span>rm14pp.</span>
                             </div>
                         
                     
-                    <button>Delete Advert</button>
+                    <h5 aria-label = 'number of users attending so far'>No. of users attending so far: .</h5>
+                    <button class="delete_advert">Delete Advert</button>
                 </div>
             </div>
         
         
-            <div class="event_container upcoming hidden" region="" role="region" aria-label="event" tabindex="0">
+            <div class="event_container upcoming" role="region" aria-label="event item" tabindex="0">
                 <div>
-                    <h5>No. of users attending: </h5>
                     
                         
                             <div class="details_display">
                                 <span>Id :</span>
-                                <span>2</span>
-                            </div>
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>Host :</span>
-                                <span>SubtleMatt147</span>
+                                <span>2.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Title :</span>
-                                <span>paintballing</span>
+                                <span>paintballing.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Host :</span>
+                                <span>SubtleMatt147.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>When :</span>
-                                <span>16:10, 22/02/23</span>
+                                <span>16:10, 22/02/23.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Closing Date :</span>
-                                <span>16:10, 05/01/23</span>
+                                <span>16:10, 05/01/23.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Max No. Of Attendees :</span>
-                                <span>20</span>
+                                <span>20.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Keywords :</span>
-                                <span>paintballing,outdoors</span>
+                                <span>paintballing,outdoors.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Description :</span>
-                                <span>paintballing then lunch. meet at the centre</span>
+                                <span>paintballing then lunch. meet at the centre.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Requirements :</span>
-                                <span>£50 min per person. wear appropriate clothing</span>
+                                <span>£50 min per person. wear appropriate clothing.</span>
                             </div>
                         
                     
@@ -581,32 +582,33 @@
                         
                             <div class="details_display">
                                 <span>Address Line 1 :</span>
-                                <span>mayhem paintball</span>
+                                <span>mayhem paintball.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>City/Town :</span>
-                                <span>adbridge</span>
+                                <span>adbridge.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>County :</span>
-                                <span>essex</span>
+                                <span>essex.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Postcode :</span>
-                                <span>rm16pl</span>
+                                <span>rm16pl.</span>
                             </div>
                         
                     
-                    <button>Cancel</button>
+                    <h5 aria-label = 'number of users attending'>No. of users attending: .</h5>
+                    <button class="cancel_event">Cancel</button>
                     <button>Message Attendees</button>
                 </div>
             </div>
@@ -614,10 +616,10 @@
     </div>
 </div>
     
-        <div class="modal_container" tabindex="0">
-    <div id="post_events_modal" class="modal" role="dialog" aria-modal="true" tabindex="0" aria-label="edit profile modal">
+        <div class="modal_container" tabindex="0" >
+    <div id="post_events_modal" class="modal" role="dialog" aria-modal="true" tabindex="0" aria-label="post_events_modal">
         <div>
-                <div class="close_button">
+                <div class="close_button" >
                     <span tabindex="0" aria-label="close modal" role="button"><i class="fa-solid fa-xmark"></i> </span> 
                 </div>
             <h2>Post event or activity</h2>
@@ -625,14 +627,14 @@
         
     <p>Complete the following form to post an advert for your event or activity.</p>
     
-    <form id="post_events_form" method="post" action="post_events/">
-        <input type="hidden" name="csrfmiddlewaretoken" value="rKKTdDjy0WBxJZ0KD64qSKQSdD78Jc3ng5iTe11mwGMGojicWwMID7c8OGr3CUJD">
+    <form id=post_events_form method="post" action="post_events/">
+        <input type="hidden" name="csrfmiddlewaretoken" value="x1HbBp2fzT9It37QMRM8gdd32R04xNVAJed7BfEUOwLdCsOfT1jvIxG6c8tU87wC">
         <div class="field_flex_container">
         <div class="form_fields">
         
             <div><label for="id_title">Title:</label>*</div>
         
-        <input type="text" name="title" maxlength="100" required="" id="id_title">
+        <input type="text" name="title" maxlength="100" required id="id_title">
         </div>
         
         <div>
@@ -647,14 +649,14 @@
         
             <div><label for="id_when">When:</label>*</div>
         
-        <input type="text" name="when" required="" id="id_when">
+        <input type="text" name="when" required id="id_when">
         </div>
         
             <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
         
         <div>
         
-            <div class="help_text">Enter a date &amp; time for the event: e.g. '07:30, 10/11/23'.</div>
+            <div class="help_text">Enter a date & time for the event: e.g. '07:30, 10/11/23'.</div>
         
         
         </div>
@@ -666,14 +668,14 @@
         
             <div><label for="id_closing_date">Closing Date:</label>*</div>
         
-        <input type="text" name="closing_date" required="" id="id_closing_date">
+        <input type="text" name="closing_date" required id="id_closing_date">
         </div>
         
             <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
         
         <div>
         
-            <div class="help_text">Enter a date &amp; time when the advert should end: e.g. '07:30, 10/11/23'.</div>
+            <div class="help_text">Enter a date & time when the advert should end: e.g. '07:30, 10/11/23'.</div>
         
         
         </div>
@@ -685,7 +687,7 @@
         
             <div><label for="id_max_attendees">Max no. of attendees:</label>*</div>
         
-        <input type="number" name="max_attendees" required="" id="id_max_attendees">
+        <input type="number" name="max_attendees" required id="id_max_attendees">
         </div>
         
         <div>
@@ -719,7 +721,8 @@
         
             <div><label for="id_description">Description:</label>*</div>
         
-        <textarea name="description" cols="40" rows="10" maxlength="500" required="" id="id_description"></textarea>
+        <textarea name="description" cols="40" rows="10" maxlength="500" required id="id_description">
+</textarea>
         </div>
         
             <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
@@ -738,7 +741,8 @@
         
             <div><label for="id_requirements">Requirements:</label>*</div>
         
-        <textarea name="requirements" cols="40" rows="10" maxlength="500" required="" id="id_requirements"></textarea>
+        <textarea name="requirements" cols="40" rows="10" maxlength="500" required id="id_requirements">
+</textarea>
         </div>
         
             <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
@@ -759,7 +763,7 @@
         
             <div><label for="id_address_line_one">Address line 1:</label>*</div>
         
-        <input type="text" name="address_line_one" maxlength="100" required="" id="id_address_line_one">
+        <input type="text" name="address_line_one" maxlength="100" required id="id_address_line_one">
         </div>
         
         <div>
@@ -774,7 +778,7 @@
         
             <div><label for="id_city_or_town">City/Town:</label>*</div>
         
-        <input type="text" name="city_or_town" maxlength="50" required="" id="id_city_or_town">
+        <input type="text" name="city_or_town" maxlength="50" required id="id_city_or_town">
         </div>
         
         <div>
@@ -789,7 +793,7 @@
         
             <div><label for="id_county">County:</label>*</div>
         
-        <input type="text" name="county" maxlength="50" required="" id="id_county">
+        <input type="text" name="county" maxlength="50" required id="id_county">
         </div>
         
         <div>
@@ -804,7 +808,7 @@
         
             <div><label for="id_postcode">Postcode:</label>*</div>
         
-        <input type="text" name="postcode" maxlength="10" required="" id="id_postcode">
+        <input type="text" name="postcode" maxlength="10" required id="id_postcode">
         </div>
         
         <div>
@@ -816,7 +820,7 @@
     
 
         <div class="modal_buttons_container">
-            <button class="modal_button" type="button" name="Done">Done</button>
+            <button class='modal_button' type="button" name="Done">Done</button>
             
                 <button class="modal_button" type="button" name="Cancel">Cancel</button>
             
@@ -824,8 +828,8 @@
     </div>
 </div>
         <div class="expand_icon">
-            <span tabindex="0" data-icon-type="expand_more" class="material-symbols-outlined">expand_more</span>
-            <span tabindex="0" data-icon-type="expand_less" class="material-symbols-outlined">expand_less</span>
+            <span tabindex="0" data-icon-type='expand_more' class="material-symbols-outlined" role="button">expand_more</span>
+            <span tabindex="0" data-icon-type="expand_less" class="material-symbols-outlined" role="button">expand_less</span>
         </div>
     </section>
     <!--Will feature in later versions.-->
@@ -842,6 +846,5 @@
     <script src="https://kit.fontawesome.com/498cc55193.js" crossorigin="anonymous"></script>
     <script src="/static/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
-
 </body>
 </html>
