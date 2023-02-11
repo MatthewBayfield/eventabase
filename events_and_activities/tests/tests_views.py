@@ -1,4 +1,4 @@
-import re
+import re, json
 from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
@@ -239,7 +239,7 @@ class TestPostEventsView(TestCase):
                                      <span>City/Town :</span><span>Gidea Park.</span></div><div class="details_display">
                                      <span>County :</span><span>Essex.</span></div><div class="details_display"><span>Postcode :</span>
                                      <span>rm26bt.</span></div><h5 aria-label="number of users attending so far">No. of users attending so far: .</h5>
-                                     <button>Delete Advert</button></div></div>'''
+                                     <button class='delete_advert'>Delete Advert</button></div></div>'''
         # test for valid form:
 
         client = Client()
@@ -293,4 +293,126 @@ class TestPostEventsView(TestCase):
         self.assertHTMLEqual(re.sub("(<input).+(name=\"csrf).+>", "", rendered_post_events_modal),
                              re.sub("(<input).+(name=\"csrf).+>", "", response_json['modal']))
 
-        
+
+class TestUpdateEventsView(TestCase):
+    """
+    Tests for UpdateEventsView.
+    """
+    data = {'email': 'tommypaul147@gmail.com',
+            'email2': 'tommypaul147@gmail.com',
+            'password1': 'holly!123',
+            'password2': 'holly!123',
+            'username': 'jimmy147'}
+
+    data2 = {'email': 'tommypaul1478@gmail.com',
+             'email2': 'tommypaul1478@gmail.com',
+             'password1': 'holly!1234',
+             'password2': 'holly!1234',
+             'username': 'jimmy1479'}
+    
+    info = {'first_name': 'mark',
+            'last_name': 'taylor',
+            'date_of_birth': '19/11/1993',
+            'sex': 'male',
+            'bio': 'I like sports'}
+    address = {'address_line_one': '58 Stanley Avenue',
+               'city_or_town': 'GIdea Park',
+               'county': 'ESSEX',
+               'postcode': 'Rm26Bt'}
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Sign-up new users 
+        client = Client()
+        client.post('/accounts/signup/', cls.data)
+        client.post('/accounts/signup/', cls.data2)
+        # verify user emails
+        user_email = EmailAddress.objects.get(user='tommypaul147@gmail.com')
+        user_email.verified = True
+        user_email.save()
+        user_email2 = EmailAddress.objects.get(user='tommypaul1478@gmail.com')
+        user_email2.verified = True
+        user_email2.save()
+        # create profile for user
+        user = CustomUserModel.objects.get(email=user_email.email)
+        UserProfile.objects.create(user=user,
+                                   first_name='jimmy',
+                                   last_name='knighton',
+                                   date_of_birth='1926-03-25',
+                                   sex='male',
+                                   bio='I enjoy all outdoor activities.')
+        # create address for user
+        UserAddress.objects.create(user_profile=user.profile,
+                                   address_line_one='57 portland gardens',
+                                   city_or_town='chadwell heath',
+                                   county='essex',
+                                   postcode='rm65uh',
+                                   latitude=51.5791,
+                                   longitude=0.1355)
+
+    def test_post_method_of_update_events_view(self):
+        """
+        Tests the POST method of the UpdateEventsView, that is responsible for handling requests to delete/cancel a host's event advert/upcoming event.
+        """
+        event = {'status': 'advertised',
+                 'title': 'paintballing',
+                 'when': '13:30, 19/01/30',
+                 'closing_date': '11:00, 01/01/30',
+                 'max_attendees': 20,
+                 'keywords': 'outdoors,fun',
+                 'description': 'painballing then lunch.',
+                 'requirements': '£50 per person',
+                 'address_line_one': '58 StanLey Avenue',
+                 'city_or_town': 'GIdea Park',
+                 'county': 'ESSEX',
+                 'postcode': 'Rm26Bt'}
+
+        # Testing delete event request:
+
+        client = Client()
+        # user sign-in
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        event['host_user'] = CustomUserModel.objects.get(email=self.data['email'])
+        # submit form to post new event
+        response = client.post(reverse('home:post_events_view'), data=event, mode='same_origin')
+        response_json = response.json()
+        # check response 
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_json['valid'], 'true')
+        # check event now exists
+        self.assertEqual((EventsActivities.objects.filter(host_user=event['host_user'], title=event['title']).exists()), True)
+        # get posted event id
+        event_instance = EventsActivities.objects.get(host_user=event['host_user'], title=event['title'])
+        event_id = str(event_instance.id)
+
+        # Make request to delete event
+        response = client.post('/home/update_events/?cancel=false', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'successful': 'true'})
+        # check event no longer exists
+        self.assertEqual((EventsActivities.objects.filter(id=int(event_id)).exists()), False)
+
+        # Testing cancel event request:
+
+        # submit form to post new event
+        response = client.post(reverse('home:post_events_view'), data=event, mode='same_origin')
+        response_json = response.json()
+        # check response 
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response_json['valid'], 'true')
+        # check event now exists
+        self.assertEqual((EventsActivities.objects.filter(host_user=event['host_user'], title=event['title']).exists()), True)
+        # get posted event id
+        event_instance = EventsActivities.objects.get(host_user=event['host_user'], title=event['title'])
+        event_id = str(event_instance.id)
+
+        # Make request to cancel event
+        response = client.post('/home/update_events/?cancel=true', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'successful': 'true'})
+        # check event no longer exists
+        self.assertEqual((EventsActivities.objects.filter(id=int(event_id)).exists()), False)

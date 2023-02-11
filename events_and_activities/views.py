@@ -1,16 +1,18 @@
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, View
 from django.http import JsonResponse
+from django.http.response import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.template.loader import get_template, render_to_string
+from django.views.decorators.csrf import ensure_csrf_cookie
 from allauth.account.decorators import verified_email_required
 from .models import EventsActivities
 from .forms import EventsActivitiesForm
 
 # Create your views here.
 
-@method_decorator(verified_email_required, name='dispatch')
+@method_decorator([verified_email_required], name='dispatch')
 class PostEventsView(FormView):
     """
     Responsible for retrieving and displaying a user's advertised or upcoming events that they are hosting
@@ -93,6 +95,8 @@ class PostEventsView(FormView):
         data = {}
 
         form_data = request.POST
+        form_data = {key: value for key, value in form_data.dict().items() if key != 'csrfmiddlewaretoken'}
+        form_data.update({'host_user': request.user})
         new_event_form = EventsActivitiesForm(data=form_data)
         valid = new_event_form.is_valid()
         if valid:
@@ -111,3 +115,35 @@ class PostEventsView(FormView):
             rendered_form = render_to_string(template_name='events_and_activities/post_events_form.html', context=new_event_form.get_context(), request=request)
             data.update({'form': rendered_form, 'valid': 'false'})
         return JsonResponse(data)
+
+
+@method_decorator(verified_email_required, name='dispatch')
+class UpdateEventsView(View):
+    """
+    Responsible for processing requests to delete a host user's existing event advert, as well as cancel one of their
+    upcoming events. Updates the EventsActivities model database by deleting the matching event.
+    """
+    def post(self, request):
+        """
+        Returns:
+            A JSON response indicating whether the request was successful with regard to the event deletion. 
+        """
+        update_type = 'cancel'
+        if request.environ['QUERY_STRING'] == 'cancel=false':
+            update_type = 'delete'
+
+        event_id = request.body.decode()
+
+        if update_type == 'cancel':
+            pass
+
+        try:
+            event = EventsActivities.objects.get(id=int(event_id))
+            event.delete()
+        except Exception as error:
+            print(error)
+
+        if not EventsActivities.objects.filter(id__exact=int(event_id)).exists():
+            return JsonResponse({'successful': 'true'})
+
+        return JsonResponse({'successful': 'false'})
