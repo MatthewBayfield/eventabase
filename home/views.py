@@ -137,38 +137,35 @@ class UserHomePage(TemplateView, HomeViewsMixin):
         Returns:
             A HTTP response containing the rendered with context home page template.
         """
-        if self.is_user_staff():
-            pass
-        else:
-            # profile view section:
+        
+        # profile view section:
+        self.further_context.update({'username': self.request.user.username,
+                                        'button1_name': 'Done',
+                                        'button2_name': 'Cancel'})
+        rendered_profile_template, user_profile, user_address = self.render_profile_template()
+        
+        self.get_context_data(**kwargs)
+        kwargs.update(self.further_context)
+        rendered_edit_profile_modal = ProfileFormView.as_view()(request,
+                                                                *args,
+                                                                user_profile=user_profile,
+                                                                user_address=user_address,
+                                                                modal='edit_profile_modal',
+                                                                **kwargs)
+        kwargs.update({'edit_profile_modal': rendered_edit_profile_modal})
 
-            self.further_context.update({'username': self.request.user.username,
-                                         'button1_name': 'Done',
-                                         'button2_name': 'Cancel'})
-            rendered_profile_template, user_profile, user_address = self.render_profile_template()
-            
-            self.get_context_data(**kwargs)
-            kwargs.update(self.further_context)
-            rendered_edit_profile_modal = ProfileFormView.as_view()(request,
-                                                                    *args,
-                                                                    user_profile=user_profile,
-                                                                    user_address=user_address,
-                                                                    modal='edit_profile_modal',
-                                                                    **kwargs)
-            kwargs.update({'edit_profile_modal': rendered_edit_profile_modal})
-
-            # post events view section:
-            rendered_post_events_section_template = PostEventsView.as_view()(request,
-                                                                             *args,
-                                                                             get_modal=False,
-                                                                             **kwargs)
-            rendered_post_events_modal = PostEventsView.as_view()(request,
-                                                                  *args,
-                                                                  get_modal=True,
-                                                                  modal='post_events_modal',
-                                                                  **kwargs)
-            kwargs.update({'post_events': rendered_post_events_section_template, 'post_events_modal': rendered_post_events_modal})
-            return super().get(request, *args, **kwargs)
+        # post events view section:
+        rendered_post_events_section_template = PostEventsView.as_view()(request,
+                                                                         *args,
+                                                                         get_modal=False,
+                                                                         **kwargs)
+        rendered_post_events_modal = PostEventsView.as_view()(request,
+                                                              *args,
+                                                              get_modal=True,
+                                                              modal='post_events_modal',
+                                                              **kwargs)
+        kwargs.update({'post_events': rendered_post_events_section_template, 'post_events_modal': rendered_post_events_modal})
+        return super().get(request, *args, **kwargs)
 
 
 @method_decorator(verified_email_required, name='dispatch')
