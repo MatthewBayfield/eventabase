@@ -1,9 +1,29 @@
-# Eventabase
+# Eventabase - *Events & Activities Organised by You for You*
+
+## Overview
+Eventabase is a UK-based event and activity advertiser and organiser. It allows its registered users to post adverts for group-based events or activities
+that they would like to host, so that other users can register their interest to participate in.
+A core principle of eventabase is that it is user-driven as indicated by its slogan: Events & Activities Organised by You for You;
+the site serves as a medium by which ordinary people can organise and advertise their own activities with people from all across the UK.
+It facilitates people in finding something to do in their local area, in making new friends, and trying something new.
+
+<img src='docs/screenshots/am_i_responsive.png' alt='am I responsive screenshot' width=70% height=70%>
 
 ## Current Status
-The site is still very much a work in progress with regard to achieving its full originally intended functionality, and there is still some functionality needed in order to reach an MVP. As it stands a user can create/edit an account, a profile, as well post new event adverts. They can also view the events they are currently advertising to host; view the confirmed events they are hosting that are upcoming. The user can also delete adverts, and cancel their upcoming events.
+The site is still very much a work in progress with regard to achieving its full originally intended functionality,
+and there is still some functionality needed in order to reach an MVP. As it stands a user can create/edit an account,
+a profile, as well post new event adverts. They can also view the events they are currently advertising to host;
+view the confirmed events they are hosting that are upcoming. The user can also delete adverts,
+and cancel their upcoming events.
 
-The minimal functionality required to search for advertised events and activities, in order to register to attend is currently being implemented. As well as this the communication between users is also currently being developed. Once both of these aspects have been implemented, an MVP will be achieved. Much of the more advanced/higher performance functionality and features as originally intended (see [UX Design process](https://github.com/MatthewBayfield/eventabase#ux-design-process)) can then be added sequentially; for example search filters, event shortlists, notifications, automated site maintenance, and event calendars.
+The minimal functionality required to search for advertised events and activities, in order to register to attend
+is currently being implemented. As well as this the communication between users is also currently being developed.
+Once both of these aspects have been implemented, an MVP will be achieved. Much of the more advanced/higher performance
+functionality and features as originally intended (see [UX Design process](https://github.com/MatthewBayfield/eventabase#ux-design-process))
+can then be added sequentially; for example search filters, event shortlists, notifications, automated site maintenance, and event calendars.
+
+### Current site
+The current site can be viewed [here](https://eventabase.herokuapp.com/).
 
 ## UX Design Process
 
