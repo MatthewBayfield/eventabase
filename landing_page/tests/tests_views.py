@@ -5,9 +5,9 @@ from allauth.account.models import EmailAddress
 # Create your tests here.
 
 
-class TestLandingPageViews(TestCase):
+class TestLandingPageView(TestCase):
     """
-    Tests for all views.
+    Tests for LandingPage view.
     """
     data = {'email': 'tommypaul147@gmail.com',
             'email2': 'tommypaul147@gmail.com',
@@ -15,10 +15,12 @@ class TestLandingPageViews(TestCase):
             'password2': 'holly!123',
             'username': 'jimmy147'}
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # Sign-up new user 
         client = Client()
-        client.post('/accounts/signup/', self.data)
+        client.post('/accounts/signup/', cls.data)
         # verify user email
         user = EmailAddress.objects.get(user='tommypaul147@gmail.com')
         user.verified = True
@@ -76,3 +78,54 @@ class TestLandingPageViews(TestCase):
         self.assertEqual(response.context['logged_in'],
                          True)
         self.assertEqual(response.context['page_id'], 'home_page')
+
+
+class TestTermsPoliciesView(TestCase):
+    """
+    """
+    data = {'email': 'tommypaul147@gmail.com',
+            'email2': 'tommypaul147@gmail.com',
+            'password1': 'holly!123',
+            'password2': 'holly!123',
+            'username': 'jimmy147'}
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Sign-up new user 
+        client = Client()
+        client.post('/accounts/signup/', cls.data)
+        # verify user email
+        user = EmailAddress.objects.get(user='tommypaul147@gmail.com')
+        user.verified = True
+        user.save()
+
+    def test_get_request_logged_in_user(self):
+        """
+        Test response for get request from logged-in user.
+        """
+        client = Client()
+        # sign-in user
+        response = client.login(email=self.data['email'],
+                                password=self.data['password1'])
+        self.assertTrue(response)
+        # get request to terms and conditions page
+        response = client.get('/terms_and_policies/', follow=True)
+        response_code = response.status_code
+        self.assertEqual(response_code, 200)
+        self.assertTemplateUsed(response, "landing_page/terms_and_conditions.html")
+        self.assertIn('logged_in', response.context.keys())
+        self.assertTrue(response.context['logged_in'])
+    
+    def test_get_request_unauthenticated_user(self):
+        """
+        Test response for get request from unauthenticated user.
+        """
+        client = Client()
+        # get request to terms and conditions page
+        response = client.get('/terms_and_policies/', follow=True)
+        response_code = response.status_code
+        self.assertEqual(response_code, 200)
+        self.assertTemplateUsed(response, "landing_page/terms_and_conditions.html")
+        self.assertIn('logged_in', response.context.keys())
+        self.assertFalse(response.context['logged_in'])
