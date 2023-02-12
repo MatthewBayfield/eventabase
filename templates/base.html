@@ -35,16 +35,6 @@
                     </div>
                 </a>
             </div>
-            {% if logged_in %}
-                <!-- <a href="{ url notifications }" type="text/html" aria-label="notifications: 0 new"> -->
-                    <div>
-                        <i class="fa-solid fa-envelope nav_icon"></i>
-                        <div class="nav_icon">
-                            0 <i class="fa-solid fa-bell" style="display:inline"></i>
-                        </div>
-                    </div>
-                <!-- </a> -->
-            {% endif %}
             {% if not logged_in %}
                 <div>
                     <a href="{% url 'account_login' %}" type="text/html" aria-label="sign-in">

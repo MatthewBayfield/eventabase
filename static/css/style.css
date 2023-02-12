@@ -351,6 +351,13 @@ span.more_menu_button {
     flex: 4 6 0%;
 }
 
+/* CSS Section: Landing_page only styling */
+
+#login_links {
+    display: flex;
+    justify-content: space-evenly;
+}
+
 /* CSS Subsection: home page styling only */
 #home_page section {
     border: 2px solid #d62839;

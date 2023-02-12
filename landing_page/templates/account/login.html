@@ -18,7 +18,7 @@
                 {% endfor %}
             </ul>
         </div>
-        <p>You can now sign-in to your new account.</Label></p>
+        <p>You can now sign-in to your account.</Label></p>
     {% else %}
         <p>If you have not created an account yet, then please <a href="{{ signup_url }}">sign up</a> first.</p>
     {% endif %}
@@ -29,8 +29,9 @@
         {% if redirect_field_value %}
         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
         {% endif %}
-        <p>
+        <p id="login_links">
             <a class="button secondaryAction" href="{% url 'account_reset_password' %}">Forgot Password?</a>
+            <a href="/admin/" target="_blank">Administrator login</a>
         </p>
         <button class="primaryAction" type="submit">"Sign In"</button>
     </form>
