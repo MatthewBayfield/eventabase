@@ -1,5 +1,10 @@
 # Eventabase
 
+## Current Status
+The site is still very much a work in progress with regard to achieving its full originally intended functionality, and there is still some functionality needed in order to reach an MVP. As it stands a user can create/edit an account, a profile, as well post new event adverts. They can also view the events they are currently advertising to host; view the confirmed events they are hosting that are upcoming. The user can also delete adverts, and cancel their upcoming events.
+
+The minimal functionality required to search for advertised events and activities, in order to register to attend is currently being implemented. As well as this the communication between users is also currently being developed. Once both of these aspects have been implemented, an MVP will be achieved. Much of the more advanced/higher performance functionality and features as originally intended (see [UX Design process](https://github.com/MatthewBayfield/eventabase#ux-design-process)) can then be added sequentially; for example search filters, event shortlists, notifications, automated site maintenance, and event calendars.
+
 ## UX Design Process
 
 ### Strategy
