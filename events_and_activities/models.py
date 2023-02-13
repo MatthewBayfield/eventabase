@@ -141,6 +141,7 @@ class EventsActivities(ProfileMixin):
     # longitude = models.DecimalField(max_digits=8, decimal_places=4,
     #                                 blank=False,
     #                                 validators=[DecimalValidator(8, 4)])
+    # Will also include address validation using the Geoapify API as for the address form in the edit profile form.
 
     def __str__(self):
         return str(self.id)
