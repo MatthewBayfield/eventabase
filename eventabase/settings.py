@@ -33,7 +33,7 @@ DEBUG = development
 
 if development:
     ALLOWED_HOSTS = ['localhost']
-    CSRF_TRUSTED_ORIGINS = ['https://8000-matthewbayfi-eventabase-lxfe72ybebg.ws-eu73.gitpod.io']
+    CSRF_TRUSTED_ORIGINS = ['https://8000-matthewbayfi-eventabase-lxfe72ybebg.ws-eu86.gitpod.io']
     # Email settings
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
