@@ -7,9 +7,11 @@ A core principle of eventabase is that it is user-driven as indicated by its slo
 the site serves as a medium by which ordinary people can organise and advertise their own activities with people from all across the UK.
 It facilitates people in finding something to do in their local area, in making new friends, and trying something new.
 
-<img src='docs/screenshots/am_i_responsive.png' alt='am I responsive screenshot' width=70% height=70%>
+<img src='docs/screenshots/am_i_responsive.png' alt='am I responsive screenshot' width=100% height=100%>
 
-## Current Status
+---
+
+## Current Site Status
 The site is still very much a work in progress with regard to achieving its full originally intended functionality,
 and there is still some functionality needed in order to reach an MVP. As it stands a user can create/edit an account,
 a profile, as well post new event adverts. They can also view the events they are currently advertising to host;
@@ -22,8 +24,7 @@ Once both of these aspects have been implemented, an MVP will be achieved. Much 
 functionality and features as originally intended (see [UX Design process](https://github.com/MatthewBayfield/eventabase#ux-design-process))
 can then be added sequentially; for example search filters, event shortlists, notifications, automated site maintenance, and event calendars.
 
-### Current site
-The current site can be viewed [here](https://eventabase.herokuapp.com/).
+---
 
 ## UX Design Process
 
@@ -403,5 +404,177 @@ below the header, that motivate use of the site, and indicate its purpose to the
 Finally, in regard to the potential typography and colour schemes employed, the aim will be to maximise the readability and also attractiveness of the site content, by creating 
 a clear pattern of use that helps to distinguish content and highlight the most important content. The final choices will be decided through experimentation and manual user feedback, as well as by which fonts and color scheme combinations sufficiently satisfy accessibility requirements.
 
+---
+
+## Current site
+The current site can be viewed [here](https://eventabase.herokuapp.com/).
+
+### Existing Features
+
+#### Overview
+As has been mentioned previously much of the original design is yet to be implemented, and so not all planned features are complete or present, but will be introduced
+as the site development continues. Additionally some of the original design will not be implemented as planned either because it is no longer needed, or because
+an improvement to the design has been made. For example the image slideshow as it is implemented is quite different to its initial wireframe, and this is seen as an improvement.
+
+#### General features
+All clickable objects, mainly buttons, indicate clicked feedback through a color change. All buttons are also can be accessed using the tab key, and clicked using the enter key, with feedback again given. All focusable elements clearly indicate when they are focused. Screenshots below show examples of clicked feedback.
+
+<img src='docs/screenshots/clicked_feedback1.png' alt='screenshot showing clicked button feedback' width=20% height=20%>
+<img src='docs/screenshots/clicked_feedback2.png' alt='screenshot showing clicked button feedback' width=20% height=20%>  
+
+#### Authentication/Security features
+The site, with the assistance of the django-allauth integrated applications, prevents unauthenticated users from viewing or modifying any content on the site only intended for
+authenticated users. If an unauthenticated user attempts to access a prohibited page, they are redirected to the sign-in or landing page. In order to create a new account a user is required to verify their supplied email, before being able to sign-in to their new account. Using Django's in-built CSRF protection, all post requests, for example during form submission, require a CSRF token.
+
+#### Navigation bar
+<img src='docs/screenshots/nav_bar.png' alt='screenshot of the navigation bar' width=48% height=100%>
+<img src='docs/screenshots/more_menu.png' alt='screenshot of expaned more menu' width=48% height=100%>
+
+The above screenshots show the navigation bar and the expanded more menu, that are common to all pages. The exact navigation buttons vary depending on the authentication status
+of the user. For an authenticated user, the home button takes the user to the generic landing page; whilst an authenticated user will be taken to their specific homepage. The
+sign-up and sign-in buttons allow a user to sign-up or sign-in to an account. Once a user has logged in the sign-in button changes to a sign-out button.
+
+Also on the navigation bar is the more button, that when clicked triggers the opening of a closable more menu. It features further links to other site pages. At the moment the only link present is the terms and conditions link, allowing a user to view the site terms and policies. The menu is closable by either clicking the close button or by
+clicking anywhere outside the menu. The navigation bar remains fixed to the top of the viewport with scrolling, enabling easy access at all times.
+
+#### Landing page features/content
+##### Header
+<img src='docs/screenshots/landing_page_header.png' alt='screenshot of the landing page header' width=50% height=50%>
+
+A header containing the site name and slogan are clearly displayed in the header of the page, indicating to the user the purpose of the site.
+
+##### Image automated slideshow
+<img src='docs/screenshots/image_slideshow.png' alt='screenshot of the landing page image slideshow' width=30% height=30%>
+
+Between the header and the navigation bar, is an automated image slideshow, that changes roughly every 8s. The images show people participating in an eclectic range of events and
+activities, thus illustrating to the user the types of events and activities they could advertise or attend using the site. It also helps entice the user to sign-up.
+
+##### How it works section
+In the main body of the landing page is a 'How it works' section, explaining to the user how the site functions, and motivating its use.
+<img src='docs/screenshots/how_it_works_section.png' alt='screenshot of the landing page how it works section' width=80% height=80%>
+
+##### Next steps section
+Also in the main body of the landing page, below the 'How it works' section, is the 'next steps' section. This is intended to concisely inform the user of how to create an account and get started posting new, or searching for event adverts. As part of this section, adjacent to the list of next steps, are two unmissable sign-up and sign-in buttons,
+making it easy for a user to do either action.
+<img src='docs/screenshots/next_steps_section.png' alt='screenshot of the landing page next steps section' width=80% height=80%>
+
+#### Sign-Up page features/content
+##### Header
+A clearly visible title in the header informs the user they are on the account registration page.
+
+<img src='docs/screenshots/sign_up_page_header.png' alt='screenshot of the sign-up page header' width=50% height=50%>
+
+##### Sign-Up Form
+Just before the sign-up form the user is prompted to sign-in if they already have an account, and can access the sign-in page via the provided link. In the form itself, the user is prompted to enter an email, username and password, with both the email and password fields requiring to be entered twice. The required fields are indicated visually with an asterisk. All fields also have placeholder values.
+
+For the fields that need to be entered twice, a matching indicator is present on the second field, indicating in real time whether the two field values match or not. Additionally for the username and password fields, there exists help icons, that when touched or hovered over, display help text for completing that field.
+
+All form fields are validated, and after a failed attempted form submission, the problem fields are indicated, and error feedback is provided. At the bottom of the form is the sign-up form submission button.
 
 
+<img src='docs/screenshots/sign_up_form.png' alt='screenshot of the sign-up form' width=48% height=50%>
+<img src='docs/screenshots/sign_up_form_error_feedback.png' alt='screenshot of the sign-up form error feedback' width=48% height=50%>
+
+#### Sign-In page features/content
+##### Header
+A clearly visible title in the header informs the user they are on the sign-in page.
+
+<img src='docs/screenshots/sign_in_page_header.png' alt='screenshot of the sign-in page header' width=30% height=30%>
+
+##### Sign-In Form
+Just before the sign-in form the user is prompted to sign-up if they do not already have an account, and can access the sign-up page via the provided link. In the form itself, the user is prompted to enter their account email and password. Again the required fields are indicated, and have placeholder values. After a failed form submission, the user is informed that the email and or password are incorrect.
+
+Below the fields there is a 'remember me' checkbox, allowing a user to remain logged-in when accessing the site from the same browser and device. There is also a forgot password link, allowing a user to reset their password if needed. Finally there is a link to the adminstrator login page for site administrators.
+
+Also below the form fields is the form submission button.
+
+<img src='docs/screenshots/sign_in_form.png' alt='screenshot of the sign-in form' width=48% height=50%>
+<img src='docs/screenshots/sign_in_form_error_feedback.png' alt='screenshot of the sign-in form error feedback' width=48% height=50%>
+
+
+#### Registered user Home page features/content
+
+##### Edit profile modal form
+When a new user signs in to their new account for the first time, the edit profile form modal is automatically opened, and can not be closed until the new user completes the form
+in order to create their mandatory user profile. The modal like all other modals on the site displays on top of the content behind, occupying most of the page, and can be scrolled independently. It is impossible to interact with the content outside of the modal, as well as tab out of the modal. The modal contains the edit profile form, above which on first login a message displays, instructing the user to complete the form.
+
+As with all forms on the site, the required form fields are indicated with an asterisk, and there are again help text icons providing help text for completing some fields.
+The form can be split into personal info and address fields. All fields are validated, with problem fields being indicated, along with error feedback given, if an invalid form is
+submitted. The form is submitted using the done button at the bottom of the form.
+
+The same modal is also used to edit an existing user profile. In this context the edit profile form is prefilled with a user's current profile field values. In addition the modal
+can now be closed either by clicking the close button at the top, or the cancel button at the bottom of the modal. Closing the modal also triggers a form refresh, so that if any of the field values were altered in the modal form, they are restored, so that opening the modal again still shows the user's current profile field values.
+
+Screenshots of the modal on first login of a new user:
+
+<img src='docs/screenshots/edit_profile_modal_new_user_pt1.png' alt='screenshot of the edit profile modal for a first login' width=48% height=50%>
+<img src='docs/screenshots/edit_profile_modal_new_user_pt2.png' alt='screenshot of the edit profile modal for a first login' width=48% height=50%>
+
+Screenshots of the modal when opened to edit an existing profile:
+
+<img src='docs/screenshots/edit_profile_modal_pt1.png' alt='screenshot of the edit profile modal for editing an existing profile' width=48% height=50%>
+<img src='docs/screenshots/edit_profile_modal_pt2.png' alt='screenshot of the edit profile modal for editing an existing profile' width=48% height=50%>
+
+
+##### Header
+A clearly visible header contains the message welcome back followed by the user's username, indicating the user has signed in and viewing their home page.
+
+<img src='docs/screenshots/home_page_header.png' alt="screenshot of a user's homepage header" width=30% height=30%>
+
+
+##### Expand More/Less Icons
+Every section of the homepage can be expanded and contracted to reveal the whole section content or just the section heading. This is achieved using
+expand less and expand more icons at the bottom of each section.
+
+Screenshot showing the unexpanded sections, with the expand-more icons visible.
+
+<img src='docs/screenshots/expand_icons.png' alt="screenshot of unexpanded homepage sections with expand more icons" width=50% height=50%>
+
+##### User Profile section
+The main body of the homepage currently consists of two sections (eventually 3-4): the user profile section and the post events section. 
+
+The user profile section displays the user's user profile information. It also contains the edit profile button, that when clicked opens
+the edit profile modal form, allowing the user to edit their profile. When an edit profile modal form is successfully submitted, the profile section
+is dynamically updated in real time without the need to refresh the page.
+
+<img src='docs/screenshots/user_profile_section.png' alt="screenshot of a user's homepage profile section" width=50% height=50%>
+
+##### Post Event section
+The post events section displays the user's current event adverts, as well as the details of upcoming events that the user is confirmed to host.
+The user can toggle between viewing each set of events using the event type radio inputs. Each event advert can be deleted using the 'delete advert' button,
+whilst the upcoming events can be cancelled using the cancel buttons for each event. Upcoming events whose occurrence dates have passed are automatically,
+after refresh, deleted and no longer displayed. Similarly event adverts whose closing dates have passed, are automatically, after refresh, moved into
+the user's upcoming events.
+
+The section also contains the post event button, that when clicked opens the post events modal form, and thus allows the user to post new event adverts that
+they wish to host.
+
+<img src='docs/screenshots/post_event_section_pt1.png' alt='screenshot of the post event section' width=48% height=50%>
+<img src='docs/screenshots/post_event_section_pt2.png' alt='screenshot of the post event section' width=48% height=50%>
+<img src='docs/screenshots/post_event_section_pt3.png' alt='screenshot of the post event section' width=48% height=50%>
+
+##### Post events modal form
+The post events modal form allows users to post new event adverts. Like all modal forms on the site all form fields are validated, and there
+are help icons for certain fields. The various fields allow a user to specify what the event or activity involves, when and where it will occur,
+any requirements, the number of people that can attend, and finally when the advert closes. The modal can be closed in an identical manner to the
+edit profile modal, with the form being refreshed again. The user can submit the form using the done button at the bottom of the modal.
+Successful form submissions result in the event advert being added to the user's viewable advertised events, without refresh.
+
+<img src='docs/screenshots/post_events_modal_pt1.png' alt='screenshot of the post events modal form' width=48% height=50%>
+<img src='docs/screenshots/post_events_modal_pt2.png' alt='screenshot of the post events modal form' width=48% height=50%>
+
+#### Terms and conditions page features/content
+##### Header
+A clearly visible title in the header informs the user they are on the terms and policies page.
+
+<img src='docs/screenshots/terms_and_policies_header.png' alt="screenshot of the terms and conditions page header" width=30% height=30%>
+
+#### Administrator page
+A very basic administrator page exists, where a site administrator can view/delete/edit/add registered users, user profiles, user email addresses, and events and activities. They can also create further administrator accounts, and verify email addresses.
+
+In its current form, an administrator should be careful when deleting/creating model instances of some of the aforementioned user and event objects. For example if an
+administrator deletes/adds a user address, they must also delete/add a user profile to prevent database errors. Eventually Django signals will be used to ensure
+related models not automatically updated, are so.
+
+<img src='docs/screenshots/admin_login.png' alt="screenshot of the admin login" width=30% height=50%>
+<img src='docs/screenshots/admin_dashboard.png' alt="screenshot of the admin dashboard" width=68% height=50%>
