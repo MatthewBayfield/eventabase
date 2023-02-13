@@ -10,13 +10,13 @@ let signinButton = document.querySelector("[name = 'sign-in']");
 let slideshowImages = [...document.getElementsByClassName('slideshow_images')];
 let linksAndButtons = [...document.getElementsByTagName('a'), ...document.getElementsByTagName('button')];
 let focusable = [...linksAndButtons, ...document.querySelectorAll('[tabindex="0"]')];
-let uniqueFocusable = [...new Set(focusable)];
+let uniqueFocusable = [...(new Set(focusable))];
 let helpTextIcons = [...document.querySelectorAll('[data-icon-type = "help"]')];
 let helpText = [...document.getElementsByClassName('help_text')];
 let matchingIcons = [...document.getElementsByClassName('matching_icon')];
 let expandIcons = [...document.querySelectorAll('[data-icon-type ^= "expand"]')];
 let modalContainers = [...document.getElementsByClassName('modal_container')];
-let modals = [...document.getElementsByClassName('modal')]
+let modals = [...document.getElementsByClassName('modal')];
 let closeModalButtons = [...document.getElementsByClassName('close_button')];
 let editPersonalInfoForm = document.getElementById('personal_info_form');
 let editAddressForm = document.getElementById('address_form');
@@ -79,7 +79,7 @@ function createMoreMenuContainerListener() {
  */
  function clickedFeedbackListeners() {
     // remove exisitng listeners to prevent duplication
-    for (let element of [...new Set([...menuItems, ...uniqueFocusable])]) {
+    for (let element of [...(new Set([...menuItems, ...uniqueFocusable]))]) {
         element.removeEventListener('mousedown', clickedFeedbackMousedown);
         element.removeEventListener('mouseup', clickedFeedbackMouseup);
     }
@@ -159,7 +159,7 @@ function expandIconListeners() {
     }
     // add new listeners
     for (let icon of expandIcons) {
-        icon.addEventListener('click', expandIconHandler)
+        icon.addEventListener('click', expandIconHandler);
     }
 }
 
@@ -319,7 +319,7 @@ function trapFocusModalListeners() {
         // The last modal button is its last focusable element.
         let lastButtonInModal = [...document.querySelectorAll(querySelector)].pop();
         lastButtonInModal.removeEventListener('blur', trapFocusModalBlur);
-        let parentModalContainer = modal.parentElement
+        let parentModalContainer = modal.parentElement;
         parentModalContainer.removeEventListener('focus', trapFocusModalFocus);
     }
     // add new listeners
@@ -329,7 +329,7 @@ function trapFocusModalListeners() {
         // The last modal button is its last focusable element.
         let lastButtonInModal = [...document.querySelectorAll(querySelector)].pop();
         lastButtonInModal.addEventListener('blur', trapFocusModalBlur); 
-        let parentModalContainer = modal.parentElement
+        let parentModalContainer = modal.parentElement;
         parentModalContainer.addEventListener('focus', trapFocusModalFocus);
     }
 }
@@ -358,10 +358,10 @@ function addPostEventsModalDonebuttonListeners() {
 
 var clickedFeedbackMousedown = (event) => {
     let element = event.currentTarget;
-    element.classList.add('clicked')
+    element.classList.add('clicked');
 };
 var clickedFeedbackMouseup = (event) => {
-    let element = event.currentTarget
+    let element = event.currentTarget;
     setTimeout(() => element.classList.remove('clicked'), 100)
 };
 var enterKeyKeydown = (event) => {
@@ -405,7 +405,7 @@ var expandIconHandler = (event) => {
         siblingIcon.removeAttribute('style');
     }
     else {
-        siblingIcon.style.display = 'inline-block'
+        siblingIcon.style.display = 'inline-block';
     }
 };
 var openModalButtonHandler = (event) => {
@@ -438,7 +438,7 @@ var helpTextIconsTouchstart  = (event) => {
         helpText[helpTextIndex].style.display = 'block';
         setTimeout(() => {
             helpText[helpTextIndex].removeAttribute('style');
-        }, 8000)
+        }, 8000);
     }
 };
 var formFieldChangeHandler = (event) => {
@@ -555,7 +555,7 @@ function compareFields(fields, icons) {
  * @summary Fades in the next slideshow image due to be displayed.
 */
 function imageFadeIn(nextImage, currentImage) {
-    nextImage.className += " current_image"
+    nextImage.className += " current_image";
     imageFadeOut(currentImage);
     nextImage.setAttribute('aria-hidden', 'false');
 }
@@ -584,7 +584,7 @@ function slideshowHandler() {
     if (currentImageIndex === slideshowImages.length - 1) {
         nextImage = slideshowImages[0];
     } else {
-        nextImage = slideshowImages[currentImageIndex + 1]
+        nextImage = slideshowImages[currentImageIndex + 1];
     }
     imageFadeIn(nextImage, currentImage);
 }
@@ -700,7 +700,7 @@ function executeAllHomePageAddListenersFunctions() {
     createModalCancelButtonListeners();
     addRadioInputListeners();
     cancelEventListeners();
-    deleteEventListeners()
+    deleteEventListeners();
     removeFeedbackListeners();
 }
 
@@ -730,13 +730,13 @@ function refreshDomElementVariables() {
     slideshowImages = [...document.getElementsByClassName('slideshow_images')];
     linksAndButtons = [...document.getElementsByTagName('a'), ...document.getElementsByTagName('button')];
     focusable = [...linksAndButtons, ...document.querySelectorAll('[tabindex="0"]')];
-    uniqueFocusable = [...new Set(focusable)];
+    uniqueFocusable = [...(new Set(focusable))];
     helpTextIcons = [...document.querySelectorAll('[data-icon-type = "help"]')];
     helpText = [...document.getElementsByClassName('help_text')];
     matchingIcons = [...document.getElementsByClassName('matching_icon')];
     expandIcons = [...document.querySelectorAll('[data-icon-type ^= "expand"]')];
     modalContainers = [...document.getElementsByClassName('modal_container')];
-    modals = [...document.getElementsByClassName('modal')]
+    modals = [...document.getElementsByClassName('modal')];
     closeModalButtons = [...document.getElementsByClassName('close_button')];
     editPersonalInfoForm = document.getElementById('personal_info_form');
     editAddressForm = document.getElementById('address_form');
@@ -791,7 +791,7 @@ function refreshDomElementVariables() {
         // Update profile section.
         if (firstResponseJson.valid === 'true' && secondResponseJson.valid === 'true') {
             personalInfoFormData.set('validate', 'false');
-            addressFormData.set('validate', 'false')
+            addressFormData.set('validate', 'false');
             let thirdRequest = new Request('profile_form/',
                                     {method: 'POST', headers: {'X-CSRFToken': csrftoken},
                                     mode: 'same-origin',
@@ -806,7 +806,7 @@ function refreshDomElementVariables() {
             let fourthResponse = await fetch(fourthRequest);
             let fourthResponseJson = await fourthResponse.json();
             if (fourthResponseJson.hasOwnProperty('error')) {
-                errMsg = `There was a problem processing your submitted address, please check that the address information you entered
+                let errMsg = `There was a problem processing your submitted address, please check that the address information you entered
     is valid and try again; If the address is valid, try another address; if the problem persists, try again later.`;
                 alert(errMsg);
                 issue = true;
@@ -820,7 +820,7 @@ function refreshDomElementVariables() {
                 if (editProfileModal.lastElementChild.children.length < 2) {
                     let cancelButton = document.createElement('button');
                     editProfileModal.lastElementChild.appendChild(cancelButton);
-                    cancelButton.outerHTML = '<button class="modal_button" type="button" name="Cancel">Cancel</button>'
+                    cancelButton.outerHTML = '<button class="modal_button" type="button" name="Cancel">Cancel</button>';
                 }
             }
             editProfileModal.parentElement.previousElementSibling.innerHTML = fourthResponseJson.profile;
