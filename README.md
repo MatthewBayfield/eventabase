@@ -589,3 +589,34 @@ The current database scheme can be seen in the following screenshot:
 
 ### Testing
 Testing documentation can be found in [TESTING.md](TESTING.md).
+
+---
+
+### Deployment
+
+The eventabse was deployed on [heroku](https://www.heroku.com/).
+
+The live URL link is: [https://eventabase.herokuapp.com/](https://eventabase.herokuapp.com/)
+
+It was deployed using the following procedure:
+
+1. Log in to your Heroku account, or create an account if required.
+2. At the top right of the Heroku dashboard click the "New" button, and from the menu that appears, click the 
+'Create new app' button.
+3. In the 'Create New App' section that follows, enter a unique name for the app, (indicated by a green tick) in the App name field, and also
+select a region, using the 'choose a region drop-down list.
+4. Once you have entered a unique app name and selected your region, click the 'create app'
+ button.
+5. After clicking 'create app' you are then taken to the deploy tab on your apps homepage. From here click on the
+'Settings' tab button to view the app settings.
+6. On the settings tab scroll down to the 'Config Vars' section, and click the 'Config Vars' button to reveal the configuration
+variables for the app.
+7. In the opened subsection, enter values for the following keys in the screenshot below. They include the URL's of the eventabase database, as well as the static file server. Also featured is the Django secret key, Geoapify API key (for geolocation) as well as the eventabase host email settings.
+
+<img src='docs/screenshots/config_vars.png' alt='heroku eventabse config vars keys' width=25% height=25%>
+
+8. Having entered the config vars, next scroll back up to the top of the page, and the click back on the 'Deploy' tab button.
+9. On this tab, scroll down to the 'Deployment method' section. In this section select 'Github' as
+the deployment method.
+10. Subsequently log in to your Github account as requested, and select to deploy the main branch of the eventabase repository.
+11. Finally enable automatic deploys, before clicking to deploy the branch.
