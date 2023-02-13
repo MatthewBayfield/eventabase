@@ -585,4 +585,7 @@ users, user profiles, user addresses, user email addresses, and event/activity d
 
 The current database scheme can be seen in the following screenshot:
 
-<img src='docs/screenshots/current_database_scheme.png' alt='current database scheme' width=50% height=50%>
+<img src='docs/screenshots/current_database_scheme.png' alt='current database scheme' width=70% height=70%>
+
+### Testing
+Testing documentation can be found in [TESTING.md](TESTING.md).
