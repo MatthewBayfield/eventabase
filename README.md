@@ -576,3 +576,13 @@ administrator deletes/adds a user address, they must also delete/add a user prof
 related models not automatically updated, are so.
 
 <img src='docs/screenshots/admin_login.png' alt="screenshot of the admin login" width=30% height=50%><img src='docs/screenshots/admin_dashboard.png' alt="screenshot of the admin dashboard" width=68% height=50%>
+
+---
+
+### Current Data model
+The existing data model includes only a fraction of the models/tables and relationships planned for the finished site. Namely there are currently only database tables for
+users, user profiles, user addresses, user email addresses, and event/activity details. Future tables for user reviews will be added, as well as relationships such as a many-to-many relationship via a custom through-table between the user table and event table, in order to track user engagement with an event.
+
+The current database scheme can be seen in the following screenshot:
+
+<img src='docs/screenshots/current_database_scheme.png' alt='current database scheme' width=50% height=50%>
