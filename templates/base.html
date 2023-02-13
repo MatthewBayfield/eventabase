@@ -10,7 +10,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body id="{{page_id}}">
+<body {% if page_id %}id="{{page_id}}"{% endif %}>
     <header>
         <h1>{% block h1 %}main heading{% endblock %}</h1>
         {% if slogan %}
