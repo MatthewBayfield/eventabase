@@ -592,7 +592,7 @@ Testing documentation can be found in [TESTING.md](TESTING.md).
 
 ---
 
-### Deployment
+## Deployment
 
 The eventabse was deployed on [heroku](https://www.heroku.com/).
 
@@ -620,3 +620,29 @@ variables for the app.
 the deployment method.
 10. Subsequently log in to your Github account as requested, and select to deploy the main branch of the eventabase repository.
 11. Finally enable automatic deploys, before clicking to deploy the branch.
+
+## Technologies used
+- python
+- Javascript
+- HTML
+- CSS
+- Django framework
+
+## Credits
+
+### Main libraries, frameworks and API's
+- Django
+- django-allauth - for user authentication.
+- Jest - for JS tests.
+- Cloudinary - to serve all static files.
+- Coverage - to measure python test coverage.
+- dj-database-url - to obtain the database url
+- dj3-cloudinary - to aid uploading static files to cloudinary during development.
+- Geoapify API - for obtaining latitudes and longitudes for addresses.
+- ElepantSQL - to host the database
+
+### Content 
+ - All slideshow images were downloaded from pexels.com
+ - fonts were obtained from google fonts
+ - Icons from font awesome and google icons.
+ - The flowchart and diagram generating site [https://app.diagrams.net/](https://app.diagrams.net/) was used to produce the diagrams in my README.
