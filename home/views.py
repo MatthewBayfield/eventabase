@@ -33,7 +33,7 @@ class HomeViewsMixin():
         if UserProfile.objects.filter(user=user).exists():
             return user.profile
         return None
-            
+
     def render_profile_template(self, to_string=False):
         """
         Renders the profile template for a user's homepage.
@@ -109,7 +109,7 @@ class UserHomePage(TemplateView, HomeViewsMixin):
         super().__init__(**kwargs)
         self.first_login = True
         self.further_context = {'first_login': self.first_login}
-        
+
     def get_context_data(self, **kwargs):
         """
         Amalgamates context data.
@@ -137,13 +137,13 @@ class UserHomePage(TemplateView, HomeViewsMixin):
         Returns:
             A HTTP response containing the rendered with context home page template.
         """
-        
+
         # profile view section:
         self.further_context.update({'username': self.request.user.username,
-                                        'button1_name': 'Done',
-                                        'button2_name': 'Cancel'})
+                                     'button1_name': 'Done',
+                                     'button2_name': 'Cancel'})
         rendered_profile_template, user_profile, user_address = self.render_profile_template()
-        
+
         self.get_context_data(**kwargs)
         kwargs.update(self.further_context)
         rendered_edit_profile_modal = ProfileFormView.as_view()(request,
@@ -236,7 +236,7 @@ class ProfileFormView(FormView, HomeViewsMixin):
         if request.GET.get('refresh', ''):
             return JsonResponse({'modal': rendered_modal_template})
         return rendered_modal_template
-            
+
     def post(self, request, *args, **kwargs):
         """
         Handles edit profile form submission and processing. Carries out profile and address model updates.
@@ -269,7 +269,7 @@ class ProfileFormView(FormView, HomeViewsMixin):
             if request.POST['validate'] == 'true':
                 if form.is_valid():
                     rendered_form = render_to_string(template_name='home/edit_profile_form.html', context=form.get_context(), request=request)
-                    return JsonResponse({'valid': 'true', 'form': rendered_form})      
+                    return JsonResponse({'valid': 'true', 'form': rendered_form})
             else:
                 if form.has_changed():
                     form.post_clean_processing(user=user)
