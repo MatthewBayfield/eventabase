@@ -419,16 +419,14 @@ an improvement to the design has been made. For example the image slideshow as i
 #### General features
 All clickable objects, mainly buttons, indicate clicked feedback through a color change. All buttons are also can be accessed using the tab key, and clicked using the enter key, with feedback again given. All focusable elements clearly indicate when they are focused. Screenshots below show examples of clicked feedback.
 
-<img src='docs/screenshots/clicked_feedback1.png' alt='screenshot showing clicked button feedback' width=20% height=20%>
-<img src='docs/screenshots/clicked_feedback2.png' alt='screenshot showing clicked button feedback' width=20% height=20%>  
+<img src='docs/screenshots/clicked_feedback1.png' alt='screenshot showing clicked button feedback' width=20% height=20%><img src='docs/screenshots/clicked_feedback2.png' alt='screenshot showing clicked button feedback' width=20% height=20%>  
 
 #### Authentication/Security features
 The site, with the assistance of the django-allauth integrated applications, prevents unauthenticated users from viewing or modifying any content on the site only intended for
 authenticated users. If an unauthenticated user attempts to access a prohibited page, they are redirected to the sign-in or landing page. In order to create a new account a user is required to verify their supplied email, before being able to sign-in to their new account. Using Django's in-built CSRF protection, all post requests, for example during form submission, require a CSRF token.
 
 #### Navigation bar
-<img src='docs/screenshots/nav_bar.png' alt='screenshot of the navigation bar' width=48% height=100%>
-<img src='docs/screenshots/more_menu.png' alt='screenshot of expaned more menu' width=48% height=100%>
+<img src='docs/screenshots/nav_bar.png' alt='screenshot of the navigation bar' width=48% height=100%><img src='docs/screenshots/more_menu.png' alt='screenshot of expaned more menu' width=48% height=100%>
 
 The above screenshots show the navigation bar and the expanded more menu, that are common to all pages. The exact navigation buttons vary depending on the authentication status
 of the user. For an authenticated user, the home button takes the user to the generic landing page; whilst an authenticated user will be taken to their specific homepage. The
@@ -438,12 +436,15 @@ Also on the navigation bar is the more button, that when clicked triggers the op
 clicking anywhere outside the menu. The navigation bar remains fixed to the top of the viewport with scrolling, enabling easy access at all times.
 
 #### Landing page features/content
+
 ##### Header
+
 <img src='docs/screenshots/landing_page_header.png' alt='screenshot of the landing page header' width=50% height=50%>
 
 A header containing the site name and slogan are clearly displayed in the header of the page, indicating to the user the purpose of the site.
 
 ##### Image automated slideshow
+
 <img src='docs/screenshots/image_slideshow.png' alt='screenshot of the landing page image slideshow' width=30% height=30%>
 
 Between the header and the navigation bar, is an automated image slideshow, that changes roughly every 8s. The images show people participating in an eclectic range of events and
@@ -451,14 +452,17 @@ activities, thus illustrating to the user the types of events and activities the
 
 ##### How it works section
 In the main body of the landing page is a 'How it works' section, explaining to the user how the site functions, and motivating its use.
+
 <img src='docs/screenshots/how_it_works_section.png' alt='screenshot of the landing page how it works section' width=80% height=80%>
 
 ##### Next steps section
 Also in the main body of the landing page, below the 'How it works' section, is the 'next steps' section. This is intended to concisely inform the user of how to create an account and get started posting new, or searching for event adverts. As part of this section, adjacent to the list of next steps, are two unmissable sign-up and sign-in buttons,
 making it easy for a user to do either action.
+
 <img src='docs/screenshots/next_steps_section.png' alt='screenshot of the landing page next steps section' width=80% height=80%>
 
 #### Sign-Up page features/content
+
 ##### Header
 A clearly visible title in the header informs the user they are on the account registration page.
 
@@ -472,8 +476,7 @@ For the fields that need to be entered twice, a matching indicator is present on
 All form fields are validated, and after a failed attempted form submission, the problem fields are indicated, and error feedback is provided. At the bottom of the form is the sign-up form submission button.
 
 
-<img src='docs/screenshots/sign_up_form.png' alt='screenshot of the sign-up form' width=48% height=50%>
-<img src='docs/screenshots/sign_up_form_error_feedback.png' alt='screenshot of the sign-up form error feedback' width=48% height=50%>
+<img src='docs/screenshots/sign_up_form.png' alt='screenshot of the sign-up form' width=48% height=50%><img src='docs/screenshots/sign_up_form_error_feedback.png' alt='screenshot of the sign-up form error feedback' width=48% height=50%>
 
 #### Sign-In page features/content
 ##### Header
@@ -488,8 +491,7 @@ Below the fields there is a 'remember me' checkbox, allowing a user to remain lo
 
 Also below the form fields is the form submission button.
 
-<img src='docs/screenshots/sign_in_form.png' alt='screenshot of the sign-in form' width=48% height=50%>
-<img src='docs/screenshots/sign_in_form_error_feedback.png' alt='screenshot of the sign-in form error feedback' width=48% height=50%>
+<img src='docs/screenshots/sign_in_form.png' alt='screenshot of the sign-in form' width=48% height=50%><img src='docs/screenshots/sign_in_form_error_feedback.png' alt='screenshot of the sign-in form error feedback' width=48% height=50%>
 
 
 #### Registered user Home page features/content
@@ -507,13 +509,11 @@ can now be closed either by clicking the close button at the top, or the cancel 
 
 Screenshots of the modal on first login of a new user:
 
-<img src='docs/screenshots/edit_profile_modal_new_user_pt1.png' alt='screenshot of the edit profile modal for a first login' width=48% height=50%>
-<img src='docs/screenshots/edit_profile_modal_new_user_pt2.png' alt='screenshot of the edit profile modal for a first login' width=48% height=50%>
+<img src='docs/screenshots/edit_profile_modal_new_user_pt1.png' alt='screenshot of the edit profile modal for a first login' width=48% height=50%><img src='docs/screenshots/edit_profile_modal_new_user_pt2.png' alt='screenshot of the edit profile modal for a first login' width=48% height=50%>
 
 Screenshots of the modal when opened to edit an existing profile:
 
-<img src='docs/screenshots/edit_profile_modal_pt1.png' alt='screenshot of the edit profile modal for editing an existing profile' width=48% height=50%>
-<img src='docs/screenshots/edit_profile_modal_pt2.png' alt='screenshot of the edit profile modal for editing an existing profile' width=48% height=50%>
+<img src='docs/screenshots/edit_profile_modal_pt1.png' alt='screenshot of the edit profile modal for editing an existing profile' width=48% height=50%><img src='docs/screenshots/edit_profile_modal_pt2.png' alt='screenshot of the edit profile modal for editing an existing profile' width=48% height=50%>
 
 
 ##### Header
@@ -549,8 +549,7 @@ the user's upcoming events.
 The section also contains the post event button, that when clicked opens the post events modal form, and thus allows the user to post new event adverts that
 they wish to host.
 
-<img src='docs/screenshots/post_event_section_pt1.png' alt='screenshot of the post event section' width=48% height=50%>
-<img src='docs/screenshots/post_event_section_pt2.png' alt='screenshot of the post event section' width=48% height=50%>
+<img src='docs/screenshots/post_event_section_pt1.png' alt='screenshot of the post event section' width=48% height=50%><img src='docs/screenshots/post_event_section_pt2.png' alt='screenshot of the post event section' width=48% height=50%>
 <img src='docs/screenshots/post_event_section_pt3.png' alt='screenshot of the post event section' width=48% height=50%>
 
 ##### Post events modal form
@@ -560,10 +559,10 @@ any requirements, the number of people that can attend, and finally when the adv
 edit profile modal, with the form being refreshed again. The user can submit the form using the done button at the bottom of the modal.
 Successful form submissions result in the event advert being added to the user's viewable advertised events, without refresh.
 
-<img src='docs/screenshots/post_events_modal_pt1.png' alt='screenshot of the post events modal form' width=48% height=50%>
-<img src='docs/screenshots/post_events_modal_pt2.png' alt='screenshot of the post events modal form' width=48% height=50%>
+<img src='docs/screenshots/post_events_modal_pt1.png' alt='screenshot of the post events modal form' width=48% height=50%><img src='docs/screenshots/post_events_modal_pt2.png' alt='screenshot of the post events modal form' width=48% height=50%>
 
 #### Terms and conditions page features/content
+
 ##### Header
 A clearly visible title in the header informs the user they are on the terms and policies page.
 
@@ -576,5 +575,4 @@ In its current form, an administrator should be careful when deleting/creating m
 administrator deletes/adds a user address, they must also delete/add a user profile to prevent database errors. Eventually Django signals will be used to ensure
 related models not automatically updated, are so.
 
-<img src='docs/screenshots/admin_login.png' alt="screenshot of the admin login" width=30% height=50%>
-<img src='docs/screenshots/admin_dashboard.png' alt="screenshot of the admin dashboard" width=68% height=50%>
+<img src='docs/screenshots/admin_login.png' alt="screenshot of the admin login" width=30% height=50%><img src='docs/screenshots/admin_dashboard.png' alt="screenshot of the admin dashboard" width=68% height=50%>
