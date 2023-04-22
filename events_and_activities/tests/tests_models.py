@@ -64,7 +64,7 @@ class TestEventsActivitiesModel(TestCase):
                                    postcode='rm65uh',
                                    latitude=51.5791,
                                    longitude=0.1355)
-    
+
     def test_new_event_creation(self):
         """
         Tests that a new event/activity is created as expected
@@ -103,19 +103,20 @@ class TestEventsActivitiesModel(TestCase):
         Tests that the ProfileMixin methods work as expected for the EventsActivities model.
         """
         # testing retrieve_field_names class method
-        expected_verbose_names = ['ID', 'title', 'host', 'status',
+        expected_verbose_names = ['engagement', 'ID', 'title', 'host', 'status',
                                   'when', 'closing date', 'max no. of attendees',
                                   'keywords', 'description', 'requirements',
                                   'Address line 1',
                                   'City/Town',
                                   'County',
-                                  'Postcode']
+                                  'Postcode',
+                                  'attendees']
         self.assertEqual(EventsActivities.retrieve_field_names(), expected_verbose_names)
-        expected_names = ['id', 'title', 'host_user', 'status',
+        expected_names = ['engagement', 'id', 'title', 'host_user', 'status',
                           'when', 'closing_date',
                           'max_attendees', 'keywords', 'description',
                           'requirements', 'address_line_one', 'city_or_town',
-                          'county', 'postcode']
+                          'county', 'postcode', 'attendees']
         self.assertEqual(EventsActivities.retrieve_field_names(False), expected_names)
         # testing retrieve_field_data method
         user = CustomUserModel.objects.get(username=self.data['username'])
@@ -142,7 +143,13 @@ class TestEventsActivitiesModel(TestCase):
                                  'requirements': 'min £50 per person. wear suitable shoes. Need to be physically fit.',
                                  'Address line 1': 'mayhem paintball', 'City/Town': 'adbridge', 'County': 'essex',
                                  'Postcode': 'rm4 1AA'}
-        self.assertEqual(new_event.retrieve_field_data(), expected_verbose_data)
+        retrieved_verbose_data = new_event.retrieve_field_data()
+        engagement_field = retrieved_verbose_data.pop('engagement')
+        attendees_field = retrieved_verbose_data.pop('attendees')
+        self.assertEqual(retrieved_verbose_data, expected_verbose_data)
+        # should have no attendees
+        self.assertEqual(engagement_field.count(), 0)
+        self.assertEqual(attendees_field.count(), 0)
         expected_data = {'id': 1, 'host_user': user,
                          'status': 'advertised', 'title': 'Paintballing',
                          'when': datetime.datetime(2022, 12, 23, 12, 0),
@@ -152,7 +159,13 @@ class TestEventsActivitiesModel(TestCase):
                          'requirements': 'min £50 per person. wear suitable shoes. Need to be physically fit.',
                          'address_line_one': 'mayhem paintball', 'city_or_town': 'adbridge', 'county': 'essex',
                          'postcode': 'rm4 1AA'}
-        self.assertEqual(new_event.retrieve_field_data(False), expected_data)
+        retrieved_data = new_event.retrieve_field_data(False)
+        engagement_field = retrieved_data.pop('engagement')
+        attendees_field = retrieved_data.pop('attendees')
+        self.assertEqual(retrieved_data, expected_data)
+        # should have no attendees
+        self.assertEqual(engagement_field.count(), 0)
+        self.assertEqual(attendees_field.count(), 0)
 
     def test_change_expired_events_manager_with_no_user_param(self):
         """
@@ -294,8 +307,3 @@ class TestEventsActivitiesModel(TestCase):
         EventsActivities.objects.filter(status='confirmed')
         self.assertEqual(len(EventsActivities.objects.filter(status='confirmed')), 1)
         self.assertTrue(EventsActivities.objects.filter(status='confirmed', title='event3').exists())
-        
-
-
-
-
