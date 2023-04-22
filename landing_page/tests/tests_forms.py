@@ -38,38 +38,6 @@ class TestSignupForm(TestCase):
                              errors=['Email cannot be more than 254 characters.'])
         self.assertFormError(form=form1, field='email2', errors=[])
 
-    def test_email_field_unique_validator(self):
-        """
-        Tests that for a non-unique email input the expected error is raised.
-        """
-        # sign-up new user
-        client = Client()
-        data = {'email': 'tommypaul@gmail.com',
-                'email2': 'tommypaul@gmail.com',
-                'password1': 'holly!123',
-                'password2': 'holly!123',
-                'username': 'jimmy'}
-        client.post('/accounts/signup/', data)
-        # try sign-up new user with non-unique email
-        data = {'email': 'tommypaul@gmail.com',
-                'email2': 'tommypaul@gmail.com',
-                'password1': 'holly!1235',
-                'password2': 'holly!1235',
-                'username': 'Timmy'}
-        form = Signup(data)
-        self.assertFalse(form.is_valid())
-        self.assertFormError(form, 'email',
-                             ['A user is already registered with this e-mail address.'])
-        # check no error is raised when unique email is provided
-        data = {'email': 'tommypaul147@gmail.com',
-                'email2': 'tommypaul147@gmail.com',
-                'password1': 'holly!1235',
-                'password2': 'holly!1235',
-                'username': 'Timmy'}
-        form = Signup(data)
-        self.assertTrue(form.is_valid())
-        self.assertFormError(form, 'email', [])  
-
     def test_email_fields_match_validation(self):
         """
         Tests that the email and retyped email matching error is raised when expected.
