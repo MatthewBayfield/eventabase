@@ -59,6 +59,8 @@ class PostEventsView(FormView):
             for event in all_advertsied_events_for_user:
                 data = event.retrieve_field_data()
                 data.pop('status')
+                data.pop('engagement')
+                data.pop('attendees')
                 data['closing date'] = data['closing date'].strftime("%H:%M, %d/%m/%y")
                 data['when'] = data['when'].strftime("%H:%M, %d/%m/%y")
                 all_advertised_hosting_events_data.append(data)
@@ -67,6 +69,8 @@ class PostEventsView(FormView):
             for event in all_upcoming_events_for_user:
                 data = event.retrieve_field_data()
                 data.pop('status')
+                data.pop('engagement')
+                data.pop('attendees')
                 data['closing date'] = data['closing date'].strftime("%H:%M, %d/%m/%y")
                 data['when'] = data['when'].strftime("%H:%M, %d/%m/%y")
                 all_upcoming_hosting_events_data.append(data)
@@ -104,6 +108,8 @@ class PostEventsView(FormView):
             new_event = new_event_form.save()
             new_event_data = new_event.retrieve_field_data()
             new_event_data.pop('status')
+            new_event_data.pop('engagement')
+            new_event_data.pop('attendees')
             new_event_data['closing date'] = new_event_data['closing date'].strftime("%H:%M, %d/%m/%y")
             new_event_data['when'] = new_event_data['when'].strftime("%H:%M, %d/%m/%y")
             rendered_event = render_to_string(template_name='events_and_activities/event.html',
