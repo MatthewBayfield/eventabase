@@ -10,6 +10,44 @@ from .validators import check_date_has_not_occured
 # Create your models here.
 
 
+class Engagement(models.Model):
+    """
+    Through model for a many-to-many relationship between the models EventsActivities and CustomUserModel.
+
+    Attributes:
+        event_id (foreign key): many-to-one relationship with the EventsActivites model.
+        user (foreign key): many-to-one relationship with the CustomUserModel via the username field.
+        status (character field): the engagement status of a user with an event/activity. Has one of three values: Interested, attending or attended.
+        last_updated (DateTime field): the date and time when the status was last changed.
+    """
+    event_id = models.ForeignKey('EventsActivities',
+                                 on_delete=models.CASCADE,
+                                 related_name='engagement',
+                                 verbose_name='event ID'
+                                 )
+    
+    user = models.ForeignKey(CustomUserModel,
+                             on_delete=models.CASCADE,
+                             related_name='engagement',
+                             verbose_name='engaged user',
+                             to_field='username'
+                             )
+
+    INTERESTED = 'In'
+    ATTENDING = 'Att'
+    ATTENDED = 'Attd'
+    STATUS_OPTIONS = [(INTERESTED, 'Interested'),
+                      (ATTENDING, 'Attending'),
+                      (ATTENDED, 'Attended')]
+    status = models.CharField(choices=STATUS_OPTIONS,
+                              default=INTERESTED,
+                              max_length=4,
+                              verbose_name='engagement status')
+    
+    last_updated = models.DateTimeField(auto_now=True,
+                                        verbose_name='last updated')
+
+
 class ChangeExpiredEvents(models.Manager):
     """
     Exists to filter out and delete or update expired events.
@@ -65,6 +103,7 @@ class EventsActivities(ProfileMixin):
         city_or_town (character field): for the event/activity.
         county (character field): for the event/activity.
         postcode (character field): UK postcode for the event/activity.
+        attendees (many-to-many field): many-to-many relationship to the CustomUserModel via the engagement model.
     """
     class Meta:
         verbose_name = 'Events and Activities'
@@ -142,6 +181,8 @@ class EventsActivities(ProfileMixin):
     #                                 blank=False,
     #                                 validators=[DecimalValidator(8, 4)])
     # Will also include address validation using the Geoapify API as for the address form in the edit profile form.
+
+    attendees = models.ManyToManyField(to=CustomUserModel, through=Engagement, related_name='event')
 
     def __str__(self):
         return str(self.id)
