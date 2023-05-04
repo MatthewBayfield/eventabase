@@ -5,7 +5,7 @@ from django.urls import reverse
 from allauth.account.models import EmailAddress
 from landing_page.models import CustomUserModel
 from home.models import UserAddress, UserProfile
-from ..models import EventsActivities
+from ..models import EventsActivities, Engagement
 
 
 class TestEventsActivitiesModel(TestCase):
@@ -307,3 +307,114 @@ class TestEventsActivitiesModel(TestCase):
         EventsActivities.objects.filter(status='confirmed')
         self.assertEqual(len(EventsActivities.objects.filter(status='confirmed')), 1)
         self.assertTrue(EventsActivities.objects.filter(status='confirmed', title='event3').exists())
+
+
+class TestEngagementModel(TestCase):
+    """
+    Tests for the Engagement through model.
+    """
+    data = {'email': 'tommypaul147@gmail.com',
+            'email2': 'tommypaul147@gmail.com',
+            'password1': 'holly!123',
+            'password2': 'holly!123',
+            'username': 'jimmy147'}
+
+    data2 = {'email': 'tommypaul1478@gmail.com',
+             'email2': 'tommypaul1478@gmail.com',
+             'password1': 'holly!1234',
+             'password2': 'holly!1234',
+             'username': 'jimmy1479'}
+    data3 = {'email': 'tommypaul14788@gmail.com',
+             'email2': 'tommypaul14788@gmail.com',
+             'password1': 'holly!12345',
+             'password2': 'holly!12345',
+             'username': 'jimmy14798'}
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Sign-up new users 
+        client = Client()
+        client.post('/accounts/signup/', cls.data)
+        client.post('/accounts/signup/', cls.data2)
+        client.post('/accounts/signup/', cls.data3)
+        # verify user emails
+        user_email = EmailAddress.objects.get(user='tommypaul147@gmail.com')
+        user_email.verified = True
+        user_email.save()
+        user_email2 = EmailAddress.objects.get(user='tommypaul1478@gmail.com')
+        user_email2.verified = True
+        user_email2.save()
+        user_email3 = EmailAddress.objects.get(user='tommypaul14788@gmail.com')
+        user_email3.verified = True
+        user_email3.save()
+
+        cls.user = CustomUserModel.objects.get(username=cls.data['username'])
+        cls.user2 = CustomUserModel.objects.get(username=cls.data2['username'])
+        cls.user3 = CustomUserModel.objects.get(username=cls.data3['username'])
+        cls.event1 = EventsActivities.objects.create(host_user=cls.user,
+                                                     status="advertised",
+                                                     title='event1',
+                                                     when="2030-12-23 12:00:00",
+                                                     closing_date="2023-10-15 12:00:00",
+                                                     max_attendees=20,
+                                                     keywords="outdoors,paintballing,competitive",
+                                                     description="Paintballing dayout, followed by lunch.",
+                                                     requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                                     address_line_one='mayhem paintball',
+                                                     city_or_town='adbridge',
+                                                     county='essex',
+                                                     postcode='rm4 1AA')
+        cls.event2 = EventsActivities.objects.create(host_user=cls.user2,
+                                                     status="advertised",
+                                                     title='event2',
+                                                     when="2030-12-23 12:00:00",
+                                                     closing_date="2023-10-15 12:00:00",
+                                                     max_attendees=20,
+                                                     keywords="outdoors,paintballing,competitive",
+                                                     description="Paintballing dayout, followed by lunch.",
+                                                     requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                                     address_line_one='mayhem paintball',
+                                                     city_or_town='adbridge',
+                                                     county='essex',
+                                                     postcode='rm4 1AA')
+    
+    def test_engagement_instance_creation(self):
+        """
+        Tests that the engagement through model instance creation operates as expected when an attendee is added to an existing event.
+        """
+        self.assertEqual(Engagement.objects.count(), 0)
+        # add interested attendees for event1 
+        self.event1.attendees.add(self.user2, through_defaults={'status': 'In'})
+        self.event1.attendees.add(self.user3, through_defaults={'status': 'In'})
+        self.assertEqual(Engagement.objects.count(), 2)
+        instances = [{'event': 1, 'user': 'jimmy14798', 'status': 'In'}, {'event': 1, 'user': 'jimmy1479', 'status': 'In'}]
+        self.assertListEqual(list(Engagement.objects.filter(event=1).values('event', 'user', 'status')), instances)
+        
+        # add interested attendee for event2
+        Engagement.objects.create(event=self.event2, user=self.user, status='In')
+        instances = [{'event': 2, 'user': 'jimmy147', 'status': 'In'}]
+        self.assertEqual(Engagement.objects.count(), 3)
+        self.assertListEqual(list(Engagement.objects.filter(event=2).values('event', 'user', 'status')), instances)
+    
+    def test_engagement_instance_update(self):
+        """
+        Tests that the Engagement through model is updated as expected when an instance's status field is altered.
+        """
+        self.assertEqual(Engagement.objects.count(), 0)
+        # add interested attendees for event1 and event2
+        self.event1.attendees.add(self.user2, through_defaults={'status': 'In'})
+        self.event2.attendees.add(self.user, through_defaults={'status': 'In'})
+        # update status for event 1 and event 2 attendees
+        time_created_event1 = Engagement.objects.filter(event=self.event1)[0].last_updated
+        time_created_event2 = Engagement.objects.filter(event=self.event2)[0].last_updated
+        Engagement.objects.update_or_create(user=self.user, event=self.event2, defaults={'status': 'Att'})
+        self.event1.engagement.update_or_create(user=self.user2, defaults={'status': 'Attd'})
+        self.assertEqual(Engagement.objects.count(), 2)
+        instances = [{'event': 1, 'user': 'jimmy1479', 'status': 'Attd'}]
+        self.assertListEqual(list(Engagement.objects.filter(event=1).values('event', 'user', 'status')), instances)
+        instances = [{'event': 2, 'user': 'jimmy147', 'status': 'Att'}]
+        self.assertListEqual(list(Engagement.objects.filter(event=2).values('event', 'user', 'status')), instances)
+        # check last_updated fields have been updated as expected
+        self.assertGreater(self.event1.engagement.get(user=self.user2).last_updated, time_created_event1)
+        self.assertGreater(self.event2.engagement.get(user=self.user).last_updated, time_created_event1)
