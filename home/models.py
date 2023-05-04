@@ -32,7 +32,7 @@ class ProfileMixin(models.Model):
 
     def retrieve_field_data(self, verbose_names=True):
         """
-        Returns db field name-value pairs for a user address instance as a dictionary.
+        Returns db field name-value pairs for a model instance as a dictionary.
 
         Args:
             verbose_names (boolean): Indicates whether to return the verbose field names in the dictionary.
