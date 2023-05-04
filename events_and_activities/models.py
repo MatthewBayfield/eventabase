@@ -10,21 +10,23 @@ from .validators import check_date_has_not_occured
 # Create your models here.
 
 
-class Engagement(models.Model):
+class Engagement(ProfileMixin):
     """
     Through model for a many-to-many relationship between the models EventsActivities and CustomUserModel.
 
     Attributes:
-        event_id (foreign key): many-to-one relationship with the EventsActivites model.
+        event (foreign key): many-to-one relationship with the EventsActivites model.
         user (foreign key): many-to-one relationship with the CustomUserModel via the username field.
         status (character field): the engagement status of a user with an event/activity. Has one of three values: Interested, attending or attended.
         last_updated (DateTime field): the date and time when the status was last changed.
     """
-    event_id = models.ForeignKey('EventsActivities',
-                                 on_delete=models.CASCADE,
-                                 related_name='engagement',
-                                 verbose_name='event ID'
-                                 )
+    class Meta:
+        ordering = ['-last_updated']
+
+    event = models.ForeignKey('EventsActivities',
+                              on_delete=models.CASCADE,
+                              related_name='engagement'
+                              )
     
     user = models.ForeignKey(CustomUserModel,
                              on_delete=models.CASCADE,
