@@ -1,0 +1,77 @@
+<h2>Search and View Events and Activities</h2>
+<div id='search_events_grid' class="grid_container" tabindex="-1">
+    <div class="top_row both_columns">
+        <p>
+            Search event & activity adverts, and view those that you are already interested in, or are confirmed to attend.
+        </p>
+        <button  id="search_adverts_button">Search Adverts</button>
+    </div>
+    <div class="both_columns bottom_row">
+        <h4>Your Interested and Upcoming Events or Activities</h4>
+        <input id='interested' name='type_of_event' type="radio" value="interested" checked >
+        <label for="interested">Interested</label>
+        <input id='upcoming' name='type_of_event' type="radio" value="attending">
+        <label for="upcoming">Upcoming</label>
+        {% for event in interested_events_data %}
+            <div class="event_container interested" role="region" aria-label="event item" tabindex="0">
+                <div>
+                    {% for field_name, value in event.items %}
+                        {% if forloop.counter0 <= 8 %}
+                            <div class="details_display">
+                                <span>{{field_name|title}} :</span>
+                                <span>{{value}}.</span>
+                            </div>
+                        {% endif %}
+                    {% endfor %}  
+                </div>
+                <div>
+                    {% for field_name, value in event.items %}
+                        {% if forloop.counter0 >= 9 %}
+                            <div class="details_display">
+                                <span>{{field_name|title}} :</span>
+                                <span>{{value}}.</span>
+                            </div>
+                        {% endif%}
+                    {% endfor %}
+                    <h5 aria-label = 'number of users attending so far'>No. of users attending so far: {{event_count}}.</h5>
+                    <button class="withdraw_interest">Withdraw Interest</button>
+                </div>
+            </div>
+        {% empty %}
+            <div class="event_container interested" role="region" aria-label="event item" tabindex="0">
+                <p>You currenty have no events or activities for which you have registered you interest in.</p>
+            </div>
+        {% endfor %}
+        {% for event in upcoming_events_data %}
+            <div class="event_container attending" role="region" aria-label="event item" tabindex="0">
+                <div>
+                    {% for field_name, value in event.items %}
+                        {% if forloop.counter0 <= 8 %}
+                            <div class="details_display">
+                                <span>{{field_name|title}} :</span>
+                                <span>{{value}}.</span>
+                            </div>
+                        {% endif%}
+                    {% endfor %}  
+                </div>
+                <div>
+                    {% for field_name, value in event.items %}
+                        {% if forloop.counter0 >= 9 %}
+                            <div class="details_display">
+                                <span>{{field_name|title}} :</span>
+                                <span>{{value}}.</span>
+                            </div>
+                        {% endif%}
+                    {% endfor %}
+                    <h5 aria-label = 'number of users attending'>No. of users attending: {{event_count}}.</h5>
+                    <button class="withdraw">Withdraw</button>
+                    <button>Message Host</button>
+                </div>
+            </div>
+        {% empty %}
+            <div class="event_container attending" role="region" aria-label="event item" tabindex="0">
+                <p>You currenty have no upcoming events or activities that are you are confirmed to attend. An event becomes confirmed once the closing advert date has passed.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
