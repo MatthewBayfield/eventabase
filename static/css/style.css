@@ -34,7 +34,7 @@ h1 {
     display: inline-block;
 }
 
-h2,h3, h4, h5 {
+h2, h3, h4, h5 {
     font-family: 'Loved by the King', cursive;
     width: fit-content;
     margin: 0.5rem auto;
@@ -430,7 +430,7 @@ span.more_menu_button {
     border-bottom: 2px solid #000000;
 }
 
-#post_events .hidden {
+#post_events .hidden, #search_events .hidden {
     display: None;
 }
 
@@ -468,7 +468,7 @@ span.more_menu_button {
     cursor: default;
 }
 
-#post_button > button {
+#post_button > button, button#search_adverts_button {
     width: fit-content;
     margin: 0 auto;
     display: block;
