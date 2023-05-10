@@ -17,7 +17,7 @@
         <label for="advertised">Advertised</label>
         <input id='upcoming' name='event_type' type="radio" value="upcoming">
         <label for="upcoming">Upcoming</label>
-        {% for event in advertised_hosting_events_data %}
+        {% for event, event_count in advertised_hosting_events_data %}
             <div class="event_container advertised" role="region" aria-label="event item" tabindex="0">
                 <div>
                     {% for field_name, value in event.items %}
@@ -38,7 +38,13 @@
                             </div>
                         {% endif%}
                     {% endfor %}
-                    <h5 aria-label = 'number of users attending so far'>No. of users attending so far: {{event_count}}.</h5>
+                    <h5 aria-label = 'number of users attending so far'>No. of users attending so far: 
+                        {% if event_count > 0 %}
+                            {{event_count}}.
+                        {% else %} 
+                            0.
+                        {% endif %}
+                    </h5>
                     <button class="delete_advert">Delete Advert</button>
                 </div>
             </div>
@@ -68,7 +74,13 @@
                             </div>
                         {% endif%}
                     {% endfor %}
-                    <h5 aria-label = 'number of users attending'>No. of users attending: {{event_count}}.</h5>
+                    <h5 aria-label = 'number of users attending'>No. of users attending: 
+                        {% if event_count > 0 %}
+                            {{event_count}}.
+                        {% else %} 
+                            0.
+                        {% endif %}
+                    </h5>
                     <button class="cancel_event">Cancel</button>
                     <!-- Visibility temporarily set to hidden, as required functionality not yet fully implemented -->
                     <button style="visibility: hidden;">Message Attendees</button>

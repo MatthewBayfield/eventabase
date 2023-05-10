@@ -1,6 +1,6 @@
 <div class="event_container advertised" role="region" aria-label="event item" tabindex="0">
     <div>
-        {% for field_name,value in event.items %}
+        {% for field_name, value in event.items %}
             {% if forloop.counter0 <= 8 %}
                 <div class="details_display">
                     <span>{{field_name|title}} :</span>
@@ -18,7 +18,7 @@
                 </div>
             {% endif%}
         {% endfor %}
-        <h5 aria-label = 'number of users attending so far'>No. of users attending so far: {{event_count}}.</h5>
+        <h5 aria-label = 'number of users attending so far'>No. of users attending so far: 0.</h5>
         <button class='delete_advert'>Delete Advert</button>
     </div>
 </div>
