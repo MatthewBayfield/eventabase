@@ -53,7 +53,7 @@
                 <p>You currenty have no adverts for hosting events or activities.</p>
             </div>
         {% endfor %}
-        {% for event in upcoming_hosting_events_data %}
+        {% for event, event_count in upcoming_hosting_events_data %}
             <div class="event_container upcoming" role="region" aria-label="event item" tabindex="0">
                 <div>
                     {% for field_name, value in event.items %}
