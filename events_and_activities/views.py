@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.template.loader import get_template, render_to_string
 from django.views.decorators.csrf import ensure_csrf_cookie
 from allauth.account.decorators import verified_email_required
-from .models import EventsActivities
+from .models import EventsActivities, Engagement
 from .forms import EventsActivitiesForm
 
 # Create your views here.
@@ -153,3 +153,84 @@ class UpdateEventsView(View):
             return JsonResponse({'successful': 'true'})
 
         return JsonResponse({'successful': 'false'})
+
+
+@method_decorator([verified_email_required], name='dispatch')
+class ViewEventsView(FormView):
+    """
+    Responsible for retrieving and displaying a user's interested or upcoming events in the search and view events section of their homepage.
+
+    Attributes:
+        search_view_events_section_template: template for the search adverts and view engaged events section of the homepage.
+        further_context (dict): context dictionary.
+    """
+    search_view_events_section_template = get_template('events_and_activities/search_view_events.html')
+
+    def __init__(self, **kwargs):
+        """
+        Calls the TemplateView constructor. Sets initial context.
+        """
+        super().__init__(**kwargs)
+        self.further_context = {}
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests for the rendered search_view_events_section template.
+        """
+        if request.path != reverse('home:user_homepage'):
+            return redirect(reverse('home:user_homepage'))
+
+        if not kwargs['get_modal']:
+            # retrieving the user's events for which they have registered their interest
+            interested_events = Engagement.objects.filter(user=request.user, status='In').select_related('event').order_by("event__when").values('event__id',
+                                                                                                                                                 'event__title',
+                                                                                                                                                 'event__host_user',
+                                                                                                                                                 'event__when',
+                                                                                                                                                 'event__closing_date',
+                                                                                                                                                 'event__max_attendees',
+                                                                                                                                                 'event__keywords',
+                                                                                                                                                 'event__description',
+                                                                                                                                                 'event__requirements',
+                                                                                                                                                 'event__address_line_one',
+                                                                                                                                                 'event__city_or_town',
+                                                                                                                                                 'event__county',
+                                                                                                                                                 'event__postcode')
+
+            new_keys = EventsActivities.retrieve_field_names(verbose_names=True)
+            new_keys.remove('status')
+            new_keys.remove('engagement')
+            new_keys.remove('attendees')
+
+            interested_events_data = []
+            for event in interested_events:
+                event['event__closing_date'] = event['event__closing_date'].strftime("%H:%M, %d/%m/%y")
+                event['event__when'] = event['event__when'].strftime("%H:%M, %d/%m/%y")
+                new_keys_event = dict(zip(new_keys, event.values()))
+                interested_events_data.append(new_keys_event)
+
+            # retrieving the user's events for which they are confirmed to attend
+            upcoming_events = Engagement.objects.filter(user=request.user, status='Att').select_related('event').order_by("event__when").values('event__id',
+                                                                                                                                                'event__title',
+                                                                                                                                                'event__host_user',
+                                                                                                                                                'event__when',
+                                                                                                                                                'event__closing_date',
+                                                                                                                                                'event__max_attendees',
+                                                                                                                                                'event__keywords',
+                                                                                                                                                'event__description',
+                                                                                                                                                'event__requirements',
+                                                                                                                                                'event__address_line_one',
+                                                                                                                                                'event__city_or_town',
+                                                                                                                                                'event__county',
+                                                                                                                                                'event__postcode')
+
+            upcoming_events_data = []
+            for event in upcoming_events:
+                event['event__closing_date'] = event['event__closing_date'].strftime("%H:%M, %d/%m/%y")
+                event['event__when'] = event['event__when'].strftime("%H:%M, %d/%m/%y")
+                new_keys_event = dict(zip(new_keys, event.values()))
+                upcoming_events_data.append(new_keys_event)
+
+            kwargs.update({'interested_events_data': interested_events_data,
+                           'upcoming_events_data': upcoming_events_data})
+            rendered_search_view_events_section_template = self.search_view_events_section_template.render(kwargs, request)
+            return rendered_search_view_events_section_template
