@@ -356,7 +356,7 @@ class TestEngagementModel(TestCase):
                                                      status="advertised",
                                                      title='event1',
                                                      when="2030-12-23 12:00:00",
-                                                     closing_date="2023-10-15 12:00:00",
+                                                     closing_date="2025-10-15 12:00:00",
                                                      max_attendees=20,
                                                      keywords="outdoors,paintballing,competitive",
                                                      description="Paintballing dayout, followed by lunch.",
@@ -369,7 +369,7 @@ class TestEngagementModel(TestCase):
                                                      status="advertised",
                                                      title='event2',
                                                      when="2030-12-23 12:00:00",
-                                                     closing_date="2023-10-15 12:00:00",
+                                                     closing_date="2025-10-15 12:00:00",
                                                      max_attendees=20,
                                                      keywords="outdoors,paintballing,competitive",
                                                      description="Paintballing dayout, followed by lunch.",
@@ -378,7 +378,7 @@ class TestEngagementModel(TestCase):
                                                      city_or_town='adbridge',
                                                      county='essex',
                                                      postcode='rm4 1AA')
-    
+
     def test_engagement_instance_creation(self):
         """
         Tests that the engagement through model instance creation operates as expected when an attendee is added to an existing event.
@@ -390,7 +390,7 @@ class TestEngagementModel(TestCase):
         self.assertEqual(Engagement.objects.count(), 2)
         instances = [{'event': 1, 'user': 'jimmy14798', 'status': 'In'}, {'event': 1, 'user': 'jimmy1479', 'status': 'In'}]
         self.assertListEqual(list(Engagement.objects.filter(event=1).values('event', 'user', 'status')), instances)
-        
+
         # add interested attendee for event2
         Engagement.objects.create(event=self.event2, user=self.user, status='In')
         instances = [{'event': 2, 'user': 'jimmy147', 'status': 'In'}]
@@ -418,3 +418,36 @@ class TestEngagementModel(TestCase):
         # check last_updated fields have been updated as expected
         self.assertGreater(self.event1.engagement.get(user=self.user2).last_updated, time_created_event1)
         self.assertGreater(self.event2.engagement.get(user=self.user).last_updated, time_created_event1)
+
+    def test_change_user_status_model_manager(self):
+        """
+        Tests the custom ChangeUserStatus model manager of the Engagement through model.
+        """
+        # add interested attendees for event1 
+        self.event1.attendees.add(self.user2, through_defaults={'status': 'In'})
+        self.event1.attendees.add(self.user3, through_defaults={'status': 'In'})
+        # add interested attendee for event2
+        Engagement.objects.create(event=self.event2, user=self.user, status='In')
+        # Alter the closing date of event1 to a past date
+        self.event1.closing_date = "2022-10-15 12:00:00"
+        self.event1.save()
+        # call the update_status manager method
+        Engagement.user_status.update_status(self.user)
+        Engagement.user_status.update_status(self.user2)
+        Engagement.user_status.update_status(self.user3)
+        for instance in self.event1.engagement.all():
+            self.assertEqual(instance.status, 'Att')
+        for instance in self.event2.engagement.all():
+            self.assertEqual(instance.status, 'In')
+        # Alter the closing date and the when date of event2 to a past date
+        self.event2.closing_date = "2022-10-15 12:00:00"
+        self.event2.when = "2023-01-23 12:00:00"
+        self.event2.save()
+        # call the update_status manager method
+        Engagement.user_status.update_status(self.user)
+        Engagement.user_status.update_status(self.user2)
+        Engagement.user_status.update_status(self.user3)
+        for instance in self.event1.engagement.all():
+            self.assertEqual(instance.status, 'Att')
+        for instance in self.event2.engagement.all():
+            self.assertEqual(instance.status, 'Attd')

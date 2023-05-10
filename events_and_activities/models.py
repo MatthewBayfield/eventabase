@@ -10,6 +10,26 @@ from .validators import check_date_has_not_occured
 # Create your models here.
 
 
+class ChangeUserStatus(models.Manager):
+    """
+    Exists to update a user's status for an instance in the Engagement through model.
+    """
+    def update_status(self, user):
+        """
+        Changes a user's status from interested to attending, or attending to attended, depending on the event related dates.
+        """
+        current_date_time = datetime.now().strftime("%H:%M, %d/%m/%y")
+        current_date_time_object = datetime.strptime(current_date_time, "%H:%M, %d/%m/%y")
+
+        user_upcoming_events = self.filter(user=user, event__closing_date__lt=current_date_time_object, status='In')
+        if len(user_upcoming_events):
+            user_upcoming_events.update(status='Att')
+
+        user_attended_events = self.filter(user=user, event__when__lt=current_date_time_object, status='Att')
+        if len(user_attended_events):
+            user_attended_events.update(status='Attd')
+
+
 class Engagement(ProfileMixin):
     """
     Through model for a many-to-many relationship between the models EventsActivities and CustomUserModel.
@@ -45,9 +65,12 @@ class Engagement(ProfileMixin):
                               default=INTERESTED,
                               max_length=4,
                               verbose_name='engagement status')
-    
+
     last_updated = models.DateTimeField(auto_now=True,
                                         verbose_name='last updated')
+
+    user_status = ChangeUserStatus()
+    objects = models.Manager()
 
 
 class ChangeExpiredEvents(models.Manager):
