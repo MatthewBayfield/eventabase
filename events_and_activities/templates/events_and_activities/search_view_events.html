@@ -12,7 +12,7 @@
         <label for="interested">Interested</label>
         <input id='upcoming' name='type_of_event' type="radio" value="attending">
         <label for="upcoming">Upcoming</label>
-        {% for event in interested_events_data %}
+        {% for event, event_count in interested_events_data %}
             <div class="event_container interested" role="region" aria-label="event item" tabindex="0">
                 <div>
                     {% for field_name, value in event.items %}
@@ -42,7 +42,7 @@
                 <p>You currenty have no events or activities for which you have registered you interest in.</p>
             </div>
         {% endfor %}
-        {% for event in upcoming_events_data %}
+        {% for event, event_count in upcoming_events_data %}
             <div class="event_container attending" role="region" aria-label="event item" tabindex="0">
                 <div>
                     {% for field_name, value in event.items %}
