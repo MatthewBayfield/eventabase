@@ -181,6 +181,9 @@ class ViewEventsView(FormView):
             return redirect(reverse('home:user_homepage'))
 
         if not kwargs['get_modal']:
+            # Updating the user's status for each of their engaged events where necessary
+            Engagement.user_status.update_status(request.user)
+
             # retrieving the user's events for which they have registered their interest
             interested_events = Engagement.objects.filter(user=request.user, status='In').select_related('event').order_by("event__when").values('event__id',
                                                                                                                                                  'event__title',
