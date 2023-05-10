@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.template.loader import get_template, render_to_string
 from allauth.account.decorators import verified_email_required
-from events_and_activities.views import PostEventsView
+from events_and_activities.views import PostEventsView, ViewEventsView
 from .forms import EditAddress, EditPersonalInfo
 from .models import UserProfile, UserAddress
 
@@ -165,6 +165,13 @@ class UserHomePage(TemplateView, HomeViewsMixin):
                                                               modal='post_events_modal',
                                                               **kwargs)
         kwargs.update({'post_events': rendered_post_events_section_template, 'post_events_modal': rendered_post_events_modal})
+
+        # search and view events section:
+        rendered_search_view_events_section_template = ViewEventsView.as_view()(request,
+                                                                                *args,
+                                                                                get_modal=False,
+                                                                                **kwargs)
+        kwargs.update({'search_view_events': rendered_search_view_events_section_template})
         return super().get(request, *args, **kwargs)
 
 
