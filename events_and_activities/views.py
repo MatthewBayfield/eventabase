@@ -206,7 +206,7 @@ class ViewEventsView(FormView):
                 event['event__closing_date'] = event['event__closing_date'].strftime("%H:%M, %d/%m/%y")
                 event['event__when'] = event['event__when'].strftime("%H:%M, %d/%m/%y")
                 new_keys_event = dict(zip(new_keys, event.values()))
-                interested_events_data.append(new_keys_event)
+                interested_events_data.append((new_keys_event, Engagement.objects.get(event=event['event__id']).event.attendees.count()))
 
             # retrieving the user's events for which they are confirmed to attend
             upcoming_events = Engagement.objects.filter(user=request.user, status='Att').select_related('event').order_by("event__when").values('event__id',
@@ -228,7 +228,7 @@ class ViewEventsView(FormView):
                 event['event__closing_date'] = event['event__closing_date'].strftime("%H:%M, %d/%m/%y")
                 event['event__when'] = event['event__when'].strftime("%H:%M, %d/%m/%y")
                 new_keys_event = dict(zip(new_keys, event.values()))
-                upcoming_events_data.append(new_keys_event)
+                upcoming_events_data.append((new_keys_event, Engagement.objects.get(event=event['event__id']).event.attendees.count()))
 
             kwargs.update({'interested_events_data': interested_events_data,
                            'upcoming_events_data': upcoming_events_data})
