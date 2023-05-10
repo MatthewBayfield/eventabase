@@ -579,20 +579,20 @@ class TestViewEventsView(TestCase):
         EventsActivities.objects.get(title='event4').attendees.add(user, through_defaults={'status': 'In'})
         EventsActivities.objects.get(title='event5').attendees.add(user, through_defaults={'status': 'Att'})
         # expected data
-        expected_interested_event_data = [{'ID': 4, 'host': user2.username, 'title': 'event4',
+        expected_interested_event_data = [({'ID': 4, 'host': user2.username, 'title': 'event4',
                                            'when': "12:00, 23/12/30", 'closing date': "12:00, 15/10/28",
                                            'max no. of attendees': 20, 'keywords': 'outdoors,paintballing,competitive',
                                            'description': 'Paintballing dayout, followed by lunch.',
                                            'requirements': 'min £50 per person. wear suitable shoes. Need to be physically fit.',
                                            'Address line 1': 'mayhem paintball', 'City/Town': 'adbridge',
-                                           'County': 'essex', 'Postcode': 'rm4 1aa'}]
-        expected_upcoming_event_data = [{'ID': 5, 'host': user2.username, 'title': 'event5',
+                                           'County': 'essex', 'Postcode': 'rm4 1aa'}, 1)]
+        expected_upcoming_event_data = [({'ID': 5, 'host': user2.username, 'title': 'event5',
                                          'when': "12:00, 30/10/24", 'closing date': "12:00, 15/10/22",
                                          'max no. of attendees': 20, 'keywords': 'outdoors,paintballing,competitive',
                                          'description': 'Paintballing dayout, followed by lunch.',
                                          'requirements': 'min £50 per person. wear suitable shoes. Need to be physically fit.',
                                          'Address line 1': 'mayhem paintball', 'City/Town': 'adbridge',
-                                         'County': 'essex', 'Postcode': 'rm4 1aa'}]
+                                         'County': 'essex', 'Postcode': 'rm4 1aa'}, 1)]
         client = Client()
         client.login(email=self.data['email'],
                      password=self.data['password1'])
