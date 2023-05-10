@@ -36,16 +36,6 @@
                 </a>
             </div>
             
-                <!-- <a href="{ url notifications }" type="text/html" aria-label="notifications: 0 new"> -->
-                    <div>
-                        <i class="fa-solid fa-envelope nav_icon"></i>
-                        <div class="nav_icon">
-                            0 <i class="fa-solid fa-bell" style="display:inline"></i>
-                        </div>
-                    </div>
-                <!-- </a> -->
-            
-            
                 <div>
                     <a href="/accounts/logout/" type="text/html" aria-label="sign-out">
                         <div>
@@ -72,7 +62,7 @@
                     <div id="menu_items_container">
                         
                         <div role="menuitem" class="menu_item">
-                            <a href="" type="text/html"><b>T & C</b></a>
+                            <a href="/terms_and_policies/" type="text/html"><b>T & C</b></a>
                         </div>
                     </div>
                 </div>
@@ -109,7 +99,7 @@
     
         <div class="profile_display">
             <span>Bio :</span>
-            <span>I like cricket, I love it.</span>
+            <span>fffwfsdfwfw</span>
         </div>
     
     </div>
@@ -118,7 +108,7 @@
     
         <div class="profile_display">
             <span>Address Line 1 :</span>
-            <span>11 rise park boulevard</span>
+            <span>11</span>
         </div>
     
         <div class="profile_display">
@@ -143,7 +133,8 @@
                 <span>Edit <i class="fa-solid fa-pen-to-square"></i></span>
             </div>
         
-        <div id="report_issue">
+        <!-- Visibility temporarily set to hidden, as required functionality not yet fully implemented -->
+        <div id="report_issue" style="visibility:hidden;">
             <div>
                 <button type="button" name="report_issue">Report Issue</button>
                 <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
@@ -166,7 +157,7 @@
     
     
     <form id=personal_info_form method="post" action="profile_form/">
-        <input type="hidden" name="csrfmiddlewaretoken" value="ucODUF5KAI40Z41dAbLCpKd5ofHuVKVRGpkzUvHpPlGv8tICHliZR4G8ywakw4wT">
+        <input type="hidden" name="csrfmiddlewaretoken" value="sC4jNBiARhcUb5bLR9Dy48mnwGaqtOhtFoTZwWGKj5PVsRHEwETT8RBxvnoaHpAG">
         <div class="field_flex_container">
         <div class="form_fields">
         
@@ -240,7 +231,7 @@
             <div><label for="id_bio">Bio:</label></div>
         
         <textarea name="bio" cols="40" rows="10" maxlength="500" id="id_bio">
-I like cricket, I love it.</textarea>
+fffwfsdfwfw</textarea>
         </div>
         
             <span data-icon-type="help" class="material-symbols-outlined" aria-hidden="true">help</span>
@@ -256,13 +247,13 @@ I like cricket, I love it.</textarea>
     
     
     <form id=address_form method="post" action="profile_form/">
-        <input type="hidden" name="csrfmiddlewaretoken" value="ucODUF5KAI40Z41dAbLCpKd5ofHuVKVRGpkzUvHpPlGv8tICHliZR4G8ywakw4wT">
+        <input type="hidden" name="csrfmiddlewaretoken" value="sC4jNBiARhcUb5bLR9Dy48mnwGaqtOhtFoTZwWGKj5PVsRHEwETT8RBxvnoaHpAG">
         <div class="field_flex_container">
         <div class="form_fields">
         
             <div><label for="id_address_line_one">Address line 1:</label>*</div>
         
-        <input type="text" name="address_line_one" value="11 rise park boulevard" maxlength="100" required id="id_address_line_one">
+        <input type="text" name="address_line_one" value="11" maxlength="100" required id="id_address_line_one">
         </div>
         
         <div>
@@ -324,15 +315,293 @@ I like cricket, I love it.</textarea>
     </div>
 </div>
         <div class="expand_icon">
-            <span tabindex="0" data-icon-type="expand_more" class="material-symbols-outlined" role="button">expand_more</span>
+            <span tabindex="0" data-icon-type='expand_more' class="material-symbols-outlined" role="button">expand_more</span>
             <span tabindex="0" data-icon-type="expand_less" class="material-symbols-outlined" role="button">expand_less</span>
         </div>
     </section>
     <section id="search_events" role="region" aria-label="search events and activities section">
-        <!-- <div class="expand_icon">
-            <span tabindex="0" data-icon-type="expand_more" class="material-symbols-outlined" role="button">expand_more</span>
+        <h2>Search and View Events and Activities</h2>
+<div id='search_events_grid' class="grid_container" tabindex="-1">
+    <div class="top_row both_columns">
+        <p>
+            Search event & activity adverts, and view those that you are already interested in, or are confirmed to attend.
+        </p>
+        <button  id="search_adverts_button">Search Adverts</button>
+    </div>
+    <div class="both_columns bottom_row">
+        <h4>Your Interested and Upcoming Events or Activities</h4>
+        <input id='interested' name='type_of_event' type="radio" value="interested" checked >
+        <label for="interested">Interested</label>
+        <input id='upcoming' name='type_of_event' type="radio" value="attending">
+        <label for="upcoming">Upcoming</label>
+        
+            <div class="event_container interested" role="region" aria-label="event item" tabindex="0">
+                <div>
+                    
+                        
+                            <div class="details_display">
+                                <span>Id :</span>
+                                <span>1.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Title :</span>
+                                <span>Hunting.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Host :</span>
+                                <span>daisy.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>When :</span>
+                                <span>14:00, 08/05/24.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Closing Date :</span>
+                                <span>14:00, 07/05/24.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Max No. Of Attendees :</span>
+                                <span>5.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Keywords :</span>
+                                <span>hunting,phesants.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Description :</span>
+                                <span>2hr hunt for phesants. Will flush and then shoot to kill..</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Requirements :</span>
+                                <span>A rifle and a spaniel breed of your choice. Or maybe a fox red labrador..</span>
+                            </div>
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                      
+                </div>
+                <div>
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Address Line 1 :</span>
+                                <span>Thordon Country Park.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>City/Town :</span>
+                                <span>Brentwood.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>County :</span>
+                                <span>Essex.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Postcode :</span>
+                                <span>cm133rz.</span>
+                            </div>
+                        
+                    
+                    <h5 aria-label = 'number of users attending so far'>No. of users attending so far: .</h5>
+                    <button class="withdraw_interest">Withdraw Interest</button>
+                </div>
+            </div>
+        
+            <div class="event_container interested" role="region" aria-label="event item" tabindex="0">
+                <div>
+                    
+                        
+                            <div class="details_display">
+                                <span>Id :</span>
+                                <span>2.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Title :</span>
+                                <span>Sleep.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Host :</span>
+                                <span>jill123.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>When :</span>
+                                <span>12:00, 09/08/24.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Closing Date :</span>
+                                <span>12:00, 08/08/24.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Max No. Of Attendees :</span>
+                                <span>1.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Keywords :</span>
+                                <span>sleep.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Description :</span>
+                                <span>12hr nap.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Requirements :</span>
+                                <span>must be very tired.</span>
+                            </div>
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                      
+                </div>
+                <div>
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Address Line 1 :</span>
+                                <span>11.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>City/Town :</span>
+                                <span>Romford.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>County :</span>
+                                <span>Essex.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Postcode :</span>
+                                <span>rm14pp.</span>
+                            </div>
+                        
+                    
+                    <h5 aria-label = 'number of users attending so far'>No. of users attending so far: .</h5>
+                    <button class="withdraw_interest">Withdraw Interest</button>
+                </div>
+            </div>
+        
+        
+            <div class="event_container attending" role="region" aria-label="event item" tabindex="0">
+                <p>You currenty have no upcoming events or activities that are you are confirmed to attend. An event becomes confirmed once the closing advert date has passed.</p>
+            </div>
+        
+    </div>
+</div>
+        <div class="expand_icon">
+            <span tabindex="0" data-icon-type='expand_more' class="material-symbols-outlined" role="button">expand_more</span>
             <span tabindex="0" data-icon-type="expand_less" class="material-symbols-outlined" role="button">expand_less</span>
-        </div> -->
+        </div>
     </section>
     <section id="post_events" role="region" aria-label="post events or activities section">
         <h2>Host Events & Activities</h2>
@@ -361,136 +630,7 @@ I like cricket, I love it.</textarea>
                         
                             <div class="details_display">
                                 <span>Id :</span>
-                                <span>17.</span>
-                            </div>
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>Title :</span>
-                                <span>ggg.</span>
-                            </div>
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>Host :</span>
-                                <span>SubtleMatt147.</span>
-                            </div>
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>When :</span>
-                                <span>13:30, 15/09/34.</span>
-                            </div>
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>Closing Date :</span>
-                                <span>13:30, 25/09/33.</span>
-                            </div>
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>Max No. Of Attendees :</span>
-                                <span>4.</span>
-                            </div>
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>Keywords :</span>
-                                <span>4444.</span>
-                            </div>
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>Description :</span>
-                                <span>444444.</span>
-                            </div>
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>Requirements :</span>
-                                <span>444444.</span>
-                            </div>
-                        
-                    
-                        
-                    
-                        
-                    
-                        
-                    
-                        
-                      
-                </div>
-                <div>
-                    
-                        
-                    
-                        
-                    
-                        
-                    
-                        
-                    
-                        
-                    
-                        
-                    
-                        
-                    
-                        
-                    
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>Address Line 1 :</span>
-                                <span>444444R.</span>
-                            </div>
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>City/Town :</span>
-                                <span>Ty.</span>
-                            </div>
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>County :</span>
-                                <span>Ty.</span>
-                            </div>
-                        
-                    
-                        
-                            <div class="details_display">
-                                <span>Postcode :</span>
-                                <span>rm14pp.</span>
-                            </div>
-                        
-                    
-                    <h5 aria-label = 'number of users attending so far'>No. of users attending so far: .</h5>
-                    <button class="delete_advert">Delete Advert</button>
-                </div>
-            </div>
-        
-        
-            <div class="event_container upcoming" role="region" aria-label="event item" tabindex="0">
-                <div>
-                    
-                        
-                            <div class="details_display">
-                                <span>Id :</span>
-                                <span>2.</span>
+                                <span>3.</span>
                             </div>
                         
                     
@@ -511,42 +651,42 @@ I like cricket, I love it.</textarea>
                         
                             <div class="details_display">
                                 <span>When :</span>
-                                <span>16:10, 22/02/23.</span>
+                                <span>14:00, 01/10/34.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Closing Date :</span>
-                                <span>16:10, 05/01/23.</span>
+                                <span>12:00, 01/10/33.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Max No. Of Attendees :</span>
-                                <span>20.</span>
+                                <span>5.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Keywords :</span>
-                                <span>paintballing,outdoors.</span>
+                                <span>paintballing.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Description :</span>
-                                <span>paintballing then lunch. meet at the centre.</span>
+                                <span>paintballing then lunch.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Requirements :</span>
-                                <span>£50 min per person. wear appropriate clothing.</span>
+                                <span>£50.</span>
                             </div>
                         
                     
@@ -582,34 +722,164 @@ I like cricket, I love it.</textarea>
                         
                             <div class="details_display">
                                 <span>Address Line 1 :</span>
-                                <span>mayhem paintball.</span>
+                                <span>Mayhem Paintball.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>City/Town :</span>
-                                <span>adbridge.</span>
+                                <span>Adbridge.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>County :</span>
-                                <span>essex.</span>
+                                <span>Essex.</span>
                             </div>
                         
                     
                         
                             <div class="details_display">
                                 <span>Postcode :</span>
-                                <span>rm16pl.</span>
+                                <span>rm41aa.</span>
+                            </div>
+                        
+                    
+                    <h5 aria-label = 'number of users attending so far'>No. of users attending so far: .</h5>
+                    <button class="delete_advert">Delete Advert</button>
+                </div>
+            </div>
+        
+        
+            <div class="event_container upcoming" role="region" aria-label="event item" tabindex="0">
+                <div>
+                    
+                        
+                            <div class="details_display">
+                                <span>Id :</span>
+                                <span>5.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Title :</span>
+                                <span>dog walk.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Host :</span>
+                                <span>SubtleMatt147.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>When :</span>
+                                <span>16:48, 09/05/25.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Closing Date :</span>
+                                <span>15:51, 09/05/23.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Max No. Of Attendees :</span>
+                                <span>1.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Keywords :</span>
+                                <span>walk_dogs.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Description :</span>
+                                <span>dddgd.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Requirements :</span>
+                                <span>ddgdgd.</span>
+                            </div>
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                      
+                </div>
+                <div>
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Address Line 1 :</span>
+                                <span>11.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>City/Town :</span>
+                                <span>Romford.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>County :</span>
+                                <span>Essex.</span>
+                            </div>
+                        
+                    
+                        
+                            <div class="details_display">
+                                <span>Postcode :</span>
+                                <span>rm1 4pp.</span>
                             </div>
                         
                     
                     <h5 aria-label = 'number of users attending'>No. of users attending: .</h5>
                     <button class="cancel_event">Cancel</button>
-                    <button>Message Attendees</button>
+                    <!-- Visibility temporarily set to hidden, as required functionality not yet fully implemented -->
+                    <button style="visibility: hidden;">Message Attendees</button>
                 </div>
             </div>
         
@@ -628,7 +898,7 @@ I like cricket, I love it.</textarea>
     <p>Complete the following form to post an advert for your event or activity.</p>
     
     <form id=post_events_form method="post" action="post_events/">
-        <input type="hidden" name="csrfmiddlewaretoken" value="x1HbBp2fzT9It37QMRM8gdd32R04xNVAJed7BfEUOwLdCsOfT1jvIxG6c8tU87wC">
+        <input type="hidden" name="csrfmiddlewaretoken" value="f7Njnkcgpblsg8asWDV7XrWXfcsyZPnxsTCZ6FAqRZYtxUGlB8bs1ab7eTGidqGK">
         <div class="field_flex_container">
         <div class="form_fields">
         

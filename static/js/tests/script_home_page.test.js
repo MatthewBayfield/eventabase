@@ -11,7 +11,8 @@ let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcon
      modalContainers, modals, closeModalButtons, modalButtons, editProfileModalDoneButton, editProfileModal,
      openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal,
      restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler,
-     refreshFormFetchHandler, updateEventFetchHandler, deleteEventButtons, cancelEventButtons} = require('../script.js');
+     refreshFormFetchHandler, updateEventFetchHandler, deleteEventButtons, cancelEventButtons,
+     interestedEvents, attendingEvents} = require('../script.js');
 // mock functions
 const log = jest.fn();
 let mockFetchEditProfile = jest.fn(() => {
@@ -581,10 +582,39 @@ describe('Test that the cancel modal buttons work', () => {
     })
 })
 
+describe('test that the search events section radio input affects the events displayed', () => {
+    test('that toggling the selected radio input changes the types of events displayed', () => {
+        let interestedOption = radioInputs[0];
+        let upcomingOption = radioInputs[1];
+        // interested is checked on page load.
+        expect(interestedOption.checked).toBe(true);
+        for (let event of interestedEvents) {
+            expect(event.classList.contains('hidden')).toBe(false);
+        }
+        for (let event of attendingEvents) {
+            expect(event.classList.contains('hidden')).toBe(true);
+        }
+        upcomingOption.click();
+        for (let event of interestedEvents) {
+            expect(event.classList.contains('hidden')).toBe(true);
+        }
+        for (let event of attendingEvents) {
+            expect(event.classList.contains('hidden')).toBe(false);
+        }
+        interestedOption.click();
+        for (let event of interestedEvents) {
+            expect(event.classList.contains('hidden')).toBe(false);
+        }
+        for (let event of attendingEvents) {
+            expect(event.classList.contains('hidden')).toBe(true);
+        }
+    })
+})
+
 describe('test that the post events section radio input affects the events displayed', () => {
     test('that toggling the selected radio input changes the types of events displayed', () => {
-        let advertsiedOption = radioInputs[0];
-        let upcomingOption = radioInputs[1];
+        let advertsiedOption = radioInputs[2];
+        let upcomingOption = radioInputs[3];
         // advertised is checked on page load.
         expect(advertsiedOption.checked).toBe(true);
         for (let event of advertisedEvents) {
