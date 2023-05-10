@@ -63,7 +63,7 @@ class PostEventsView(FormView):
                 data.pop('attendees')
                 data['closing date'] = data['closing date'].strftime("%H:%M, %d/%m/%y")
                 data['when'] = data['when'].strftime("%H:%M, %d/%m/%y")
-                all_advertised_hosting_events_data.append(data)
+                all_advertised_hosting_events_data.append((data, event.attendees.count()))
 
             all_upcoming_hosting_events_data = []
             for event in all_upcoming_events_for_user:
@@ -73,7 +73,7 @@ class PostEventsView(FormView):
                 data.pop('attendees')
                 data['closing date'] = data['closing date'].strftime("%H:%M, %d/%m/%y")
                 data['when'] = data['when'].strftime("%H:%M, %d/%m/%y")
-                all_upcoming_hosting_events_data.append(data)
+                all_upcoming_hosting_events_data.append((data, event.attendees.count()))
 
             kwargs.update({'upcoming_hosting_events_data': all_upcoming_hosting_events_data,
                            'advertised_hosting_events_data': all_advertised_hosting_events_data})
