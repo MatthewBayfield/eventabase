@@ -183,20 +183,20 @@ class TestPostEventsView(TestCase):
                                         county='essex',
                                         postcode='rm4 1aa')
         # expected data
-        expected_advertised_event_data = [{'ID': 1, 'host': user, 'title': 'event1',
+        expected_advertised_event_data = [({'ID': 1, 'host': user, 'title': 'event1',
                                            'when': '12:00, 23/12/30', 'closing date': '12:00, 15/12/28',
                                            'max no. of attendees': 20, 'keywords': 'outdoors,paintballing,competitive',
                                            'description': 'Paintballing dayout, followed by lunch.',
                                            'requirements': 'min £50 per person. wear suitable shoes. Need to be physically fit.',
                                            'Address line 1': 'mayhem paintball', 'City/Town': 'adbridge',
-                                           'County': 'essex', 'Postcode': 'rm4 1aa'}]
-        expected_upcoming_event_data = [{'ID': 3, 'host': user, 'title': 'event3',
+                                           'County': 'essex', 'Postcode': 'rm4 1aa'}, 0)]
+        expected_upcoming_event_data = [({'ID': 3, 'host': user, 'title': 'event3',
                                          'when': '12:00, 23/12/30', 'closing date': '12:00, 15/10/22',
                                          'max no. of attendees': 20, 'keywords': 'outdoors,paintballing,competitive',
                                          'description': 'Paintballing dayout, followed by lunch.',
                                          'requirements': 'min £50 per person. wear suitable shoes. Need to be physically fit.',
                                          'Address line 1': 'mayhem paintball', 'City/Town': 'adbridge',
-                                         'County': 'essex', 'Postcode': 'rm4 1aa'}]
+                                         'County': 'essex', 'Postcode': 'rm4 1aa'}, 0)]
         client = Client()
         client.login(email=self.data['email'],
                      password=self.data['password1'])
@@ -238,7 +238,7 @@ class TestPostEventsView(TestCase):
                                      <span>58 Stanley Avenue.</span></div><div class="details_display">
                                      <span>City/Town :</span><span>Gidea Park.</span></div><div class="details_display">
                                      <span>County :</span><span>Essex.</span></div><div class="details_display"><span>Postcode :</span>
-                                     <span>rm26bt.</span></div><h5 aria-label="number of users attending so far">No. of users attending so far: .</h5>
+                                     <span>rm26bt.</span></div><h5 aria-label="number of users attending so far">No. of users attending so far: 0.</h5>
                                      <button class='delete_advert'>Delete Advert</button></div></div>'''
         # test for valid form:
 
