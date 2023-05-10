@@ -29,6 +29,8 @@ let postEventForm = document.getElementById('post_events_form');
 let postEventFormDoneButton = document.getElementById('post_events_modal') ? document.getElementById('post_events_modal').querySelector('.modal_button') : null;
 let advertisedEvents = [...document.getElementsByClassName('advertised')];
 let upcomingEvents = [...document.getElementsByClassName('upcoming')];
+let interestedEvents = [...document.getElementsByClassName('interested')];
+let attendingEvents = [...document.getElementsByClassName('attending')];
 let radioInputs = [...document.querySelectorAll("[type = 'radio']")];
 let deleteEventButtons = [...document.getElementsByClassName('delete_advert')];
 let cancelEventButtons = [...document.getElementsByClassName('cancel_event')];
@@ -181,7 +183,7 @@ function openModalButtonListeners() {
 
 
 /** Adds input event listeners to the post
- * events section radio inputs to control
+ * events section and search events section radio inputs to control
  * which type of events are displayed
  * @summary Adds radio input listeners to control which events are visible.
  */
@@ -193,6 +195,10 @@ function addRadioInputListeners() {
     // add new listeners
     for (let input of radioInputs) {
         if (input.value === 'advertised') {
+            input.click();
+            updateVisibleEvents(input);
+        }
+        else if (input.value === 'interested') {
             input.click();
             updateVisibleEvents(input);
         }
@@ -620,9 +626,9 @@ function closeModal(input) {
 }
 
 /** Event handler for the radioInput event listeners.
- *  Alters whether advertised or upcoming events
- * are displayed in the post events section.
- * @summary event handler for radioInput listeners. Alters which events are displayed.
+ *  Alters which type of events
+ *  are displayed in the post events section and the search events secton.
+ *  @summary event handler for radioInput listeners. Alters which events are displayed.
  */
 function updateVisibleEvents(input) {
     if (input.value === 'advertised') {
@@ -640,7 +646,24 @@ function updateVisibleEvents(input) {
             }
         }
     }
-    else {
+    else if (input.value === 'interested') {
+        for (let eventContainer of interestedEvents) {
+            if (eventContainer.classList.contains('hidden')) {
+                eventContainer.classList.remove('hidden');
+            }
+        }
+        for (let eventContainer of attendingEvents) {
+            if (eventContainer.classList.contains('hidden')) {
+
+            }
+            else {
+                eventContainer.classList.add('hidden');
+            }
+        }
+
+    }
+
+    else if (input.value === 'upcoming') {
         for (let eventContainer of advertisedEvents) {
             if (eventContainer.classList.contains('hidden')) {
 
@@ -650,6 +673,22 @@ function updateVisibleEvents(input) {
             }
         }
         for (let eventContainer of upcomingEvents) {
+            if (eventContainer.classList.contains('hidden')) {
+                eventContainer.classList.remove('hidden');
+            }
+        }
+    }
+
+    else if (input.value === 'attending') {
+        for (let eventContainer of interestedEvents) {
+            if (eventContainer.classList.contains('hidden')) {
+
+            }
+            else {
+                eventContainer.classList.add('hidden');
+            }
+        }
+        for (let eventContainer of attendingEvents) {
             if (eventContainer.classList.contains('hidden')) {
                 eventContainer.classList.remove('hidden');
             }
@@ -749,6 +788,8 @@ function refreshDomElementVariables() {
     postEventForm = document.getElementById('post_events_form');
     advertisedEvents = [...document.getElementsByClassName('advertised')];
     upcomingEvents = [...document.getElementsByClassName('upcoming')];
+    interestedEvents = [...document.getElementsByClassName('interested')];
+    attendingEvents = [...document.getElementsByClassName('attending')];
     radioInputs = [...document.querySelectorAll("[type = 'radio']")];
     deleteEventButtons = [...document.getElementsByClassName('delete_advert')];
     cancelEventButtons = [...document.getElementsByClassName('cancel_event')];
@@ -1030,5 +1071,5 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 //     editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
 //     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
 //     refreshFormFetchHandler, closeModal, restoreForm, postEventFormDoneButton, updateEventFetchHandler,
-//     deleteEventButtons, cancelEventButtons
+//     deleteEventButtons, cancelEventButtons, interestedEvents, attendingEvents
 // };
