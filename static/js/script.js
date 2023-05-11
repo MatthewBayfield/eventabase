@@ -34,6 +34,7 @@ let attendingEvents = [...document.getElementsByClassName('attending')];
 let radioInputs = [...document.querySelectorAll("[type = 'radio']")];
 let deleteEventButtons = [...document.getElementsByClassName('delete_advert')];
 let cancelEventButtons = [...document.getElementsByClassName('cancel_event')];
+let withdrawButtons = [...document.getElementsByClassName('withdraw')];
 
 // JS Section: Event listeners:
 
@@ -227,6 +228,18 @@ function deleteEventListeners() {
     for (let button of deleteEventButtons) {
         button.removeEventListener('click', updateEventFetchHandler);
         button.addEventListener('click', updateEventFetchHandler);
+    }
+}
+
+/**  Adds click event listeners to withdraw buttons.
+  *  Handler carries out a post fetch request to withdraw a user from an
+  *  event. Makes the event item no longer visible.
+ * @summary Click listeners added to withdraw buttons for event withdrawal.
+ */
+function eventWithdrawalListeners() {
+    for (let button of withdrawButtons) {
+        button.removeEventListener('click', withdrawFromEventFetchHandler);
+        button.addEventListener('click', withdrawFromEventFetchHandler);
     }
 }
 
@@ -740,6 +753,7 @@ function executeAllHomePageAddListenersFunctions() {
     addRadioInputListeners();
     cancelEventListeners();
     deleteEventListeners();
+    eventWithdrawalListeners();
     removeFeedbackListeners();
 }
 
@@ -793,6 +807,7 @@ function refreshDomElementVariables() {
     radioInputs = [...document.querySelectorAll("[type = 'radio']")];
     deleteEventButtons = [...document.getElementsByClassName('delete_advert')];
     cancelEventButtons = [...document.getElementsByClassName('cancel_event')];
+    withdrawButtons = [...document.getElementsByClassName('withdraw')];
 }
 
 // JS Subsection: Fetch requests:
@@ -1043,6 +1058,41 @@ If the problem persists, please report the issue to us.`);
     }     
 }
 
+/** Fetch POST request handler for withdrawing
+ *  a user from an event they are interested in or have upcoming.
+ * @summary Fetch POST request handler for withdrawing a user from an event.
+ */
+async function withdrawFromEventFetchHandler(event) {
+    let target = event.currentTarget;
+    let requestUrl = 'event_withdrawal';
+    // Obtain event id
+    let eventID = target.parentElement.previousElementSibling.firstElementChild.lastElementChild.innerHTML.replace('.', '');
+
+    try {
+        // For aquiring the csrf token
+        const csrftoken = Cookies.get('csrftoken');
+        // make request and check response
+        let request = new Request(requestUrl,
+                                    {method: 'POST', headers: {'X-CSRFToken': csrftoken},
+                                    mode: 'same-origin',
+                                    body: eventID});
+        let response = await fetch(request);
+        let responseJSON = await response.json();
+
+        if (responseJSON.successful === 'true') {
+            let event_container = target.parentElement.parentElement;
+            event_container.style.display = 'none';
+        }
+        else {
+            window.alert(`Unable to withdraw you from the event at the moment, please try again later.
+If the problem persists, please report the issue to us.`);
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }     
+}
+
 // JS Section: Page specific executed code
 
 // all pages:
@@ -1071,5 +1121,5 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 //     editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
 //     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
 //     refreshFormFetchHandler, closeModal, restoreForm, postEventFormDoneButton, updateEventFetchHandler,
-//     deleteEventButtons, cancelEventButtons, interestedEvents, attendingEvents
+//     deleteEventButtons, cancelEventButtons, interestedEvents, attendingEvents, withdrawButtons, withdrawFromEventFetchHandler
 // };

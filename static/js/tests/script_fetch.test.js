@@ -11,7 +11,8 @@ let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcon
      modalContainers, modals, closeModalButtons, editProfileModal, editProfileModalDoneButton,
      editProfileFormFetchHandler, addEditProfileModalDonebuttonListeners, postEventModal,
      postEventFormFetchHandler, postEventForm, refreshFormFetchHandler, updateEventFetchHandler,
-     editAddressForm, editPersonalInfoForm, openModalButtons, deleteEventButtons, cancelEventButtons} = require('../script.js');
+     editAddressForm, editPersonalInfoForm, openModalButtons, deleteEventButtons, cancelEventButtons,
+     withdrawButtons, withdrawFromEventFetchHandler} = require('../script.js');
 // function from script.js, but redefined in this scope; needed to update references to updated DOM.
 function refreshDomElementVariables() {
     moreMenuContainer = document.getElementById('more_menu_container');
@@ -45,6 +46,7 @@ function refreshDomElementVariables() {
     radioInputs = [...document.querySelectorAll("[type = 'radio']")];
     deleteEventButtons = [...document.getElementsByClassName('delete_advert')];
     cancelEventButtons = [...document.getElementsByClassName('cancel_event')];
+    withdrawButtons = [...document.getElementsByClassName('withdraw')];
 }
 // mock functions
 const get = jest.fn();
@@ -56,6 +58,7 @@ global.fetch = jest.fn(() => Promise.resolve({
 }));
 global.alert = jest.fn();
 // global variables needed for some tests
+let initialSearchViewEventsSection = document.getElementById('search_events').innerHTML;
 let initialPostEventsSection = postEventModal.parentElement.previousElementSibling.innerHTML;
 let initialPostEventForm = postEventForm.innerHTML;
 let initialProfileSection = editProfileModal.parentElement.previousElementSibling.innerHTML;
@@ -389,5 +392,94 @@ If the problem persists, please report the issue to us.`
         // check event has not been hidden
         expect(document.querySelectorAll('.event_container.advertised').length).toBe(1);
         expect(document.querySelectorAll('.event_container.advertised')[0].style.display).not.toBe('none');
+    })
+})
+
+describe('test the event withdrawal fetch POST request operates as expected', () => {
+    beforeEach(() => {
+        // grid container styling
+        refreshDomElementVariables();
+        document.getElementById('search_events_grid').style.display = 'grid';
+        document.querySelectorAll('.event_container.interested')[0].style.display = 'block';
+        document.querySelectorAll('.event_container.attending')[0].style.display = 'block';
+    })
+    afterEach(() => {
+        Request.mockClear();
+        fetch.mockClear();
+        alert.mockClear();
+        // reset html content
+        document.getElementById('search_events').innerHTML = initialSearchViewEventsSection;
+    })
+
+    test('check request and response/actions when a successful event withdrawal request is submitted', async () => {
+        json_data = {'successful': 'true'};
+        expect(document.querySelectorAll('.event_container.interested').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(1);
+        // the events should be visible
+        expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('block');
+        let withdrawInterestButton = withdrawButtons[0];
+        let withdrawButton = withdrawButtons[1];
+        let event = {currentTarget: withdrawInterestButton};
+        // call the handler to simulate withdrawing interest
+        await withdrawFromEventFetchHandler(event);
+        expect(Request).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal']));
+        // check only the intended event has been hidden
+        expect(document.querySelectorAll('.event_container.interested').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('none');
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('block');
+        // call the handler to simulate withdrawing from a confirmed event
+        event = {currentTarget: withdrawButton};
+        await withdrawFromEventFetchHandler(event);
+        expect(Request).toHaveBeenCalledTimes(2);
+        expect(fetch).toHaveBeenCalledTimes(2);
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal']));
+        // check event has been hidden
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('none');
+        expect(document.querySelectorAll('.event_container.interested').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('none');
+    })
+
+    test('check request and response/actions when an unsuccessful event withdrawal request is submitted', async () => {
+        json_data = {'successful': 'false'};
+        expect(document.querySelectorAll('.event_container.interested').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(1);
+        // the events should be visible
+        expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('block');
+        let withdrawInterestButton = withdrawButtons[0];
+        let withdrawButton = withdrawButtons[1];
+        let event = {currentTarget: withdrawInterestButton};
+        // call the handler to simulate withdrawing interest
+        await withdrawFromEventFetchHandler(event);
+        expect(Request).toHaveBeenCalledTimes(1);
+        expect(fetch).toHaveBeenCalledTimes(1);
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal']));
+        // check alert displayed
+        let message = `Unable to withdraw you from the event at the moment, please try again later.
+If the problem persists, please report the issue to us.`;
+        expect(alert).toHaveBeenLastCalledWith(message);
+        // check event has not been hidden
+        expect(document.querySelectorAll('.event_container.interested').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('block');
+        // call the handler to simulate withdrawing from a confirmed event
+        event = {currentTarget: withdrawButton};
+        await withdrawFromEventFetchHandler(event);
+        expect(Request).toHaveBeenCalledTimes(2);
+        expect(fetch).toHaveBeenCalledTimes(2);
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal']));
+        // check alert displayed
+        expect(alert).toHaveBeenLastCalledWith(message);
+        // check event has not been hidden
+        expect(document.querySelectorAll('.event_container.interested').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('block');
     })
 })
