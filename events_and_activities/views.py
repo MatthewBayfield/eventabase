@@ -237,3 +237,20 @@ class ViewEventsView(FormView):
                            'upcoming_events_data': upcoming_events_data})
             rendered_search_view_events_section_template = self.search_view_events_section_template.render(kwargs, request)
             return rendered_search_view_events_section_template
+
+    def post(self, request):
+        """
+        Returns:
+            A JSON response indicating whether the request was successful with regard to withdrawing from an event.
+        """
+        event_id = request.body.decode()
+        try:
+            engagement_instance = Engagement.objects.get(event__id=int(event_id), user=request.user)
+            engagement_instance.delete()
+        except Exception as error:
+            print(error)
+
+        if not (Engagement.objects.filter(event__id=int(event_id), user=request.user)).exists():
+            return JsonResponse({'successful': 'true'})
+
+        return JsonResponse({'successful': 'false'})
