@@ -488,20 +488,20 @@ class TestViewEventsView(TestCase):
         self.assertEqual(response_code, 200)
         self.assertTemplateUsed('events_and_activities/search_view_events.html')
     
-    # def test_response_direct_get_request_post_events_view(self):
-    #     """
-    #     Tests that if a user tries to access the ViewEventsView
-    #     via a GET request to its url, they are redirected.
-    #     """
-    #     # unauthenticated user
-    #     client = Client()
-    #     response = client.get('/home/post_events/', follow=True)
-    #     self.assertRedirects(response, '/accounts/login/?next=/home/post_events/')
-    #     # authenticated user
-    #     client.login(email=self.data['email'],
-    #                  password=self.data['password1'])
-    #     response = client.get('/home/post_events/', follow=True)
-    #     self.assertRedirects(response, '/home/')
+    def test_response_direct_get_request_post_events_view(self):
+        """
+        Tests that if a user tries to access the ViewEventsView
+        via a GET request to its url, they are redirected.
+        """
+        # unauthenticated user
+        client = Client()
+        response = client.get('/home/event_withdrawal/', follow=True)
+        self.assertRedirects(response, '/accounts/login/?next=/home/event_withdrawal/')
+        # authenticated user
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        response = client.get('/home/event_withdrawal/', follow=True)
+        self.assertRedirects(response, '/home/')
 
     def test_the_search_view_events_section_view_related_logic_and_rendering(self):
         """
@@ -603,3 +603,71 @@ class TestViewEventsView(TestCase):
         for key, value in sub_context.items():
             with self.subTest(key):
                 self.assertEqual(response.context[key], value)
+    
+    def test_post_method_of_view_events_view(self):
+        """
+        Tests the POST method of the ViewEventsView, that is responsible for handling requests to withdrawal user from an event.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+
+        EventsActivities.objects.create(host_user=user2,
+                                        status="advertised",
+                                        title='event4',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2028-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.create(host_user=user2,
+                                        status="upcoming",
+                                        title='event5',
+                                        when="2024-10-30 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        # Adding user as an attendee to event4 and event5
+        EventsActivities.objects.get(title='event4').attendees.add(user, through_defaults={'status': 'In'})
+        EventsActivities.objects.get(title='event5').attendees.add(user, through_defaults={'status': 'Att'})
+
+        client = Client()
+        # user sign-in
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+
+        # check user is interested in event4
+        self.assertEqual((user.engagement.filter(event__title='event4', status='In')).exists(), True)
+        # get the event4 id
+        event_instance = EventsActivities.objects.get(title='event4')
+        event_id = str(event_instance.id)
+        # Make request to withdraw from event4
+        response = client.post('/home/event_withdrawal/', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'successful': 'true'})
+        # check user is no longer interested in event4
+        self.assertEqual(Engagement.objects.filter(event__title='event4', user=user).exists(), False)
+
+        # check user is attending event5
+        self.assertEqual((user.engagement.filter(event__title='event5', status='Att')).exists(), True)
+        # get the event5 id
+        event_instance = EventsActivities.objects.get(title='event5')
+        event_id = str(event_instance.id)
+        # Make request to withdraw from event5
+        response = client.post('/home/event_withdrawal/', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'successful': 'true'})
+        # check user is no longer attending event5
+        self.assertEqual(Engagement.objects.filter(event__title='event5', user=user).exists(), False)
