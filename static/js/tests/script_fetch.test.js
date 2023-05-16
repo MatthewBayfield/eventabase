@@ -331,7 +331,7 @@ describe('test the update events fetch POST request operates as expected', () =>
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['update_events/?cancel=true']));
         // check event has been hidden
-        expect(document.querySelectorAll('.event_container.upcoming').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.upcoming').length).toBe(2);
         expect(document.querySelectorAll('.event_container.upcoming')[0].style.display).toBe('none');
     })
 
@@ -348,7 +348,7 @@ describe('test the update events fetch POST request operates as expected', () =>
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['update_events/?cancel=false']));
         // check event has been hidden
-        expect(document.querySelectorAll('.event_container.advertised').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.advertised').length).toBe(2);
         expect(document.querySelectorAll('.event_container.advertised')[0].style.display).toBe('none');
     })
 
@@ -392,6 +392,51 @@ If the problem persists, please report the issue to us.`
         // check event has not been hidden
         expect(document.querySelectorAll('.event_container.advertised').length).toBe(1);
         expect(document.querySelectorAll('.event_container.advertised')[0].style.display).not.toBe('none');
+    })
+
+    test("check no the expected no events message displays once all a user's events/adverts have been cancelled/deleted", async () => {
+        json_data = {'successful': 'true'};
+        // testing for when cancelling events:
+
+        expect(document.querySelectorAll('.event_container.upcoming').length).toBe(1);
+        // the events should be visible
+        expect(document.querySelectorAll('.event_container.upcoming')[0].style.display).toBe('block');
+        let event;
+        for (button of cancelEventButtons) {
+            event = {currentTarget: button};
+            // call the handler to simulate cancelling an event
+            await updateEventFetchHandler(event);
+            if (document.querySelectorAll('.event_container.upcoming')[0].style.display === 'block') {
+                expect(document.querySelectorAll('.event_container.upcoming').length).toBe(1);
+                expect(document.querySelector('.event_container.upcoming > p')).toBe(null);
+            }
+            else {
+                expect(document.querySelectorAll('.event_container.upcoming').length).toBe(2);
+                let message = `You currenty have no upcoming events or activities that are you are confirmed to host. An event becomes confirmed once the closing advert date has passed.`;
+                expect(window.getComputedStyle(document.querySelectorAll('.event_container.upcoming')[1]).getPropertyValue('display')).toBe('block');
+                expect(document.querySelector('.event_container.upcoming > p').innerHTML).toBe(message);
+            }
+        }
+        // testing for when deleting adverts:
+
+        expect(document.querySelectorAll('.event_container.advertised').length).toBe(1);
+        // the events should be visible
+        expect(document.querySelectorAll('.event_container.advertised')[0].style.display).toBe('block');
+        for (button of deleteEventButtons) {
+            event = {currentTarget: button};
+            // call the handler to simulate deleting an event advert
+            await updateEventFetchHandler(event);
+            if (document.querySelectorAll('.event_container.advertised')[0].style.display === 'block') {
+                expect(document.querySelectorAll('.event_container.advertised').length).toBe(1);
+                expect(document.querySelector('.event_container.advertised > p')).toBe(null);
+            }
+            else {
+                expect(document.querySelectorAll('.event_container.advertised').length).toBe(2);
+                let message = `You currenty have no adverts for hosting events or activities.`;
+                expect(window.getComputedStyle(document.querySelectorAll('.event_container.advertised')[1]).getPropertyValue('display')).toBe('block');
+                expect(document.querySelector('.event_container.advertised > p').innerHTML).toBe(message);
+            }
+        }
     })
 })
 

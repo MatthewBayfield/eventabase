@@ -1041,6 +1041,34 @@ async function updateEventFetchHandler(event) {
         if (responseJSON.successful === 'true') {
             let event_container = target.parentElement.parentElement;
             event_container.style.display = 'none';
+            // code to display the 'you have no more events message', if the user deletes/cancels all their adverts/events.
+            if (buttonType !== 'Cancel') {
+                if (document.getElementsByClassName('advertised').length - document.querySelectorAll('.advertised[style="display: none;"]').length === 0) {
+                    let no_of_containers = document.getElementsByClassName('advertised').length;
+                    let lastEventContainer = document.getElementsByClassName('advertised')[no_of_containers - 1];
+                    let container = lastEventContainer.insertAdjacentElement('afterend', document.createElement('div'));
+                    container.setAttribute('class', 'event_container advertised');
+                    container.setAttribute('role', 'region');
+                    container.setAttribute('aria-label', 'event item');
+                    container.setAttribute('tabindex', '0');
+                    container.innerHTML = `<p>You currenty have no adverts for hosting events or activities.</p>`;
+                }
+            }
+            else {
+                if (document.getElementsByClassName('upcoming').length - document.querySelectorAll('.upcoming[style="display: none;"]').length === 0) {
+                    let no_of_containers = document.getElementsByClassName('upcoming').length;
+                    let lastEventContainer = document.getElementsByClassName('upcoming')[no_of_containers - 1];
+                    let container = lastEventContainer.insertAdjacentElement('afterend', document.createElement('div'));
+                    container.setAttribute('class', 'event_container upcoming');
+                    container.setAttribute('role', 'region');
+                    container.setAttribute('aria-label', 'event item');
+                    container.setAttribute('tabindex', '0');
+                    container.innerHTML = `<p>You currenty have no upcoming events or activities that are you are confirmed to host. An event becomes confirmed once the closing advert date has passed.</p>`;
+                }
+            }
+            refreshDomElementVariables();
+            executeAllPageAddListenerFunctions();
+            executeAllHomePageAddListenersFunctions();
         }
         else {
             if (buttonType !== 'Cancel') {
