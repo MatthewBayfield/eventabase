@@ -402,6 +402,8 @@ describe('test the event withdrawal fetch POST request operates as expected', ()
         document.getElementById('search_events_grid').style.display = 'grid';
         document.querySelectorAll('.event_container.interested')[0].style.display = 'block';
         document.querySelectorAll('.event_container.attending')[0].style.display = 'block';
+        document.querySelectorAll('.event_container.interested')[1].style.display = 'block';
+        document.querySelectorAll('.event_container.attending')[1].style.display = 'block';
     })
     afterEach(() => {
         Request.mockClear();
@@ -413,44 +415,52 @@ describe('test the event withdrawal fetch POST request operates as expected', ()
 
     test('check request and response/actions when a successful event withdrawal request is submitted', async () => {
         json_data = {'successful': 'true'};
-        expect(document.querySelectorAll('.event_container.interested').length).toBe(1);
-        expect(document.querySelectorAll('.event_container.attending').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.interested').length).toBe(2);
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(2);
         // the events should be visible
         expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('block');
         expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.interested')[1].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending')[1].style.display).toBe('block');
         let withdrawInterestButton = withdrawButtons[0];
-        let withdrawButton = withdrawButtons[1];
+        let withdrawButton = withdrawButtons[2];
         let event = {currentTarget: withdrawInterestButton};
         // call the handler to simulate withdrawing interest
         await withdrawFromEventFetchHandler(event);
         expect(Request).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledTimes(1);
-        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal']));
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal/']));
         // check only the intended event has been hidden
-        expect(document.querySelectorAll('.event_container.interested').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.interested').length).toBe(2);
         expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('none');
-        expect(document.querySelectorAll('.event_container.attending').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.interested')[1].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(2);
         expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending')[1].style.display).toBe('block');
         // call the handler to simulate withdrawing from a confirmed event
         event = {currentTarget: withdrawButton};
         await withdrawFromEventFetchHandler(event);
         expect(Request).toHaveBeenCalledTimes(2);
         expect(fetch).toHaveBeenCalledTimes(2);
-        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal']));
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal/']));
         // check event has been hidden
-        expect(document.querySelectorAll('.event_container.attending').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(2);
         expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('none');
-        expect(document.querySelectorAll('.event_container.interested').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.attending')[1].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.interested').length).toBe(2);
         expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('none');
+        expect(document.querySelectorAll('.event_container.interested')[1].style.display).toBe('block');
     })
 
     test('check request and response/actions when an unsuccessful event withdrawal request is submitted', async () => {
         json_data = {'successful': 'false'};
-        expect(document.querySelectorAll('.event_container.interested').length).toBe(1);
-        expect(document.querySelectorAll('.event_container.attending').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.interested').length).toBe(2);
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(2);
         // the events should be visible
         expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('block');
         expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.interested')[1].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending')[1].style.display).toBe('block');
         let withdrawInterestButton = withdrawButtons[0];
         let withdrawButton = withdrawButtons[1];
         let event = {currentTarget: withdrawInterestButton};
@@ -458,28 +468,84 @@ describe('test the event withdrawal fetch POST request operates as expected', ()
         await withdrawFromEventFetchHandler(event);
         expect(Request).toHaveBeenCalledTimes(1);
         expect(fetch).toHaveBeenCalledTimes(1);
-        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal']));
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal/']));
         // check alert displayed
         let message = `Unable to withdraw you from the event at the moment, please try again later.
 If the problem persists, please report the issue to us.`;
         expect(alert).toHaveBeenLastCalledWith(message);
         // check event has not been hidden
-        expect(document.querySelectorAll('.event_container.interested').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.interested').length).toBe(2);
         expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('block');
-        expect(document.querySelectorAll('.event_container.attending').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.interested')[1].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(2);
         expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending')[1].style.display).toBe('block');
         // call the handler to simulate withdrawing from a confirmed event
         event = {currentTarget: withdrawButton};
         await withdrawFromEventFetchHandler(event);
         expect(Request).toHaveBeenCalledTimes(2);
         expect(fetch).toHaveBeenCalledTimes(2);
-        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal']));
+        expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal/']));
         // check alert displayed
         expect(alert).toHaveBeenLastCalledWith(message);
         // check event has not been hidden
-        expect(document.querySelectorAll('.event_container.interested').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.interested').length).toBe(2);
         expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('block');
-        expect(document.querySelectorAll('.event_container.attending').length).toBe(1);
+        expect(document.querySelectorAll('.event_container.interested')[1].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(2);
         expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending')[1].style.display).toBe('block');
+    })
+
+    test('check no the expected no events message displays once all events have been withdrawn from', async () => {
+        json_data = {'successful': 'true'};
+        // testing for a user's interested events:
+
+        expect(document.querySelectorAll('.event_container.interested').length).toBe(2);
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(2);
+        // the events should be visible
+        expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.interested')[1].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending')[1].style.display).toBe('block');
+        let withdrawInterestButtons = withdrawButtons.slice(0, 2);
+        let withdrawalButtons = withdrawButtons.slice(2, 4);
+        let event;
+        for (button of withdrawInterestButtons) {
+            event = {currentTarget: button};
+            // call the handler to simulate withdrawing interest
+            await withdrawFromEventFetchHandler(event);
+            if (document.querySelectorAll('.event_container.interested')[1].style.display === 'block') {
+                expect(document.querySelectorAll('.event_container.interested').length).toBe(2);
+                expect(document.querySelector('.event_container.interested > p')).toBe(null);
+            }
+            else {
+                expect(document.querySelectorAll('.event_container.interested').length).toBe(3);
+                let message = 'You currenty have no events or activities for which you have registered you interest in.';
+                expect(window.getComputedStyle(document.querySelectorAll('.event_container.interested')[2]).getPropertyValue('display')).toBe('block');
+                expect(document.querySelector('.event_container.interested > p').innerHTML).toBe(message);
+                
+            }
+        }
+        // testing for a user's upcoming events:
+
+        expect(document.querySelectorAll('.event_container.attending').length).toBe(2);
+        expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('block');
+        expect(document.querySelectorAll('.event_container.attending')[1].style.display).toBe('block');
+        // call the handler to simulate withdrawing from a confirmed event
+        for (button of withdrawalButtons) {
+            event = {currentTarget: button};
+            await withdrawFromEventFetchHandler(event);
+            if (document.querySelectorAll('.event_container.attending')[1].style.display === 'block') {
+                expect(document.querySelectorAll('.event_container.attending').length).toBe(2);
+                expect(document.querySelector('.event_container.attending > p')).toBe(null);
+            }
+            else {
+                expect(document.querySelectorAll('.event_container.attending').length).toBe(3);
+                let message = `You currenty have no upcoming events or activities that are you are confirmed to attend. An event becomes confirmed once the closing advert date has passed.`;
+                expect(window.getComputedStyle(document.querySelectorAll('.event_container.attending')[2]).getPropertyValue('display')).toBe('block');
+                expect(document.querySelector('.event_container.attending > p').innerHTML).toBe(message);
+            }
+        }
     })
 })

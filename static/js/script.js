@@ -1064,7 +1064,7 @@ If the problem persists, please report the issue to us.`);
  */
 async function withdrawFromEventFetchHandler(event) {
     let target = event.currentTarget;
-    let requestUrl = 'event_withdrawal';
+    let requestUrl = 'event_withdrawal/';
     // Obtain event id
     let eventID = target.parentElement.previousElementSibling.firstElementChild.lastElementChild.innerHTML.replace('.', '');
 
@@ -1082,6 +1082,30 @@ async function withdrawFromEventFetchHandler(event) {
         if (responseJSON.successful === 'true') {
             let event_container = target.parentElement.parentElement;
             event_container.style.display = 'none';
+            // code to display the 'you have no more events message', if the user after withdrawing from an event has no events left.
+            if (document.getElementsByClassName('interested').length - document.querySelectorAll('.interested[style="display: none;"]').length === 0) {
+                let no_of_containers = document.getElementsByClassName('interested').length;
+                let lastEventContainer = document.getElementsByClassName('interested')[no_of_containers -1];
+                let container = lastEventContainer.insertAdjacentElement('afterend', document.createElement('div'));
+                container.setAttribute('class', 'event_container interested');
+                container.setAttribute('role', 'region');
+                container.setAttribute('aria-label', 'event item');
+                container.setAttribute('tabindex', '0');
+                container.innerHTML = `<p>You currenty have no events or activities for which you have registered you interest in.</p>`;
+            }
+            if (document.getElementsByClassName('attending').length - document.querySelectorAll('.attending[style="display: none;"]').length === 0) {
+                let no_of_containers = document.getElementsByClassName('attending').length;
+                let lastEventContainer = document.getElementsByClassName('attending')[no_of_containers - 1];
+                let container = lastEventContainer.insertAdjacentElement('afterend', document.createElement('div'));
+                container.setAttribute('class', 'event_container attending');
+                container.setAttribute('role', 'region');
+                container.setAttribute('aria-label', 'event item');
+                container.setAttribute('tabindex', '0');
+                container.innerHTML = `<p>You currenty have no upcoming events or activities that are you are confirmed to attend. An event becomes confirmed once the closing advert date has passed.</p>`;
+            }
+            refreshDomElementVariables();
+            executeAllPageAddListenerFunctions();
+            executeAllHomePageAddListenersFunctions();
         }
         else {
             window.alert(`Unable to withdraw you from the event at the moment, please try again later.
