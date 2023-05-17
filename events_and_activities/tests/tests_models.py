@@ -451,3 +451,37 @@ class TestEngagementModel(TestCase):
             self.assertEqual(instance.status, 'Att')
         for instance in self.event2.engagement.all():
             self.assertEqual(instance.status, 'Attd')
+
+    def test_engagement_event_cascade_deletion_(self):
+        """
+        Tests that when an Event instance is deleted in the EventsActivities model, the related instances through the event foreign key field in the engagement through model
+        are deleted.
+        """
+        self.assertEqual(Engagement.objects.count(), 0)
+        # add interested attendees for event1 and event2
+        self.event1.attendees.add(self.user2, through_defaults={'status': 'In'})
+        self.event1.attendees.add(self.user3, through_defaults={'status': 'Att'})
+        Engagement.objects.create(event=self.event2, user=self.user, status='In')
+        self.assertEqual(Engagement.objects.count(), 3)
+        self.assertEqual(len(Engagement.objects.filter(event__title='event1')), 2)
+        # Delete the event1 model instance of the EventsActivities Model
+        EventsActivities.objects.get(title='event1').delete()
+        self.assertEqual(Engagement.objects.count(), 1)
+        self.assertEqual(len(Engagement.objects.filter(event__title='event1')), 0)
+
+    def test_engagement_user_cascade_deletion_(self):
+        """
+        Tests that when a user instance is deleted in the CustomUserModel model, the related instances through the user foreign key field in the engagement through model
+        are deleted.
+        """
+        self.assertEqual(Engagement.objects.count(), 0)
+        # add interested attendees for event1 and event2
+        self.event1.attendees.add(self.user2, through_defaults={'status': 'In'})
+        self.event1.attendees.add(self.user3, through_defaults={'status': 'Att'})
+        Engagement.objects.create(event=self.event2, user=self.user3, status='In')
+        self.assertEqual(Engagement.objects.count(), 3)
+        self.assertEqual(len(Engagement.objects.filter(user=self.user3)), 2)
+        # Delete the user3 model instance of the CustomUserModel model
+        CustomUserModel.objects.get(username=self.user3.username).delete()
+        self.assertEqual(Engagement.objects.count(), 1)
+        self.assertEqual(len(Engagement.objects.filter(user=self.user3)), 0)
