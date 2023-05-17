@@ -432,6 +432,10 @@ var openModalButtonHandler = (event) => {
     if (window.getComputedStyle(modalContainers[i]).getPropertyValue('display') === 'none') {
         modalContainers[i].style.display = 'block';
         modals[i].focus();
+        modals[i].scrollTo({
+            top: 0,
+            behaviour: 'instant'
+        })
         document.body.style.overflowY = 'hidden';
     }
 };
@@ -1173,5 +1177,5 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 //     editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
 //     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
 //     refreshFormFetchHandler, closeModal, restoreForm, postEventFormDoneButton, updateEventFetchHandler,
-//     deleteEventButtons, cancelEventButtons, interestedEvents, attendingEvents, withdrawButtons, withdrawFromEventFetchHandler
+//     deleteEventButtons, cancelEventButtons, interestedEvents, attendingEvents, withdrawButtons, withdrawFromEventFetchHandler, openModalButtonHandler
 // };
