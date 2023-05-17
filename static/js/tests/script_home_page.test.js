@@ -12,7 +12,7 @@ let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcon
      openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal,
      restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler,
      refreshFormFetchHandler, updateEventFetchHandler, deleteEventButtons, cancelEventButtons,
-     interestedEvents, attendingEvents} = require('../script.js');
+     interestedEvents, attendingEvents, openModalButtonHandler} = require('../script.js');
 // mock functions
 const log = jest.fn();
 let mockFetchEditProfile = jest.fn(() => {
@@ -21,6 +21,21 @@ let mockFetchEditProfile = jest.fn(() => {
 })
 let mockFetchEvent = jest.fn(() => {
     closeModal(postEventModal.firstElementChild.firstElementChild.firstElementChild);
+})
+// mocking the scrollTo method of a DOM element
+Element.prototype.scrollTo = jest.fn();
+// mocking the openModalButtonHandler so that it uses the mocked scrollTo method
+let openModalButtonMockHandler = jest.fn((event) => {
+    let i = openModalButtons.indexOf(event.currentTarget);
+    if (window.getComputedStyle(modalContainers[i]).getPropertyValue('display') === 'none') {
+        modalContainers[i].style.display = 'block';
+        modals[i].focus();
+        modals[i].scrollTo({
+            top: 0,
+            behaviour: 'instant'
+        })
+    document.body.style.overflowY = 'hidden';
+    }
 })
 
 describe('test more menu functionality', () => {
@@ -336,6 +351,17 @@ describe('Test that the open modal buttons work', () => {
         for (let container of modalContainers) {
             container.style.display = 'none';
         }
+        for (let button of openModalButtons) {
+            button.removeEventListener('click', openModalButtonHandler);
+            button.addEventListener('click', openModalButtonMockHandler);
+        }  
+    })
+    afterEach(() => {
+        for (let button of openModalButtons) {
+            button.removeEventListener('click', openModalButtonMockHandler);
+            button.addEventListener('click', openModalButtonHandler);
+        }
+        Element.prototype.scrollTo.mockClear();
     })
 
     test('that the container becomes visible, the modal gains focus, and background scrollbar is hidden', () => {
@@ -345,9 +371,20 @@ describe('Test that the open modal buttons work', () => {
             expect(window.getComputedStyle(modalContainers[i]).getPropertyValue('display')).toBe('block');
             expect(document.activeElement).toBe(modals[i]);
             expect(document.body.style.overflowY).toBe('hidden');
+        }
+    })
+    
+    test('that the modal is scrolled to the top when opened', () => {
+        for (let i=0; i < modalContainers.length; i++) {
+            // open the modal
+            openModalButtons[i].click();
+            expect(Element.prototype.scrollTo).toHaveBeenCalledTimes(i + 1);
+            expect(Element.prototype.scrollTo).toHaveBeenLastCalledWith({
+                top: 0,
+                behaviour: 'instant'
+            });
         }  
     })
-
 })
 
 describe('Test that the close modal buttons work (excluding fetch request)', () => {
