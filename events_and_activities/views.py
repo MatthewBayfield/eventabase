@@ -6,6 +6,9 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.template.loader import get_template, render_to_string
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.core import mail
+from eventabase.settings import EMAIL_HOST_USER
+from smtplib import SMTPException
 from allauth.account.decorators import verified_email_required
 from .models import EventsActivities, Engagement
 from .forms import EventsActivitiesForm
@@ -127,7 +130,8 @@ class PostEventsView(FormView):
 class UpdateEventsView(View):
     """
     Responsible for processing requests to delete a host user's existing event advert, as well as cancel one of their
-    upcoming events. Updates the EventsActivities model database by deleting the matching event.
+    upcoming events. Updates the EventsActivities model database by deleting the matching event. Emails are sent to
+    notify an attendee that an event/advert has been cancelled/deleted.
     """
     def post(self, request):
         """
@@ -138,21 +142,40 @@ class UpdateEventsView(View):
         if request.environ['QUERY_STRING'] == 'cancel=false':
             update_type = 'delete'
 
-        event_id = request.body.decode()
-
-        if update_type == 'cancel':
-            pass
+        event_id = request.body.decode()   
 
         try:
-            event = EventsActivities.objects.get(id=int(event_id))
-            event.delete()
-        except Exception as error:
+            try:
+                event = EventsActivities.objects.get(id=int(event_id))
+                event_title = event.title
+                event_host = event.host_user.username
+                event_when = event.when.strftime("%H:%M, %d/%m/%y")
+                event_attendees = list(event.attendees.values_list('email').all())
+                event.delete()
+            except Exception as error:
+                print(error)
+                return JsonResponse({'successful': 'false'})
+
+            if not EventsActivities.objects.filter(id__exact=int(event_id)).exists():
+                message = ''
+                subject = f'EventID:{event_id} has been cancelled by the host'
+                recipients = []
+                for attendee in event_attendees:
+                    recipients.append(attendee[0])
+                result = ''
+                if update_type == 'cancel':
+                    message = f'''Hi,
+One of the events you are confirmed to attend has been cancelled:
+Unfortunately the event titled {event_title}, hosted by {event_host}, and due to occur on the {event_when}, has been cancelled.'''
+                else:
+                    message = f'''Hi,
+An event that you have registered your interest in has been cancelled:
+Unfortunately the event titled {event_title}, hosted by {event_host}, and due to occur on the {event_when}, has been cancelled.'''
+                mail.send_mail(subject=subject, message=message, recipient_list=recipients, from_email=EMAIL_HOST_USER)
+        except (SMTPException, Exception) as error:
             print(error)
 
-        if not EventsActivities.objects.filter(id__exact=int(event_id)).exists():
-            return JsonResponse({'successful': 'true'})
-
-        return JsonResponse({'successful': 'false'})
+        return JsonResponse({'successful': 'true'})
 
 
 @method_decorator([verified_email_required], name='dispatch')
