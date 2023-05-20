@@ -2,6 +2,7 @@ import re, json
 from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
+from django.core import mail
 from allauth.account.models import EmailAddress
 from landing_page.models import CustomUserModel
 from home.models import UserAddress, UserProfile
@@ -309,6 +310,12 @@ class TestUpdateEventsView(TestCase):
              'password1': 'holly!1234',
              'password2': 'holly!1234',
              'username': 'jimmy1479'}
+
+    data3 = {'email': 'tommypaul14789@gmail.com',
+             'email2': 'tommypaul14789@gmail.com',
+             'password1': 'holly!12345',
+             'password2': 'holly!12345',
+             'username': 'jimmy14799'}
     
     info = {'first_name': 'mark',
             'last_name': 'taylor',
@@ -327,6 +334,7 @@ class TestUpdateEventsView(TestCase):
         client = Client()
         client.post('/accounts/signup/', cls.data)
         client.post('/accounts/signup/', cls.data2)
+        client.post('/accounts/signup/', cls.data3)
         # verify user emails
         user_email = EmailAddress.objects.get(user='tommypaul147@gmail.com')
         user_email.verified = True
@@ -334,59 +342,72 @@ class TestUpdateEventsView(TestCase):
         user_email2 = EmailAddress.objects.get(user='tommypaul1478@gmail.com')
         user_email2.verified = True
         user_email2.save()
+        user_email3 = EmailAddress.objects.get(user='tommypaul14789@gmail.com')
+        user_email3.verified = True
+        user_email3.save()
         # create profile for user
-        user = CustomUserModel.objects.get(email=user_email.email)
-        UserProfile.objects.create(user=user,
+        cls.user = CustomUserModel.objects.get(email=user_email.email)
+        UserProfile.objects.create(user=cls.user,
                                    first_name='jimmy',
                                    last_name='knighton',
                                    date_of_birth='1926-03-25',
                                    sex='male',
                                    bio='I enjoy all outdoor activities.')
         # create address for user
-        UserAddress.objects.create(user_profile=user.profile,
+        UserAddress.objects.create(user_profile=cls.user.profile,
                                    address_line_one='57 portland gardens',
                                    city_or_town='chadwell heath',
                                    county='essex',
                                    postcode='rm65uh',
                                    latitude=51.5791,
                                    longitude=0.1355)
+        cls.user2 = CustomUserModel.objects.get(username=cls.data2['username'])
+        cls.user3 = CustomUserModel.objects.get(username=cls.data3['username'])
+        # create events hosted by user.
+        EventsActivities.objects.create(host_user=cls.user,
+                                        status="advertised",
+                                        title='event1',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2028-12-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.create(host_user=cls.user,
+                                        status="upcoming",
+                                        title='event2',
+                                        when="2024-10-30 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        # Adding user2 and user3 as attendees of event1 and event2
+        EventsActivities.objects.get(title='event1').attendees.add(cls.user2, through_defaults={'status': 'In'})
+        EventsActivities.objects.get(title='event1').attendees.add(cls.user3, through_defaults={'status': 'In'})
+        EventsActivities.objects.get(title='event2').attendees.add(cls.user2, through_defaults={'status': 'Att'})
+        EventsActivities.objects.get(title='event2').attendees.add(cls.user3, through_defaults={'status': 'Att'})
 
     def test_post_method_of_update_events_view(self):
         """
         Tests the POST method of the UpdateEventsView, that is responsible for handling requests to delete/cancel a host's event advert/upcoming event.
         """
-        event = {'status': 'advertised',
-                 'title': 'paintballing',
-                 'when': '13:30, 19/01/30',
-                 'closing_date': '11:00, 01/01/30',
-                 'max_attendees': 20,
-                 'keywords': 'outdoors,fun',
-                 'description': 'painballing then lunch.',
-                 'requirements': '£50 per person',
-                 'address_line_one': '58 StanLey Avenue',
-                 'city_or_town': 'GIdea Park',
-                 'county': 'ESSEX',
-                 'postcode': 'Rm26Bt'}
-
         # Testing delete event request:
 
         client = Client()
         # user sign-in
         client.login(email=self.data['email'],
                      password=self.data['password1'])
-        event['host_user'] = CustomUserModel.objects.get(email=self.data['email'])
-        # submit form to post new event
-        response = client.post(reverse('home:post_events_view'), data=event, mode='same_origin')
-        response_json = response.json()
-        # check response 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response_json['valid'], 'true')
-        # check event now exists
-        self.assertEqual((EventsActivities.objects.filter(host_user=event['host_user'], title=event['title']).exists()), True)
-        # get posted event id
-        event_instance = EventsActivities.objects.get(host_user=event['host_user'], title=event['title'])
+        event_instance = EventsActivities.objects.get(host_user=self.user, title='event1')
         event_id = str(event_instance.id)
-
         # Make request to delete event
         response = client.post('/home/update_events/?cancel=false', data=event_id, content_type='text/XML')
         # check response
@@ -394,21 +415,24 @@ class TestUpdateEventsView(TestCase):
         self.assertEqual(response.json(), {'successful': 'true'})
         # check event no longer exists
         self.assertEqual((EventsActivities.objects.filter(id=int(event_id)).exists()), False)
+        # check emails have been sent
+        event_title = event_instance.title
+        event_host = event_instance.host_user.username
+        event_when = event_instance.when.strftime("%H:%M, %d/%m/%y")
+        subject = f'EventID:{event_id} has been cancelled by the host'
+        recipients = [self.data2['email'], self.data3['email']]
+        message = f'''Hi,
+An event that you have registered your interest in has been cancelled:
+Unfortunately the event titled {event_title}, hosted by {event_host}, and due to occur on the {event_when}, has been cancelled.'''
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, subject)
+        self.assertEqual(mail.outbox[0].to, recipients)
+        self.assertEqual(mail.outbox[0].body, message)
 
         # Testing cancel event request:
 
-        # submit form to post new event
-        response = client.post(reverse('home:post_events_view'), data=event, mode='same_origin')
-        response_json = response.json()
-        # check response 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response_json['valid'], 'true')
-        # check event now exists
-        self.assertEqual((EventsActivities.objects.filter(host_user=event['host_user'], title=event['title']).exists()), True)
-        # get posted event id
-        event_instance = EventsActivities.objects.get(host_user=event['host_user'], title=event['title'])
+        event_instance = EventsActivities.objects.get(host_user=self.user, title='event2')
         event_id = str(event_instance.id)
-
         # Make request to cancel event
         response = client.post('/home/update_events/?cancel=true', data=event_id, content_type='text/XML')
         # check response
@@ -416,6 +440,19 @@ class TestUpdateEventsView(TestCase):
         self.assertEqual(response.json(), {'successful': 'true'})
         # check event no longer exists
         self.assertEqual((EventsActivities.objects.filter(id=int(event_id)).exists()), False)
+        # check emails have been sent
+        event_title = event_instance.title
+        event_host = event_instance.host_user.username
+        event_when = event_instance.when.strftime("%H:%M, %d/%m/%y")
+        subject = f'EventID:{event_id} has been cancelled by the host'
+        recipients = [self.data2['email'], self.data3['email']]
+        message = f'''Hi,
+One of the events you are confirmed to attend has been cancelled:
+Unfortunately the event titled {event_title}, hosted by {event_host}, and due to occur on the {event_when}, has been cancelled.'''
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertEqual(mail.outbox[1].subject, subject)
+        self.assertEqual(mail.outbox[1].to, recipients)
+        self.assertEqual(mail.outbox[1].body, message)
 
 
 class TestViewEventsView(TestCase):
