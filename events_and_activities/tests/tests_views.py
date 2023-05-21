@@ -708,3 +708,69 @@ class TestViewEventsView(TestCase):
         self.assertEqual(response.json(), {'successful': 'true'})
         # check user is no longer attending event5
         self.assertEqual(Engagement.objects.filter(event__title='event5', user=user).exists(), False)
+
+    def test_post_method_of_view_events_view_with_exception(self):
+        """
+        Tests the behaviour of the POST method of the ViewEventsView when an exception occurs.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+
+        EventsActivities.objects.create(host_user=user2,
+                                        status="advertised",
+                                        title='event4',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2028-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.create(host_user=user2,
+                                        status="upcoming",
+                                        title='event5',
+                                        when="2024-10-30 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        # Adding user as an attendee to event4 and event5
+        EventsActivities.objects.get(title='event4').attendees.add(user, through_defaults={'status': 'In'})
+        EventsActivities.objects.get(title='event5').attendees.add(user, through_defaults={'status': 'Att'})
+
+        client = Client()
+        # user sign-in
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+
+        # check user is interested in event4
+        self.assertEqual((user.engagement.filter(event__title='event4', status='In')).exists(), True)
+        # generate an exception in the view by using a non-existent event_id
+        event_id = '100'
+        # Make withdrawal request with an invalid event_id
+        response = client.post('/home/event_withdrawal/', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'successful': 'false'})
+        # check user is still interested in event4
+        self.assertEqual(Engagement.objects.filter(event__title='event4', user=user).exists(), True)
+        
+        # check user is attending event5
+        self.assertEqual((user.engagement.filter(event__title='event5', status='Att')).exists(), True)
+        # generate an exception in the view by using a non-existent event_id
+        event_id = '100'
+        # Make withdrawal request with an invalid event_id
+        response = client.post('/home/event_withdrawal/', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'successful': 'false'})
+        # check user is still attending event5
+        self.assertEqual(Engagement.objects.filter(event__title='event5', user=user).exists(), True)

@@ -272,8 +272,7 @@ class ViewEventsView(FormView):
             engagement_instance.delete()
         except Exception as error:
             print(error)
+            return JsonResponse({'successful': 'false'})
 
-        if not (Engagement.objects.filter(event__id=int(event_id), user=request.user)).exists():
-            return JsonResponse({'successful': 'true'})
+        return JsonResponse({'successful': 'true'})
 
-        return JsonResponse({'successful': 'false'})
