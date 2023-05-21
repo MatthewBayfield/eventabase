@@ -453,6 +453,42 @@ Unfortunately the event titled {event_title}, hosted by {event_host}, and due to
         self.assertEqual(mail.outbox[1].subject, subject)
         self.assertEqual(mail.outbox[1].to, recipients)
         self.assertEqual(mail.outbox[1].body, message)
+    
+    def test_post_method_of_update_events_view_with_exception(self):
+        """
+        Tests the behaviour of the POST method of the UpdateEventsView when an exception occurs related to deleting an event.
+        """
+        # Testing delete event request:
+
+        client = Client()
+        # user sign-in
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        # use non existent invalid event_id to generate a view exception
+        event_id = '100'
+        # Make request to delete event
+        response = client.post('/home/update_events/?cancel=false', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'successful': 'false'})
+        # check event still exists
+        self.assertEqual((EventsActivities.objects.filter(host_user=self.user, title='event1')).exists(), True)
+        # check emails have not been sent
+        self.assertEqual(len(mail.outbox), 0)
+
+        # Testing cancel event request:
+
+        # use non existent invalid event_id to generate a view exception
+        event_id = '100'
+        # Make request to cancel event
+        response = client.post('/home/update_events/?cancel=true', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'successful': 'false'})
+        # check event still exists
+        self.assertEqual((EventsActivities.objects.filter(host_user=self.user, title='event2').exists()), True)
+        # check emails have not been sent
+        self.assertEqual(len(mail.outbox), 0)
 
 
 class TestViewEventsView(TestCase):
