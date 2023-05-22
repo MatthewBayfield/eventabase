@@ -47,7 +47,7 @@ class Engagement(ProfileMixin):
                               on_delete=models.CASCADE,
                               related_name='engagement'
                               )
-    
+
     user = models.ForeignKey(CustomUserModel,
                              on_delete=models.CASCADE,
                              related_name='engagement',
@@ -77,9 +77,9 @@ class ChangeExpiredEvents(models.Manager):
     """
     Exists to filter out and delete or update expired events.
     """
-    def delete_expired(self, user=None):
+    def update_completed(self, user=None):
         """
-        Deletes events that have already occured.
+        Alters the status of events that have already occured.
         """
         current_date_time = datetime.now().strftime("%H:%M, %d/%m/%y")
         current_date_time_object = datetime.strptime(current_date_time, "%H:%M, %d/%m/%y")
@@ -87,11 +87,11 @@ class ChangeExpiredEvents(models.Manager):
         if not user:
             expired_events = self.filter(when__lt=current_date_time_object)
             if len(expired_events):
-                return expired_events.delete()
+                return expired_events.update(status='completed')
         else:
             expired_events = self.filter(host_user=user, when__lt=current_date_time_object)
             if len(expired_events):
-                return expired_events.delete()
+                return expired_events.update(status='completed')
 
     def update_expired(self, user=None):
         """
@@ -101,11 +101,11 @@ class ChangeExpiredEvents(models.Manager):
         current_date_time_object = datetime.strptime(current_date_time, "%H:%M, %d/%m/%y")
 
         if not user:
-            expired_events = self.filter(closing_date__lt=current_date_time_object)
+            expired_events = self.filter(closing_date__lt=current_date_time_object, status='advertised')
             if len(expired_events):
                 expired_events.update(status='confirmed')
         else:
-            expired_events = self.filter(host_user=user, closing_date__lt=current_date_time_object)
+            expired_events = self.filter(host_user=user, closing_date__lt=current_date_time_object, status='advertised')
             if len(expired_events):
                 expired_events.update(status='confirmed')
 
@@ -141,7 +141,7 @@ class EventsActivities(ProfileMixin):
                                                         message="Must contain only the characters [a-zA-Z0-9,.!/;:], with single spaces between words.",
                                                         flags=re.MULTILINE),
                                          MaxLengthValidator(100)])
-                                         
+
     host_user = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE,
                                   verbose_name='host',
                                   to_field='username',
