@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
 from django.core import mail
+from eventabase.settings import EMAIL_HOST_USER
 from allauth.account.models import EmailAddress
 from landing_page.models import CustomUserModel
 from home.models import UserAddress, UserProfile
@@ -428,6 +429,7 @@ Unfortunately the event titled {event_title}, hosted by {event_host}, and due to
         self.assertEqual(mail.outbox[0].subject, subject)
         self.assertEqual(mail.outbox[0].to, recipients)
         self.assertEqual(mail.outbox[0].body, message)
+        self.assertEqual(mail.outbox[0].from_email, EMAIL_HOST_USER)
 
         # Testing cancel event request:
 
@@ -453,6 +455,7 @@ Unfortunately the event titled {event_title}, hosted by {event_host}, and due to
         self.assertEqual(mail.outbox[1].subject, subject)
         self.assertEqual(mail.outbox[1].to, recipients)
         self.assertEqual(mail.outbox[1].body, message)
+        self.assertEqual(mail.outbox[1].from_email, EMAIL_HOST_USER)
     
     def test_post_method_of_update_events_view_with_exception(self):
         """
@@ -731,6 +734,8 @@ class TestViewEventsView(TestCase):
         self.assertEqual(response.json(), {'successful': 'true'})
         # check user is no longer interested in event4
         self.assertEqual(Engagement.objects.filter(event__title='event4', user=user).exists(), False)
+        # check emails have not been sent
+        self.assertEqual(len(mail.outbox), 0)
 
         # check user is attending event5
         self.assertEqual((user.engagement.filter(event__title='event5', status='Att')).exists(), True)
@@ -744,6 +749,20 @@ class TestViewEventsView(TestCase):
         self.assertEqual(response.json(), {'successful': 'true'})
         # check user is no longer attending event5
         self.assertEqual(Engagement.objects.filter(event__title='event5', user=user).exists(), False)
+        # check email has been sent
+        event_instance = EventsActivities.objects.get(id=int(event_id))
+        host_email = event_instance.host_user.email
+        event_title = event_instance.title
+        event_when = event_instance.when.strftime("%H:%M, %d/%m/%y")
+        subject = f'{user.username} has withdrawn from your upcoming event, EventID:{event_id}'
+        message = f'''Hi,
+{user.username} has withdrawn from one of your upcoming events:
+Unfortunately {user.username} has withdrawn from your event titled {event_title}, due to occur on the {event_when}.'''
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, subject)
+        self.assertEqual(mail.outbox[0].to, [host_email])
+        self.assertEqual(mail.outbox[0].body, message)
+        self.assertEqual(mail.outbox[0].from_email, EMAIL_HOST_USER)
 
     def test_post_method_of_view_events_view_with_exception(self):
         """
@@ -798,6 +817,8 @@ class TestViewEventsView(TestCase):
         self.assertEqual(response.json(), {'successful': 'false'})
         # check user is still interested in event4
         self.assertEqual(Engagement.objects.filter(event__title='event4', user=user).exists(), True)
+        # check emails have not been sent
+        self.assertEqual(len(mail.outbox), 0)
         
         # check user is attending event5
         self.assertEqual((user.engagement.filter(event__title='event5', status='Att')).exists(), True)
@@ -810,3 +831,5 @@ class TestViewEventsView(TestCase):
         self.assertEqual(response.json(), {'successful': 'false'})
         # check user is still attending event5
         self.assertEqual(Engagement.objects.filter(event__title='event5', user=user).exists(), True)
+        # check emails have not been sent
+        self.assertEqual(len(mail.outbox), 0)

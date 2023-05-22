@@ -268,11 +268,24 @@ class ViewEventsView(FormView):
         """
         event_id = request.body.decode()
         try:
+            event_instance = EventsActivities.objects.get(id=int(event_id))
+            host_email = event_instance.host_user.email
+            event_title = event_instance.title
+            event_when = event_instance.when.strftime("%H:%M, %d/%m/%y")
             engagement_instance = Engagement.objects.get(event__id=int(event_id), user=request.user)
+            user_status = engagement_instance.status
             engagement_instance.delete()
         except Exception as error:
             print(error)
             return JsonResponse({'successful': 'false'})
+        try:
+            if user_status == 'Att':
+                subject = f'{request.user.username} has withdrawn from your upcoming event, EventID:{event_id}'
+                message = f'''Hi,
+{request.user.username} has withdrawn from one of your upcoming events:
+Unfortunately {request.user.username} has withdrawn from your event titled {event_title}, due to occur on the {event_when}.'''
+                mail.send_mail(subject=subject, message=message, recipient_list=[host_email], from_email=EMAIL_HOST_USER)
+        except (SMTPException, Exception) as error:
+            print(error)
 
         return JsonResponse({'successful': 'true'})
-
