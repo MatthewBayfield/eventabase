@@ -833,3 +833,224 @@ Unfortunately {user.username} has withdrawn from your event titled {event_title}
         self.assertEqual(Engagement.objects.filter(event__title='event5', user=user).exists(), True)
         # check emails have not been sent
         self.assertEqual(len(mail.outbox), 0)
+
+
+class TestSearchAdvertsView(TestCase):
+    """
+    Tests for SearchAdvertsView.
+    """
+    data = {'email': 'tommypaul147@gmail.com',
+            'email2': 'tommypaul147@gmail.com',
+            'password1': 'holly!123',
+            'password2': 'holly!123',
+            'username': 'jimmy147'}
+
+    data2 = {'email': 'tommypaul1478@gmail.com',
+             'email2': 'tommypaul1478@gmail.com',
+             'password1': 'holly!1234',
+             'password2': 'holly!1234',
+             'username': 'jimmy1479'}
+
+    data3 = {'email': 'tommypaul146@gmail.com',
+             'email2': 'tommypaul146@gmail.com',
+             'password1': 'holly!157',
+             'password2': 'holly!157',
+             'username': 'jimmy146'}
+    
+    info = {'first_name': 'mark',
+            'last_name': 'taylor',
+            'date_of_birth': '19/11/1993',
+            'sex': 'male',
+            'bio': 'I like sports'}
+    address = {'address_line_one': '58 Stanley Avenue',
+               'city_or_town': 'GIdea Park',
+               'county': 'ESSEX',
+               'postcode': 'Rm26Bt'}
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Sign-up new users 
+        client = Client()
+        client.post('/accounts/signup/', cls.data)
+        client.post('/accounts/signup/', cls.data2)
+        client.post('/accounts/signup/', cls.data3)
+        # verify user emails
+        user_email = EmailAddress.objects.get(user='tommypaul147@gmail.com')
+        user_email.verified = True
+        user_email.save()
+        user_email2 = EmailAddress.objects.get(user='tommypaul1478@gmail.com')
+        user_email2.verified = True
+        user_email2.save()
+        user_email3 = EmailAddress.objects.get(user='tommypaul146@gmail.com')
+        user_email3.verified = True
+        user_email3.save()
+        # create profile for user
+        user = CustomUserModel.objects.get(email=user_email.email)
+        UserProfile.objects.create(user=user,
+                                   first_name='jimmy',
+                                   last_name='knighton',
+                                   date_of_birth='1926-03-25',
+                                   sex='male',
+                                   bio='I enjoy all outdoor activities.')
+        # create address for user
+        UserAddress.objects.create(user_profile=user.profile,
+                                   address_line_one='57 portland gardens',
+                                   city_or_town='chadwell heath',
+                                   county='essex',
+                                   postcode='rm65uh',
+                                   latitude=51.5791,
+                                   longitude=0.1355)
+    
+    def test_get_response_existing_authenticated_user(self):
+        """
+        Tests that the search event adverts page template is rendered for an authenticated user who has already created their profile.
+        """
+        client = Client()
+        # sign-in user
+        response = client.login(email=self.data['email'],
+                                password=self.data['password1'])
+        response = client.get('/events_and_activities/search_event_adverts/')
+        response_code = response.status_code
+        self.assertEqual(response_code, 200)
+        self.assertTemplateUsed(response, 'events_and_activities/search_event_adverts.html')
+
+    def test_get_response_authenticated_user_not_yet_created_profile(self):
+        """
+        Tests that a new user who has yet to create their profile is redirected to their home page if they try to access the search event adverts page.
+        """
+        client = Client()
+        # sign-in user
+        response = client.login(email=self.data2['email'],
+                                password=self.data2['password1'])
+        response = client.get('/events_and_activities/search_event_adverts/', follow=True)
+        response_code = response.status_code
+        self.assertEqual(response_code, 200)
+        redirect_chain = response.redirect_chain
+        self.assertEqual(redirect_chain, [('/home/', 302)])
+        self.assertTemplateNotUsed(response, 'events_and_activities/search_event_adverts.html')
+
+    def test_get_response_unauthenticated_user(self):
+        """
+        Tests that an unauthenticated user is redirected when a GET request is made to the search event adverts page.
+        """
+        client = Client()
+        response = client.get('/events_and_activities/search_event_adverts/', follow=True)
+        response_code = response.status_code
+        self.assertEqual(response_code, 200)
+        redirect_chain = response.redirect_chain
+        self.assertEqual(redirect_chain, [('/accounts/login/?next=/events_and_activities/search_event_adverts/', 302)])
+        self.assertTemplateUsed(response, 'account/login.html')
+
+    def test_get_method_view_logic_and_advert_retrieval(self):
+        """
+        Tests that the correct advert instances are retrieved from the EventsActivities Model and rendered, for a user.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user3 = CustomUserModel.objects.get(username=self.data3['username'])
+        # create profile for user2
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+        UserProfile.objects.create(user=user2,
+                                   first_name='timmy',
+                                   last_name='knighton',
+                                   date_of_birth='1923-03-25',
+                                   sex='male',
+                                   bio='I enjoy everything.')
+        # create address for user2
+        UserAddress.objects.create(user_profile=user2.profile,
+                                   address_line_one='58 portland gardens',
+                                   city_or_town='chadwell heath',
+                                   county='essex',
+                                   postcode='rm65uh',
+                                   latitude=51.5791,
+                                   longitude=0.1355)
+        # create event that user2 is interested in already
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event1',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2028-12-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.get(title='event1').attendees.add(user2, through_defaults={'status': 'In'})
+        # create event that user2 is already attending
+        EventsActivities.objects.create(host_user=user,
+                                        status="confirmed",
+                                        title='event2',
+                                        when="2028-10-30 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.get(title='event2').attendees.add(user2, through_defaults={'status': 'Att'})
+        # create event that user2 is hosting
+        EventsActivities.objects.create(host_user=user2,
+                                        status="advertised",
+                                        title='event3',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2029-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        # create event that currently has the max number of attendees
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event4',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2029-10-15 12:00:00",
+                                        max_attendees=1,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.get(title='event4').attendees.add(user3, through_defaults={'status': 'In'})
+        # create event that should be rendered as an advert for user2
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event5',
+                                        when="2032-10-30 12:00:00",
+                                        closing_date="2031-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')                          
+        self.assertEqual(EventsActivities.objects.all().count(), 5)
+
+        client = Client()
+        # sign-in user2
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        response = client.get('/events_and_activities/search_event_adverts/')
+        # expected data
+        expected_advert_data = [({'ID': 5, 'host': user.username, 'title': 'event5',
+                                  'when': '12:00, 30/10/32', 'closing date': '12:00, 15/10/31',
+                                  'max no. of attendees': 20, 'keywords': 'outdoors,paintballing,competitive',
+                                  'description': 'Paintballing dayout, followed by lunch.',
+                                  'requirements': 'min £50 per person. wear suitable shoes. Need to be physically fit.',
+                                  'Address line 1': 'mayhem paintball', 'City/Town': 'adbridge',
+                                  'County': 'essex', 'Postcode': 'rm4 1aa'}, 0)]
+        self.assertEqual(len(response.context['event_advert_data']), 1)
+        self.assertEqual(response.context['event_advert_data'], expected_advert_data)
