@@ -24,5 +24,6 @@ urlpatterns = [
             views.password_reset_from_key,
             name="account_reset_password_from_key"),
     path('home/', include('home.urls')),
-    path('admin/', admin.site.urls)    
+    path('events_and_activities/', include('events_and_activities.urls')),
+    path('admin/', admin.site.urls)
 ]
