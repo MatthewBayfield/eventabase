@@ -1,4 +1,6 @@
+from django.db.models import Count, F
 from django.views.generic.edit import FormView, View
+from django.views.generic.base import TemplateView
 from django.http import JsonResponse
 from django.http.response import HttpResponse
 from django.shortcuts import redirect
@@ -12,6 +14,7 @@ from smtplib import SMTPException
 from allauth.account.decorators import verified_email_required
 from .models import EventsActivities, Engagement
 from .forms import EventsActivitiesForm
+from home.models import UserProfile
 
 # Create your views here.
 
@@ -52,7 +55,7 @@ class PostEventsView(FormView):
                 return redirect(reverse('home:user_homepage'))
 
         if not kwargs['get_modal']:
-            EventsActivities.expired.delete_expired(request.user)
+            EventsActivities.expired.update_completed(request.user)
             EventsActivities.expired.update_expired(request.user)
             all_posted_events_for_user = EventsActivities.objects.filter(host_user=request.user)
             all_advertsied_events_for_user = all_posted_events_for_user.filter(status='advertised')
@@ -289,3 +292,66 @@ Unfortunately {request.user.username} has withdrawn from your event titled {even
             print(error)
 
         return JsonResponse({'successful': 'true'})
+
+
+@method_decorator([verified_email_required], name='dispatch')
+class SearchAdvertsView(TemplateView):
+    """
+    Responsible for retrieving and displaying current event adverts as part of the search event adverts page,
+    as well as handling a user's request to register their interest in an event.
+
+    Attributes:
+        template_name (str): name of the template used to render the search event adverts page.
+    """
+    template_name = 'events_and_activities/search_event_adverts.html'
+
+    def __init__(self, **kwargs):
+        """
+        Calls the TemplateView constructor. Sets initial context.
+        """
+        super().__init__(**kwargs)
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handles GET requests for the search event adverts page.
+        """
+        if not UserProfile.objects.filter(user=request.user).exists():
+            return redirect(reverse('home:user_homepage'))
+        
+        EventsActivities.expired.update_expired()
+        event_adverts = (EventsActivities.objects.filter(status='advertised')
+                                                 .exclude(host_user=request.user)
+                                                 .exclude(attendees=request.user)
+                                                 .annotate(attendee_count=Count('attendees'))
+                                                 .exclude(attendee_count__gte=F('max_attendees'))
+                                                 .order_by('closing_date')
+                                                 .values('id',
+                                                         'title',
+                                                         'host_user',
+                                                         'when',
+                                                         'closing_date',
+                                                         'max_attendees',
+                                                         'keywords',
+                                                         'description',
+                                                         'requirements',
+                                                         'address_line_one',
+                                                         'city_or_town',
+                                                         'county',
+                                                         'postcode',
+                                                         'attendee_count'))
+
+        new_keys = EventsActivities.retrieve_field_names(verbose_names=True)
+        new_keys.remove('status')
+        new_keys.remove('engagement')
+        new_keys.remove('attendees')
+
+        event_advert_data = []
+        for advert in event_adverts:
+            attendee_count = advert.pop('attendee_count')
+            advert['closing_date'] = advert['closing_date'].strftime("%H:%M, %d/%m/%y")
+            advert['when'] = advert['when'].strftime("%H:%M, %d/%m/%y")
+            new_keys_advert = dict(zip(new_keys, advert.values()))
+            event_advert_data.append((new_keys_advert, attendee_count))
+
+        kwargs.update({'event_advert_data': event_advert_data})
+        return super().get(request, *args, **kwargs)
