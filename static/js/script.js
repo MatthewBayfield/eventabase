@@ -35,6 +35,7 @@ let radioInputs = [...document.querySelectorAll("[type = 'radio']")];
 let deleteEventButtons = [...document.getElementsByClassName('delete_advert')];
 let cancelEventButtons = [...document.getElementsByClassName('cancel_event')];
 let withdrawButtons = [...document.getElementsByClassName('withdraw')];
+let searchAdvertsButton = document.getElementById('search_adverts_button');
 
 // JS Section: Event listeners:
 
@@ -241,6 +242,16 @@ function eventWithdrawalListeners() {
         button.removeEventListener('click', withdrawFromEventFetchHandler);
         button.addEventListener('click', withdrawFromEventFetchHandler);
     }
+}
+
+/** Adds click event listener to the search adverts button.
+ *  Redirects the user to the search event adverts page
+ */
+function searchAdvertsButtonEventListener() {
+    // remove exisitng listeners to prevent duplication
+    searchAdvertsButton.removeEventListener('click', searchAdvertsButtonHandler);
+    // add new listeners
+    searchAdvertsButton.addEventListener('click', searchAdvertsButtonHandler); 
 }
 
 // JS Subsection: form related event listeners 
@@ -497,6 +508,11 @@ var trapFocusModalBlur = (event) => {
 var trapFocusModalFocus  = (event) => {
     let modal = event.currentTarget.firstElementChild;
     modal.focus();
+};
+var searchAdvertsButtonHandler = () => {
+    let current_location = window.location.href;
+    let next_location = current_location.replace('home/','events_and_activities/search_event_adverts/');
+    window.location.assign(next_location);
 };
 
 /** An event handler that performs the DOM manipulations necessary
@@ -759,6 +775,7 @@ function executeAllHomePageAddListenersFunctions() {
     deleteEventListeners();
     eventWithdrawalListeners();
     removeFeedbackListeners();
+    searchAdvertsButtonEventListener();
 }
 
 /**Recreates all the event listeners
@@ -812,6 +829,7 @@ function refreshDomElementVariables() {
     deleteEventButtons = [...document.getElementsByClassName('delete_advert')];
     cancelEventButtons = [...document.getElementsByClassName('cancel_event')];
     withdrawButtons = [...document.getElementsByClassName('withdraw')];
+    searchAdvertsButton = document.getElementById('search_adverts_button');
 }
 
 // JS Subsection: Fetch requests:
@@ -1177,5 +1195,6 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 //     editProfileFormFetchHandler, editProfileModalDoneButton, addEditProfileModalDonebuttonListeners,
 //     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
 //     refreshFormFetchHandler, closeModal, restoreForm, postEventFormDoneButton, updateEventFetchHandler,
-//     deleteEventButtons, cancelEventButtons, interestedEvents, attendingEvents, withdrawButtons, withdrawFromEventFetchHandler, openModalButtonHandler
+//     deleteEventButtons, cancelEventButtons, interestedEvents, attendingEvents, withdrawButtons, withdrawFromEventFetchHandler, openModalButtonHandler,
+//     searchAdvertsButton
 // };
