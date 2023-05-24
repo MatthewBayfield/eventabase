@@ -9,7 +9,8 @@ let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/re
 document.documentElement.innerHTML = fileContents;
 let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
      modalContainers, modals, closeModalButtons, modalButtons, openModalButtons, advertisedEvents, closeModal,
-     restoreForm, refreshFormFetchHandler, updateEventFetchHandler, openModalButtonHandler} = require('../script.js');
+     restoreForm, refreshFormFetchHandler, updateEventFetchHandler, openModalButtonHandler,
+     gridContainers} = require('../script.js');
 // mock functions
 const log = jest.fn();
 // mocking the scrollTo method of a DOM element
@@ -233,6 +234,12 @@ describe("check that the 'enter key' event listeners work", () => {
             }
         }
     })
+})
+
+test('that the grid containers, containing the event advert data are visible on loading', () => {
+    for (let container of gridContainers) {
+        expect(container.style.display).toBe('grid')
+    }
 })
 
 // describe('Test that the open modal buttons work', () => {
