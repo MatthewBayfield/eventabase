@@ -434,7 +434,7 @@ span.more_menu_button {
     display: None;
 }
 
-#home_page button {
+#home_page button, #search_adverts button {
     width: fit-content;
     height: fit-content;
     padding: 0.5rem;
@@ -479,7 +479,7 @@ span.more_menu_button {
     margin: 0.5rem 1rem 1.5rem 1rem;  
 }
 
-#post_events h5, #search_events h5 {
+#post_events h5, #search_events h5, #search_event_adverts h5 {
     font-family: 'Josefin Slab', serif;
     margin: 0.5rem;
 }
