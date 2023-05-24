@@ -36,6 +36,7 @@ let deleteEventButtons = [...document.getElementsByClassName('delete_advert')];
 let cancelEventButtons = [...document.getElementsByClassName('cancel_event')];
 let withdrawButtons = [...document.getElementsByClassName('withdraw')];
 let searchAdvertsButton = document.getElementById('search_adverts_button');
+let gridContainers = [...document.getElementsByClassName('grid_container')];
 
 // JS Section: Event listeners:
 
@@ -729,6 +730,16 @@ function updateVisibleEvents(input) {
     }
 }
 
+/** Changes the display of all elements with the
+ *  class grid_container to 'grid'.
+ * @summary Changes display of grid_container class elements to 'grid'.
+ */
+function displayGridContainers() {
+    for (let container of gridContainers) {
+        container.style.display = 'grid';
+    }
+}
+
 /** Event handler that clears/restores modal forms
  * after close or cancel button click.
  *  @summary Event handler that clears/restores a modal form.
@@ -830,6 +841,7 @@ function refreshDomElementVariables() {
     cancelEventButtons = [...document.getElementsByClassName('cancel_event')];
     withdrawButtons = [...document.getElementsByClassName('withdraw')];
     searchAdvertsButton = document.getElementById('search_adverts_button');
+    gridContainers = [...document.getElementsByClassName('grid_container')];
 }
 
 // JS Subsection: Fetch requests:
@@ -1184,6 +1196,11 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
     executeAllHomePageAddListenersFunctions();    
 }
 
+// search event adverts page
+if (document.getElementsByTagName('title')[0].textContent === 'Search event adverts') {
+    displayGridContainers();
+}
+
 // JS Section: code for jest testing
 
 //uncommented during testing
@@ -1196,5 +1213,5 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 //     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
 //     refreshFormFetchHandler, closeModal, restoreForm, postEventFormDoneButton, updateEventFetchHandler,
 //     deleteEventButtons, cancelEventButtons, interestedEvents, attendingEvents, withdrawButtons, withdrawFromEventFetchHandler, openModalButtonHandler,
-//     searchAdvertsButton
+//     searchAdvertsButton, gridContainers
 // };
