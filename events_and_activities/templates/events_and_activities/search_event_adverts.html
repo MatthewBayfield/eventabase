@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block extra_meta %}
+    <meta name="description" content="Eventabase search event adverts page">
+    <meta name="keywords" content="search-event-adverts">
+{% endblock %}
+
+{% block title %}Search event adverts{% endblock %}
+
+{% block h1 %}Search Adverts{% endblock %}
+
+{% block main %}
+    <section id="search_event_adverts" role="region" aria-label="Search event adverts section">
+        <div id='search_adverts_grid' class="grid_container" tabindex="-1">
+            <div class="top_row both_columns">
+                <p>
+                    All currently advertised events and activities are listed below. 
+                </p>
+                <p>
+                    Register your interest in any event you wish to attend; it will appear in the search and view events section of your homepage,
+                    as part of your interested events.
+                </p>
+            </div>
+            <div class="both_columns bottom_row">
+                <h2>Current Adverts</h2>
+                {% for event, event_count in event_advert_data %}
+                    <div class="event_container advert" role="region" aria-label="event item" tabindex="0">
+                        <div>
+                            {% for field_name, value in event.items %}
+                                {% if forloop.counter0 <= 8 %}
+                                    <div class="details_display">
+                                        <span>{{field_name|title}} :</span>
+                                        <span>{{value}}.</span>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div>
+                            {% for field_name, value in event.items %}
+                                {% if forloop.counter0 >= 9 %}
+                                    <div class="details_display">
+                                        <span>{{field_name|title}} :</span>
+                                        <span>{{value}}.</span>
+                                    </div>
+                                {% endif%}
+                            {% endfor %}
+                            <h5 aria-label = 'number of users attending so far'>No. of users attending so far: {{event_count}}.</h5>
+                            <button class="register_interest">Register Interest</button>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="event_container advert" role="region" aria-label="event item" tabindex="0">
+                        <p>There are currently no new adverts for events or activities.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
