@@ -12,7 +12,7 @@ let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcon
      openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal,
      restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler,
      refreshFormFetchHandler, updateEventFetchHandler, deleteEventButtons, cancelEventButtons,
-     interestedEvents, attendingEvents, openModalButtonHandler} = require('../script.js');
+     interestedEvents, attendingEvents, openModalButtonHandler, searchAdvertsButton} = require('../script.js');
 // mock functions
 const log = jest.fn();
 let mockFetchEditProfile = jest.fn(() => {
@@ -674,5 +674,29 @@ describe('test that the post events section radio input affects the events displ
         for (let event of upcomingEvents) {
             expect(event.classList.contains('hidden')).toBe(true);
         }
+    })
+})
+
+describe('check search adverts button works', () => {
+    const originalLocation = window.location;
+    beforeEach(() => {
+        delete window.location;
+        window.location = {
+            href: 'home/',
+            assign: jest.fn((url) => {
+                return url;
+            })
+        }
+    })
+
+    afterEach(() => {
+        window.location = originalLocation;
+    })
+
+    test('that clicking the button redirects the user to the search event adverts page', () => {
+        expect(window.location.assign).toHaveBeenCalledTimes(0);
+        searchAdvertsButton.click();
+        expect(window.location.assign).toHaveBeenCalledTimes(1);
+        expect(window.location.assign).toHaveBeenCalledWith('events_and_activities/search_event_adverts/');
     })
 })
