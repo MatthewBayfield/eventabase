@@ -14,6 +14,7 @@ from smtplib import SMTPException
 from allauth.account.decorators import verified_email_required
 from .models import EventsActivities, Engagement
 from .forms import EventsActivitiesForm
+from .exceptions import EventClash
 from home.models import UserProfile
 
 # Create your views here.
@@ -355,3 +356,34 @@ class SearchAdvertsView(TemplateView):
 
         kwargs.update({'event_advert_data': event_advert_data})
         return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """
+        Returns:
+            A JSON response indicating whether the request was successful with regard to registering a user's interest in an event.
+        """
+        event_id = request.body.decode()
+
+        try:
+            event = EventsActivities.objects.get(id=int(event_id))
+            event_when = event.when
+            if EventsActivities.objects.filter(host_user=request.user, when=event_when).exists():
+                raise EventClash(event.title, event_id, host=True)
+            if Engagement.objects.filter(event__when=event_when, user=request.user, status='In').exists():
+                raise EventClash(event.title, event_id, interested=True)
+            if Engagement.objects.filter(event__when=event_when, user=request.user, status='Att').exists():
+                raise EventClash(event.title, event_id, attending=True)
+            if not event.attendees.count() >= event.max_attendees:
+                event.attendees.add(request.user, through_defaults={'status': 'In'})
+                return JsonResponse({'successful': 'true'})
+            else:
+                msg = 'Interest not registered. Sorry but the maximum number of people for this event have just now registered their interest.'
+                return JsonResponse({'successful': 'false', 'error_msg': msg, 'error_type': 'max_people'})
+
+        except EventClash as error:
+            return JsonResponse({'successful': 'false', 'error_msg': error.msg, 'error_type': 'clash'})
+        except Exception as error:
+            print(error)
+            msg = '''Something went wrong, unable to register your interest in this event at this time. Please refresh the page and try again. If the problem
+persists, please contact us.''' 
+            return JsonResponse({'successful': 'false', 'error_msg': msg, 'error_type': 'database'})

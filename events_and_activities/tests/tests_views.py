@@ -9,7 +9,7 @@ from landing_page.models import CustomUserModel
 from home.models import UserAddress, UserProfile
 from ..forms import EventsActivitiesForm
 from ..models import EventsActivities, Engagement
-
+from ..exceptions import EventClash
 
 class TestPostEventsView(TestCase):
     """
@@ -1054,3 +1054,352 @@ class TestSearchAdvertsView(TestCase):
                                   'County': 'essex', 'Postcode': 'rm4 1aa'}, 0)]
         self.assertEqual(len(response.context['event_advert_data']), 1)
         self.assertEqual(response.context['event_advert_data'], expected_advert_data)
+    
+    def test_post_method_response_for_unauthenticated_user(self):
+        """
+        Tests the response when an unauthenticated user tries to register their interest in an event
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+    
+        # create event1
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event1',
+                                        when="2032-10-30 12:00:00",
+                                        closing_date="2031-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        client = Client()
+        # get the event1 id
+        event_instance = EventsActivities.objects.get(title='event1')
+        event_id = str(event_instance.id)
+        # Make post request to register interest in event1
+        response = client.post('/events_and_activities/search_event_adverts/', data=event_id, content_type='text/XML', follow=True)
+        # check response
+        self.assertEqual(response.status_code, 200)
+        redirect_chain = response.redirect_chain
+        self.assertEqual(redirect_chain, [('/accounts/login/?next=/events_and_activities/search_event_adverts/', 302)])
+        self.assertTemplateUsed(response, 'account/login.html')
+
+    def test_post_method_for_successful_request(self):
+        """
+        Tests the method code for when the criteria are met for a successful request to register a user's interest in an event.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+        user3 = CustomUserModel.objects.get(username=self.data3['username'])
+        # create event that user2 is interested in already
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event1',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2028-12-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.get(title='event1').attendees.add(user2, through_defaults={'status': 'In'})
+        # create event that user2 is already attending
+        EventsActivities.objects.create(host_user=user,
+                                        status="confirmed",
+                                        title='event2',
+                                        when="2028-10-30 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.get(title='event2').attendees.add(user2, through_defaults={'status': 'Att'})
+        # create event that user2 is hosting
+        EventsActivities.objects.create(host_user=user2,
+                                        status="advertised",
+                                        title='event3',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2029-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        # create event that currently has the max number of attendees
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event4',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2029-10-15 12:00:00",
+                                        max_attendees=1,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.get(title='event4').attendees.add(user3, through_defaults={'status': 'In'})
+        # create event that should be rendered as an advert for user2
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event5',
+                                        when="2032-10-30 12:00:00",
+                                        closing_date="2031-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        client = Client()
+        # sign-in user2
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        response = client.get('/events_and_activities/search_event_adverts/')
+        # get the event5 id
+        event_instance = EventsActivities.objects.get(title='event5')
+        event_id = str(event_instance.id)
+        # Make post request to register interest in event5
+        response = client.post('/events_and_activities/search_event_adverts/', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'successful': 'true'})
+        # check user2 is interested in event5
+        self.assertTrue(event_instance.engagement.filter(user=user2, status='In').exists())
+
+    def test_post_method_for_unsuccessful_request_due_to_hosting_event_clash(self):
+        """
+        Tests the response when a user attempts to register interest in an event that occurs on the same date as an event they are hosting.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+        user3 = CustomUserModel.objects.get(username=self.data3['username'])
+        # create event that user2 is hosting
+        EventsActivities.objects.create(host_user=user2,
+                                        status="advertised",
+                                        title='event1',
+                                        when="2032-10-30 12:00:00",
+                                        closing_date="2029-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        # create event on the same date as event1 
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event2',
+                                        when="2032-10-30 12:00:00",
+                                        closing_date="2031-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        client = Client()
+        # sign-in user2
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        response = client.get('/events_and_activities/search_event_adverts/')
+        # get the event2 id
+        event_instance = EventsActivities.objects.get(title='event2')
+        event_id = str(event_instance.id)
+        # Make post request to register interest in event2
+        response = client.post('/events_and_activities/search_event_adverts/', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'successful': 'false', 'error_msg': EventClash(event_instance.title, event_id, host=True).msg, 'error_type': 'clash'})
+        # check user2 is not interested in event2
+        self.assertFalse(event_instance.engagement.filter(user=user2, status='In').exists())
+
+    def test_post_method_for_unsuccessful_request_due_to_engaged_event_clash(self):
+        """
+        Tests the response when a user attempts to register interest in an event that occurs on the same date as an event they are interested in or are attending.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+        user3 = CustomUserModel.objects.get(username=self.data3['username'])
+        # create event that user2 is interested in already
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event1',
+                                        when="2032-10-30 12:00:00",
+                                        closing_date="2028-12-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.get(title='event1').attendees.add(user2, through_defaults={'status': 'In'})
+        # create event that user2 is already attending
+        EventsActivities.objects.create(host_user=user,
+                                        status="confirmed",
+                                        title='event2',
+                                        when="2033-10-30 12:00:00",
+                                        closing_date="2022-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.get(title='event2').attendees.add(user2, through_defaults={'status': 'Att'})
+        # create event on the same date as event1 
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event3',
+                                        when="2032-10-30 12:00:00",
+                                        closing_date="2031-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        # create event on the same date as event2 
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event4',
+                                        when="2033-10-30 12:00:00",
+                                        closing_date="2031-10-15 12:00:00",
+                                        max_attendees=20,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        client = Client()
+        # sign-in user2
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        response = client.get('/events_and_activities/search_event_adverts/')
+        # get the event3 id
+        event_instance = EventsActivities.objects.get(title='event3')
+        event_id = str(event_instance.id)
+        # Make post request to register interest in event3
+        response = client.post('/events_and_activities/search_event_adverts/', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'successful': 'false', 'error_msg': EventClash(event_instance.title, event_id, interested=True).msg, 'error_type': 'clash'})
+        # check user2 is not interested in event3
+        self.assertFalse(event_instance.engagement.filter(user=user2, status='In').exists())
+
+        # get the event4 id
+        event_instance = EventsActivities.objects.get(title='event4')
+        event_id = str(event_instance.id)
+        # Make post request to register interest in event4
+        response = client.post('/events_and_activities/search_event_adverts/', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'successful': 'false', 'error_msg': EventClash(event_instance.title, event_id, attending=True).msg, 'error_type': 'clash'})
+        # check user2 is not interested in event4
+        self.assertFalse(event_instance.engagement.filter(user=user2, status='In').exists())
+
+
+    def test_post_method_for_unsuccessful_request_due_to_max_attendees(self):
+        """
+        Tests the response when a user attempts to register interest in an event that just now achieved its maximum number of attendees.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+        user3 = CustomUserModel.objects.get(username=self.data3['username'])
+        # create event that currently has the max number of attendees
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event1',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2029-10-15 12:00:00",
+                                        max_attendees=1,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        EventsActivities.objects.get(title='event1').attendees.add(user3, through_defaults={'status': 'In'})
+        client = Client()
+        # sign-in user2
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        response = client.get('/events_and_activities/search_event_adverts/')
+        # get the event1 id
+        event_instance = EventsActivities.objects.get(title='event1')
+        event_id = str(event_instance.id)
+        # Make post request to register interest in event1
+        response = client.post('/events_and_activities/search_event_adverts/', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        msg = 'Interest not registered. Sorry but the maximum number of people for this event have just now registered their interest.'
+        self.assertEqual(response.json(), {'successful': 'false', 'error_msg': msg, 'error_type': 'max_people'})
+        # check user2 is not interested in event1
+        self.assertFalse(event_instance.engagement.filter(user=user2, status='In').exists())
+
+    def test_post_method_for_unsuccessful_request_due_to_other_exception(self):
+        """
+        Tests the response when an exception occurs related to the database or similar, when a user attempts to register interest in an event.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+        # create event
+        EventsActivities.objects.create(host_user=user,
+                                        status="advertised",
+                                        title='event1',
+                                        when="2030-12-23 12:00:00",
+                                        closing_date="2029-10-15 12:00:00",
+                                        max_attendees=1,
+                                        keywords="outdoors,paintballing,competitive",
+                                        description="Paintballing dayout, followed by lunch.",
+                                        requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                        address_line_one='mayhem paintball',
+                                        city_or_town='adbridge',
+                                        county='essex',
+                                        postcode='rm4 1aa')
+        client = Client()
+        # sign-in user2
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        response = client.get('/events_and_activities/search_event_adverts/')
+        # give an invalid event_id to simulate an exception
+        event_id = str('5')
+        # Make post request to register interest in event1
+        response = client.post('/events_and_activities/search_event_adverts/', data=event_id, content_type='text/XML')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        msg = '''Something went wrong, unable to register your interest in this event at this time. Please refresh the page and try again. If the problem
+persists, please contact us.''' 
+        self.assertEqual(response.json(), {'successful': 'false', 'error_msg': msg, 'error_type': 'database'})
+        # check user2 is not interested in event1
+        self.assertFalse(EventsActivities.objects.get(id='1').engagement.filter(user=user2, status='In').exists())
