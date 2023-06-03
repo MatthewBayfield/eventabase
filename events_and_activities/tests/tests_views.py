@@ -11,6 +11,7 @@ from ..forms import EventsActivitiesForm
 from ..models import EventsActivities, Engagement
 from ..exceptions import EventClash
 
+
 class TestPostEventsView(TestCase):
     """
     Tests for PostEventsView.
@@ -1231,7 +1232,7 @@ class TestSearchAdvertsView(TestCase):
         response = client.post('/events_and_activities/search_event_adverts/', data=event_id, content_type='text/XML')
         # check response
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {'successful': 'false', 'error_msg': EventClash(event_instance.title, event_id, host=True).msg, 'error_type': 'clash'})
+        self.assertEqual(response.json(), {'successful': 'false', 'error_msg': EventClash('event1', '1', host=True).msg, 'error_type': 'clash'})
         # check user2 is not interested in event2
         self.assertFalse(event_instance.engagement.filter(user=user2, status='In').exists())
 
@@ -1246,7 +1247,7 @@ class TestSearchAdvertsView(TestCase):
         EventsActivities.objects.create(host_user=user,
                                         status="advertised",
                                         title='event1',
-                                        when="2032-10-30 12:00:00",
+                                        when="2032-10-30 11:00:00",
                                         closing_date="2028-12-15 12:00:00",
                                         max_attendees=20,
                                         keywords="outdoors,paintballing,competitive",
@@ -1261,7 +1262,7 @@ class TestSearchAdvertsView(TestCase):
         EventsActivities.objects.create(host_user=user,
                                         status="confirmed",
                                         title='event2',
-                                        when="2033-10-30 12:00:00",
+                                        when="2033-10-30 13:00:00",
                                         closing_date="2022-10-15 12:00:00",
                                         max_attendees=20,
                                         keywords="outdoors,paintballing,competitive",
@@ -1276,7 +1277,7 @@ class TestSearchAdvertsView(TestCase):
         EventsActivities.objects.create(host_user=user,
                                         status="advertised",
                                         title='event3',
-                                        when="2032-10-30 12:00:00",
+                                        when="2032-10-30 9:00:00",
                                         closing_date="2031-10-15 12:00:00",
                                         max_attendees=20,
                                         keywords="outdoors,paintballing,competitive",
@@ -1290,7 +1291,7 @@ class TestSearchAdvertsView(TestCase):
         EventsActivities.objects.create(host_user=user,
                                         status="advertised",
                                         title='event4',
-                                        when="2033-10-30 12:00:00",
+                                        when="2033-10-30 14:00:00",
                                         closing_date="2031-10-15 12:00:00",
                                         max_attendees=20,
                                         keywords="outdoors,paintballing,competitive",
@@ -1312,7 +1313,7 @@ class TestSearchAdvertsView(TestCase):
         response = client.post('/events_and_activities/search_event_adverts/', data=event_id, content_type='text/XML')
         # check response
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {'successful': 'false', 'error_msg': EventClash(event_instance.title, event_id, interested=True).msg, 'error_type': 'clash'})
+        self.assertEqual(response.json(), {'successful': 'false', 'error_msg': EventClash('event1', '1', interested=True).msg, 'error_type': 'clash'})
         # check user2 is not interested in event3
         self.assertFalse(event_instance.engagement.filter(user=user2, status='In').exists())
 
@@ -1323,7 +1324,7 @@ class TestSearchAdvertsView(TestCase):
         response = client.post('/events_and_activities/search_event_adverts/', data=event_id, content_type='text/XML')
         # check response
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {'successful': 'false', 'error_msg': EventClash(event_instance.title, event_id, attending=True).msg, 'error_type': 'clash'})
+        self.assertEqual(response.json(), {'successful': 'false', 'error_msg': EventClash('event2', '2', attending=True).msg, 'error_type': 'clash'})
         # check user2 is not interested in event4
         self.assertFalse(event_instance.engagement.filter(user=user2, status='In').exists())
 
@@ -1398,7 +1399,7 @@ class TestSearchAdvertsView(TestCase):
         response = client.post('/events_and_activities/search_event_adverts/', data=event_id, content_type='text/XML')
         # check response
         self.assertEqual(response.status_code, 200)
-        msg = '''Something went wrong, unable to register your interest in this event at this time. Please refresh the page and try again. If the problem
+        msg = '''Unable to register your interest in this event at this time. Please refresh the page and try again. If the problem
 persists, please contact us.''' 
         self.assertEqual(response.json(), {'successful': 'false', 'error_msg': msg, 'error_type': 'database'})
         # check user2 is not interested in event1
