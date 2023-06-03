@@ -367,12 +367,16 @@ class SearchAdvertsView(TemplateView):
         try:
             event = EventsActivities.objects.get(id=int(event_id))
             event_when = event.when
-            if EventsActivities.objects.filter(host_user=request.user, when=event_when).exists():
-                raise EventClash(event.title, event_id, host=True)
-            if Engagement.objects.filter(event__when=event_when, user=request.user, status='In').exists():
-                raise EventClash(event.title, event_id, interested=True)
-            if Engagement.objects.filter(event__when=event_when, user=request.user, status='Att').exists():
-                raise EventClash(event.title, event_id, attending=True)
+            if EventsActivities.objects.filter(host_user=request.user).filter(when__date=event_when.date()).exists():
+                clashing_event = EventsActivities.objects.get(host_user=request.user, when__date=event_when.date())
+                raise EventClash(clashing_event.title, clashing_event.id, host=True)
+            relevant_user_engaged_events = Engagement.objects.filter(user=request.user).filter(event__when__date=event_when.date())
+            if relevant_user_engaged_events.filter(status='In').exists():
+                clashing_event = relevant_user_engaged_events.get(status='In')
+                raise EventClash(clashing_event.event.title, clashing_event.event.id, interested=True)
+            if relevant_user_engaged_events.filter(status='Att').exists():
+                clashing_event = relevant_user_engaged_events.get(status='Att')
+                raise EventClash(clashing_event.event.title, clashing_event.event.id, attending=True)
             if not event.attendees.count() >= event.max_attendees:
                 event.attendees.add(request.user, through_defaults={'status': 'In'})
                 return JsonResponse({'successful': 'true'})
@@ -384,6 +388,6 @@ class SearchAdvertsView(TemplateView):
             return JsonResponse({'successful': 'false', 'error_msg': error.msg, 'error_type': 'clash'})
         except Exception as error:
             print(error)
-            msg = '''Something went wrong, unable to register your interest in this event at this time. Please refresh the page and try again. If the problem
+            msg = '''Unable to register your interest in this event at this time. Please refresh the page and try again. If the problem
 persists, please contact us.''' 
             return JsonResponse({'successful': 'false', 'error_msg': msg, 'error_type': 'database'})
