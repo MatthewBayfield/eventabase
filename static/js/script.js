@@ -37,6 +37,7 @@ let cancelEventButtons = [...document.getElementsByClassName('cancel_event')];
 let withdrawButtons = [...document.getElementsByClassName('withdraw')];
 let searchAdvertsButton = document.getElementById('search_adverts_button');
 let gridContainers = [...document.getElementsByClassName('grid_container')];
+let registerInterestButtons = [...document.getElementsByClassName('register_interest')];
 
 // JS Section: Event listeners:
 
@@ -253,6 +254,21 @@ function searchAdvertsButtonEventListener() {
     searchAdvertsButton.removeEventListener('click', searchAdvertsButtonHandler);
     // add new listeners
     searchAdvertsButton.addEventListener('click', searchAdvertsButtonHandler); 
+}
+
+/** Adds click event listeners to
+ *  register interest buttons. Event
+ *  handler performs fetch POST request
+ *  in order to register a user's interest in an event.
+ *  @summary Adds click listeners to register interest buttons. Triggers fetch POST request.
+ */
+function registerInterestButtonListeners() {
+    // remove exisitng listeners to prevent duplication
+    for (let button of registerInterestButtons) {
+        button.removeEventListener('click', registerInterestFetchHandler);
+        // add new listeners
+        button.addEventListener('click', registerInterestFetchHandler);
+    }
 }
 
 // JS Subsection: form related event listeners 
@@ -769,6 +785,16 @@ function executeAllPageAddListenerFunctions() {
 }
 
 /**Recreates all the event listeners
+ * for the search event adverts page.
+ * Necessary when the DOM is dynamically
+ * updated.
+ * @summary Recreates event listeners for the search event adverts page.
+ */
+function executeAllSearchEventAdvertsAddListenersFunctions() {
+    registerInterestButtonListeners();
+}
+
+/**Recreates all the event listeners
  * for the HomePage.
  * Necessary when the DOM is dynamically
  * updated.
@@ -842,6 +868,7 @@ function refreshDomElementVariables() {
     withdrawButtons = [...document.getElementsByClassName('withdraw')];
     searchAdvertsButton = document.getElementById('search_adverts_button');
     gridContainers = [...document.getElementsByClassName('grid_container')];
+    registerInterestButtons = [...document.getElementsByClassName('register_interest')];
 }
 
 // JS Subsection: Fetch requests:
@@ -1179,6 +1206,88 @@ If the problem persists, please report the issue to us.`);
     }     
 }
 
+/** 
+ * @summary Fetch POST request handler for registering user's interest in an event.
+ */
+async function registerInterestFetchHandler(event) {
+    let target = event.currentTarget;
+    let requestUrl = '';
+    // Obtain event id
+    let eventID = target.parentElement.previousElementSibling.firstElementChild.lastElementChild.innerHTML.replace('.', '');
+
+    try {
+        // For aquiring the csrf token
+        const csrftoken = Cookies.get('csrftoken');
+        // make request and check response
+        let request = new Request(requestUrl,
+                                    {method: 'POST', headers: {'X-CSRFToken': csrftoken},
+                                    mode: 'same-origin',
+                                    body: eventID});
+        let response = await fetch(request);
+        let responseJSON = await response.json();
+
+        if (responseJSON.successful === 'true') {
+            let event_container = target.parentElement.parentElement;
+            event_container.style.display = 'none';
+            // code to display the 'there are no adverts' message, if there are no other event adverts left.
+            if (document.getElementsByClassName('advert').length - document.querySelectorAll('.advert[style="display: none;"]').length === 0) {
+                let no_of_containers = document.getElementsByClassName('advert').length;
+                let lastEventContainer = document.getElementsByClassName('advert')[no_of_containers -1];
+                let container = lastEventContainer.insertAdjacentElement('afterend', document.createElement('div'));
+                container.setAttribute('class', 'event_container advert');
+                container.setAttribute('role', 'region');
+                container.setAttribute('aria-label', 'event item');
+                container.setAttribute('tabindex', '0');
+                container.innerHTML = `<p>There are currently no adverts, please refresh the page or check again later.</p>`;
+            }
+            refreshDomElementVariables();
+            executeAllPageAddListenerFunctions();
+            executeAllSearchEventAdvertsAddListenersFunctions();
+            Swal.fire({
+                title: 'Success',
+                text: 'Your interest in this event/activity has been registered',
+                icon: 'success',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
+        }
+        if (responseJSON.successful === 'false' && responseJSON.error_type === 'clash') {
+            Swal.fire({
+                title: 'Event Date Clash',
+                text: responseJSON.error_msg,
+                icon: 'warning',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
+        }
+        if (responseJSON.successful === 'false' && responseJSON.error_type === 'max_people') {
+            Swal.fire({
+                title: 'Too many attendees',
+                text: responseJSON.error_msg,
+                icon: 'info',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
+        }
+        if (responseJSON.successful === 'false' && responseJSON.error_type === 'database') {
+            Swal.fire({
+                title: 'Something went wrong',
+                text: responseJSON.error_msg,
+                icon: 'error',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }     
+}
+
 // JS Section: Page specific executed code
 
 // all pages:
@@ -1199,6 +1308,7 @@ if (document.getElementsByTagName('title')[0].textContent === 'Home') {
 // search event adverts page
 if (document.getElementsByTagName('title')[0].textContent === 'Search event adverts') {
     displayGridContainers();
+    executeAllSearchEventAdvertsAddListenersFunctions();
 }
 
 // JS Section: code for jest testing
@@ -1213,5 +1323,5 @@ if (document.getElementsByTagName('title')[0].textContent === 'Search event adve
 //     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
 //     refreshFormFetchHandler, closeModal, restoreForm, postEventFormDoneButton, updateEventFetchHandler,
 //     deleteEventButtons, cancelEventButtons, interestedEvents, attendingEvents, withdrawButtons, withdrawFromEventFetchHandler, openModalButtonHandler,
-//     searchAdvertsButton, gridContainers
+//     searchAdvertsButton, gridContainers, registerInterestButtons, registerInterestFetchHandler
 // };
