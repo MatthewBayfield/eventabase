@@ -954,6 +954,11 @@ function refreshDomElementVariables() {
         // update 'edit profile modal' forms
         if (firstResponseJson.valid === 'false') {
             editPersonalInfoForm.innerHTML = firstResponseJson.form;
+            // Add form errors present message to top of the form
+            let p = document.createElement('p');
+            editPersonalInfoForm.children[0].before(p);
+            p.classList.add('errorlist');
+            p.innerHTML = '<strong>Please correct the errors described/indicated below, before resubmitting the form:</strong>';
         }
 
         if (secondResponseJson.valid === 'false') {

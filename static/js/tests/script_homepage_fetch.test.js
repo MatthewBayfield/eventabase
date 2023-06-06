@@ -82,17 +82,20 @@ describe('test the ProfileFormView fetch POST request works', () => {
     })
 
     test('only two requests are made if the submitted forms are invalid, and the profile content does not change', async () => {
-        json_data = {'valid': 'false', 'profile': profile_content, 'form': 'form'}
+        json_data = {'valid': 'false', 'profile': profile_content, 'form': "<p>form</p>"}
         expect(editProfileModal.parentElement.hasAttribute('style')).toBe(true);
-        expect(editAddressForm.innerHTML).not.toBe('form');
-        expect(editPersonalInfoForm.innerHTML).not.toBe('form');
+        expect(editAddressForm.innerHTML).not.toBe("<p>form</p>");
+        expect(editPersonalInfoForm.innerHTML).not.toBe("<p>form</p>");
         expect(editProfileModal.parentElement.previousElementSibling.innerHTML).not.toBe(profile_content);
         // call handler
         await editProfileFormFetchHandler();
         expect(Request).toHaveBeenCalledTimes(2);
         expect(fetch).toHaveBeenCalledTimes(2);
-        expect(editAddressForm.innerHTML).toBe('form');
-        expect(editPersonalInfoForm.innerHTML).toBe('form');
+        // check form content
+        expect(editAddressForm.innerHTML).toBe("<p>form</p>");
+        let content = '<p class="errorlist"><strong>Please correct the errors described/indicated below, before resubmitting the form:</strong></p><p>form</p>';
+        expect(editPersonalInfoForm.innerHTML).toBe(content);
+        // check profile content has not changed
         expect(editProfileModal.parentElement.previousElementSibling.innerHTML).not.toBe(profile_content);
         // check modal is still open
         expect(editProfileModal.parentElement.hasAttribute('style')).toBe(true);
