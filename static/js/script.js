@@ -1129,8 +1129,10 @@ async function updateEventFetchHandler(event) {
         if (responseJSON.successful === 'true') {
             let event_container = target.parentElement.parentElement;
             event_container.style.display = 'none';
+            let success_msg;
             // code to display the 'you have no more events message', if the user deletes/cancels all their adverts/events.
             if (buttonType !== 'Cancel') {
+                success_msg = `Your event/activity advert has been deleted.`;
                 if (document.getElementsByClassName('advertised').length - document.querySelectorAll('.advertised[style="display: none;"]').length === 0) {
                     let no_of_containers = document.getElementsByClassName('advertised').length;
                     let lastEventContainer = document.getElementsByClassName('advertised')[no_of_containers - 1];
@@ -1143,6 +1145,7 @@ async function updateEventFetchHandler(event) {
                 }
             }
             else {
+                success_msg = `Your upcoming event/activity has been cancelled.`;
                 if (document.getElementsByClassName('upcoming').length - document.querySelectorAll('.upcoming[style="display: none;"]').length === 0) {
                     let no_of_containers = document.getElementsByClassName('upcoming').length;
                     let lastEventContainer = document.getElementsByClassName('upcoming')[no_of_containers - 1];
@@ -1154,19 +1157,36 @@ async function updateEventFetchHandler(event) {
                     container.innerHTML = `<p>You currenty have no upcoming events or activities that are you are confirmed to host. An event becomes confirmed once the closing advert date has passed.</p>`;
                 }
             }
+            Swal.fire({
+                title: 'Success',
+                text: success_msg,
+                icon: 'success',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
             refreshDomElementVariables();
             executeAllPageAddListenerFunctions();
             executeAllHomePageAddListenersFunctions();
         }
         else {
+            let error_msg;
             if (buttonType !== 'Cancel') {
-                window.alert(`Unable to delete advert at the moment, please try again later.
-If the problem persists, please report the issue to us.`);
+                error_msg = `Unable to delete advert at the moment, please try again later.
+If the problem persists, please report the issue to us.`;
             }
             else {
-                window.alert(`Unable to cancel the event at the moment, please try again later.
-If the problem persists, please report the issue to us.`);
+                error_msg = `Unable to cancel the event at the moment, please try again later.
+If the problem persists, please report the issue to us.`;
             }
+            Swal.fire({
+                title: 'Something went wrong',
+                text: error_msg,
+                icon: 'error',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
         }
     }
     catch(error) {
@@ -1219,13 +1239,29 @@ async function withdrawFromEventFetchHandler(event) {
                 container.setAttribute('tabindex', '0');
                 container.innerHTML = `<p>You currenty have no upcoming events or activities that are you are confirmed to attend. An event becomes confirmed once the closing advert date has passed.</p>`;
             }
+            Swal.fire({
+                title: 'Success',
+                text: 'You have successfully been withdrawn from this event/activity',
+                icon: 'success',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
             refreshDomElementVariables();
             executeAllPageAddListenerFunctions();
             executeAllHomePageAddListenersFunctions();
         }
         else {
-            window.alert(`Unable to withdraw you from the event at the moment, please try again later.
-If the problem persists, please report the issue to us.`);
+            let err_msg = `Unable to withdraw you from the event at the moment, please try again later.
+If the problem persists, please report the issue to us.`;
+            Swal.fire({
+                title: 'Something went wrong',
+                text: err_msg,
+                icon: 'error',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
         }
     }
     catch(error) {
