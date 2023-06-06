@@ -13,6 +13,8 @@ let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcon
      postEventFormFetchHandler, postEventForm, refreshFormFetchHandler, updateEventFetchHandler,
      editAddressForm, editPersonalInfoForm, openModalButtons, deleteEventButtons, cancelEventButtons,
      withdrawButtons, withdrawFromEventFetchHandler} = require('../script.js');
+// sweetalert2 library import
+global.Swal = require('sweetalert2');
 // function from script.js, but redefined in this scope; needed to update references to updated DOM.
 function refreshDomElementVariables() {
     moreMenuContainer = document.getElementById('more_menu_container');
@@ -57,6 +59,7 @@ global.fetch = jest.fn(() => Promise.resolve({
     json: () => Promise.resolve(json_data)
 }));
 global.alert = jest.fn();
+let swal_fire = jest.spyOn(Swal, 'fire');
 // global variables needed for some tests
 let initialSearchViewEventsSection = document.getElementById('search_events').innerHTML;
 let initialPostEventsSection = postEventModal.parentElement.previousElementSibling.innerHTML;
@@ -75,6 +78,7 @@ describe('test the ProfileFormView fetch POST request works', () => {
         Request.mockClear();
         fetch.mockClear();
         alert.mockClear();
+        swal_fire.mockClear();
         // reset html content
         editProfileModal.parentElement.previousElementSibling.innerHTML = initialProfileSection;
         editAddressForm.innerHTML = initialAddressForm;
@@ -114,6 +118,16 @@ describe('test the ProfileFormView fetch POST request works', () => {
         expect(editAddressForm.innerHTML).toBe('form');
         expect(editPersonalInfoForm.innerHTML).toBe('form');
         expect(editProfileModal.parentElement.previousElementSibling.innerHTML).toBe(profile_content);
+        // check success alert has been fired
+        expect(swal_fire).toHaveBeenCalledTimes(1);
+        expect(swal_fire).toHaveBeenLastCalledWith({
+            title: 'Success',
+            text: 'Your profile information has been successfully updated',
+            icon: 'success',
+            allowOutsideClick: false,
+            confirmButtonText: 'Continue',
+            confirmButtonAriaLabel: 'Continue',
+        })
         // check modal is closed
         expect(editProfileModal.parentElement.hasAttribute('style')).toBe(false);
     })
@@ -171,6 +185,7 @@ describe('test the post events form fetch POST request operates as expected', ()
     afterEach(() => {
         Request.mockClear();
         fetch.mockClear();
+        swal_fire.mockClear();
         // reset html content
         postEventModal.parentElement.previousElementSibling.innerHTML = initialPostEventsSection;
         postEventForm.innerHTML = initialPostEventForm;
@@ -198,6 +213,16 @@ describe('test the post events form fetch POST request operates as expected', ()
         expect(document.querySelectorAll('.event_container.advertised > p').length).toBe(0);
         // check form content updated
         expect(postEventForm.innerHTML).toBe('form');
+        // check success alert has been fired
+        expect(swal_fire).toHaveBeenCalledTimes(1);
+        expect(swal_fire).toHaveBeenLastCalledWith({
+            title: 'Success',
+            text: 'Your event/activity advert has been posted',
+            icon: 'success',
+            allowOutsideClick: false,
+            confirmButtonText: 'Continue',
+            confirmButtonAriaLabel: 'Continue',
+        })
         // check modal has been closed
         expect(postEventModal.parentElement.hasAttribute('style')).toBe(false);
     })

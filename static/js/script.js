@@ -945,6 +945,14 @@ function refreshDomElementVariables() {
             executeAllPageAddListenerFunctions();
             executeAllHomePageAddListenersFunctions();
             if (!issue) {
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Your profile information has been successfully updated',
+                    icon: 'success',
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Continue',
+                    confirmButtonAriaLabel: 'Continue',
+                })
                 //close edit profile modal
                 closeModal(editProfileModal.firstElementChild.firstElementChild.firstElementChild);
             }
@@ -1007,6 +1015,14 @@ function refreshDomElementVariables() {
             if (no_events_msg !== null) {
                 no_events_msg.parentElement.remove();
             }
+            Swal.fire({
+                title: 'Success',
+                text: 'Your event/activity advert has been posted',
+                icon: 'success',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
             //close modal
             closeModal(postEventModal.firstElementChild.firstElementChild.firstElementChild);
 
