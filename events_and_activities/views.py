@@ -125,7 +125,9 @@ class PostEventsView(FormView):
             rendered_blank_form = str(EventsActivitiesForm())
             data.update({'event': rendered_event, 'valid': 'true', 'form': rendered_blank_form})
         else:
-            rendered_form = render_to_string(template_name='events_and_activities/post_events_form.html', context=new_event_form.get_context(), request=request)
+            context = new_event_form.get_context()
+            context.update({'errors_present': True})
+            rendered_form = render_to_string(template_name='events_and_activities/post_events_form.html', context=context, request=request)
             data.update({'form': rendered_form, 'valid': 'false'})
         return JsonResponse(data)
 

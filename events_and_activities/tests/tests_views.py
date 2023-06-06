@@ -210,7 +210,7 @@ class TestPostEventsView(TestCase):
         for key, value in sub_context.items():
             with self.subTest(key):
                 self.assertEqual(response.context[key], value)
-    
+
     def test_post_events_form_handling_and_processing(self):
         """
         Tests the POST method of the PostEventsView, that is responsible for handling the post events form submission.
@@ -258,6 +258,8 @@ class TestPostEventsView(TestCase):
         self.assertEqual(response_json['valid'], 'true')
         self.assertHTMLEqual(response_json['event'], expected_rendered_event)
         self.assertHTMLEqual(response_json['form'], str(EventsActivitiesForm()))
+        msg = '<p class="errorlist"><strong>Please correct the errors described/indicated below, before resubmitting the form:</strong></p>'
+        self.assertInHTML(msg, response_json['form'], count=0)
         # test for invalid form:
 
         client = Client()
@@ -267,7 +269,9 @@ class TestPostEventsView(TestCase):
         event['host_user'] = CustomUserModel.objects.get(email=self.data['email'])
         event['when'] = '13:30'
         new_form = EventsActivitiesForm(event)
-        rendered_form = new_form.render(context=new_form.get_context())
+        context = new_form.get_context()
+        context.update({'errors_present': True})
+        rendered_form = new_form.render(context=context)
         # submit form
         response = client.post(reverse('home:post_events_view'), data=event, mode='same_origin')
         response_json = response.json()
@@ -275,6 +279,7 @@ class TestPostEventsView(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_json['valid'], 'false')
         self.assertHTMLEqual(response_json['form'], rendered_form)
+        self.assertInHTML(msg, response_json['form'], count=1)
 
     def test_response_get_fetch_request_post_events_view(self):
         """
