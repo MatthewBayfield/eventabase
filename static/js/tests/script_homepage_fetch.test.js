@@ -340,7 +340,7 @@ describe('test the update events fetch POST request operates as expected', () =>
     afterEach(() => {
         Request.mockClear();
         fetch.mockClear();
-        alert.mockClear();
+        swal_fire.mockClear();
         // reset html content
         postEventModal.parentElement.previousElementSibling.innerHTML = initialPostEventsSection;
         postEventForm.innerHTML = initialPostEventForm;
@@ -361,6 +361,17 @@ describe('test the update events fetch POST request operates as expected', () =>
         // check event has been hidden
         expect(document.querySelectorAll('.event_container.upcoming').length).toBe(2);
         expect(document.querySelectorAll('.event_container.upcoming')[0].style.display).toBe('none');
+        // check success alert has been fired
+        expect(swal_fire).toHaveBeenCalledTimes(1);
+        let success_msg = `Your upcoming event/activity has been cancelled.`;
+        expect(swal_fire).toHaveBeenLastCalledWith({
+            title: 'Success',
+            text: success_msg,
+            icon: 'success',
+            allowOutsideClick: false,
+            confirmButtonText: 'Continue',
+            confirmButtonAriaLabel: 'Continue',
+        })
     })
 
     test('check request and response/actions when a successful delete advert request is submitted', async () => {
@@ -378,6 +389,17 @@ describe('test the update events fetch POST request operates as expected', () =>
         // check event has been hidden
         expect(document.querySelectorAll('.event_container.advertised').length).toBe(2);
         expect(document.querySelectorAll('.event_container.advertised')[0].style.display).toBe('none');
+        // check success alert has been fired
+        expect(swal_fire).toHaveBeenCalledTimes(1);
+        let success_msg = `Your event/activity advert has been deleted.`;
+        expect(swal_fire).toHaveBeenLastCalledWith({
+            title: 'Success',
+            text: success_msg,
+            icon: 'success',
+            allowOutsideClick: false,
+            confirmButtonText: 'Continue',
+            confirmButtonAriaLabel: 'Continue',
+        })
     })
 
     test('check request and response/actions when an unsuccessful cancel event request is submitted', async () => {
@@ -393,9 +415,17 @@ describe('test the update events fetch POST request operates as expected', () =>
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['update_events/?cancel=true']));
         // check alert displayed
-        let message = `Unable to cancel the event at the moment, please try again later.
+        expect(swal_fire).toHaveBeenCalledTimes(1);
+        let error_msg = `Unable to cancel the event at the moment, please try again later.
 If the problem persists, please report the issue to us.`;
-        expect(alert).toHaveBeenLastCalledWith(message);
+        expect(swal_fire).toHaveBeenLastCalledWith({
+            title: 'Something went wrong',
+            text: error_msg,
+            icon: 'error',
+            allowOutsideClick: false,
+            confirmButtonText: 'Continue',
+            confirmButtonAriaLabel: 'Continue',
+        })
         // check event has not been hidden
         expect(document.querySelectorAll('.event_container.upcoming').length).toBe(1);
         expect(document.querySelectorAll('.event_container.upcoming')[0].style.display).not.toBe('none');
@@ -414,9 +444,18 @@ If the problem persists, please report the issue to us.`;
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['update_events/?cancel=false']));
         // check alert displayed
-        let message = `Unable to delete advert at the moment, please try again later.
-If the problem persists, please report the issue to us.`
-        expect(alert).toHaveBeenLastCalledWith(message);
+        // check alert displayed
+        expect(swal_fire).toHaveBeenCalledTimes(1);
+        let error_msg = `Unable to delete advert at the moment, please try again later.
+If the problem persists, please report the issue to us.`;
+        expect(swal_fire).toHaveBeenLastCalledWith({
+            title: 'Something went wrong',
+            text: error_msg,
+            icon: 'error',
+            allowOutsideClick: false,
+            confirmButtonText: 'Continue',
+            confirmButtonAriaLabel: 'Continue',
+        })
         // check event has not been hidden
         expect(document.querySelectorAll('.event_container.advertised').length).toBe(1);
         expect(document.querySelectorAll('.event_container.advertised')[0].style.display).not.toBe('none');
@@ -481,7 +520,7 @@ describe('test the event withdrawal fetch POST request operates as expected', ()
     afterEach(() => {
         Request.mockClear();
         fetch.mockClear();
-        alert.mockClear();
+        swal_fire.mockClear();
         // reset html content
         document.getElementById('search_events').innerHTML = initialSearchViewEventsSection;
     })
@@ -510,6 +549,17 @@ describe('test the event withdrawal fetch POST request operates as expected', ()
         expect(document.querySelectorAll('.event_container.attending').length).toBe(2);
         expect(document.querySelectorAll('.event_container.attending')[0].style.display).toBe('block');
         expect(document.querySelectorAll('.event_container.attending')[1].style.display).toBe('block');
+        // check alert displayed
+        expect(swal_fire).toHaveBeenCalledTimes(1);
+        expect(swal_fire).toHaveBeenLastCalledWith({
+            title: 'Success',
+            text: 'You have successfully been withdrawn from this event/activity',
+            icon: 'success',
+            allowOutsideClick: false,
+            confirmButtonText: 'Continue',
+            confirmButtonAriaLabel: 'Continue',
+        })
+
         // call the handler to simulate withdrawing from a confirmed event
         event = {currentTarget: withdrawButton};
         await withdrawFromEventFetchHandler(event);
@@ -523,6 +573,16 @@ describe('test the event withdrawal fetch POST request operates as expected', ()
         expect(document.querySelectorAll('.event_container.interested').length).toBe(2);
         expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('none');
         expect(document.querySelectorAll('.event_container.interested')[1].style.display).toBe('block');
+        // check alert displayed
+        expect(swal_fire).toHaveBeenCalledTimes(2);
+        expect(swal_fire).toHaveBeenLastCalledWith({
+            title: 'Success',
+            text: 'You have successfully been withdrawn from this event/activity',
+            icon: 'success',
+            allowOutsideClick: false,
+            confirmButtonText: 'Continue',
+            confirmButtonAriaLabel: 'Continue',
+        })
     })
 
     test('check request and response/actions when an unsuccessful event withdrawal request is submitted', async () => {
@@ -543,9 +603,17 @@ describe('test the event withdrawal fetch POST request operates as expected', ()
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal/']));
         // check alert displayed
-        let message = `Unable to withdraw you from the event at the moment, please try again later.
+        expect(swal_fire).toHaveBeenCalledTimes(1);
+        let err_msg = `Unable to withdraw you from the event at the moment, please try again later.
 If the problem persists, please report the issue to us.`;
-        expect(alert).toHaveBeenLastCalledWith(message);
+        expect(swal_fire).toHaveBeenLastCalledWith({
+                title: 'Something went wrong',
+                text: err_msg,
+                icon: 'error',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
         // check event has not been hidden
         expect(document.querySelectorAll('.event_container.interested').length).toBe(2);
         expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('block');
@@ -560,7 +628,15 @@ If the problem persists, please report the issue to us.`;
         expect(fetch).toHaveBeenCalledTimes(2);
         expect(Request.mock.lastCall).toEqual(expect.arrayContaining(['event_withdrawal/']));
         // check alert displayed
-        expect(alert).toHaveBeenLastCalledWith(message);
+        expect(swal_fire).toHaveBeenCalledTimes(2);
+        expect(swal_fire).toHaveBeenLastCalledWith({
+                title: 'Something went wrong',
+                text: err_msg,
+                icon: 'error',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
         // check event has not been hidden
         expect(document.querySelectorAll('.event_container.interested').length).toBe(2);
         expect(document.querySelectorAll('.event_container.interested')[0].style.display).toBe('block');
