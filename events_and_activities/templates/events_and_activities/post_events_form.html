@@ -1,3 +1,6 @@
+{% if errors_present %}
+    <p class="errorlist"><strong>Please correct the errors described/indicated below, before resubmitting the form:</strong></p>
+{% endif %}
 {{ errors }}
 {% for field, errors in fields %}
     {% if forloop.counter0 == 7 %}
