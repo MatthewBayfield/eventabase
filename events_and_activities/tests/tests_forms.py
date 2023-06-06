@@ -25,12 +25,13 @@ class TestEventsActivitiesForm(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # create user
+        # create users
         username = 'taylor111'
         email = 'marktaylor@hotmail.com'
         password = 'alpha555'
         CustomUserModel.objects.create(username=username, email=email, password=password)
         user = CustomUserModel.objects.get(username='taylor111')
+        cls.user2 = CustomUserModel.objects.create(username='jonny123', email='jonnytaylor@hotmail.com', password='alpha5557')
         cls.event.update({'host_user': user})
 
     def test_host_user_validators(self):
@@ -74,23 +75,51 @@ class TestEventsActivitiesForm(TestCase):
         valid = new_form.is_valid()
         self.assertFalse(valid)
         self.assertFormError(new_form, 'title', 'Ensure this value has at most 100 characters (it has 101).')
-        
+
     def test_when_field_validators(self):
         """
         Tests that the when field validators are applied and expected errors added to the form context.
         """
+        # invalid date format test
         event = self.event.copy()
         event['when'] = '19/11/93'
         new_form = EventsActivitiesForm(data=event)
         valid = new_form.is_valid()
         self.assertFalse(valid)
         self.assertFormError(new_form, 'when', 'Enter a valid datetime format.')
-        event['when'] = '11:00, 01/01/93'
+
+        # event date clash test
+        event['when'] = '13:30, 19/01/30'
+        # create event hosted by user2 on same date as event to be hosted by user
+        user2_event = EventsActivities.objects.create(host_user=self.user2,
+                                                      status="advertised",
+                                                      title='Paintballing',
+                                                      when="2030-01-19 13:30:00",
+                                                      closing_date="2029-12-15 12:00:00",
+                                                      max_attendees=20,
+                                                      keywords="outdoors,paintballing,competitive",
+                                                      description="Paintballing dayout, followed by lunch.",
+                                                      requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                                      address_line_one='mayhem paintball',
+                                                      city_or_town='adbridge',
+                                                      county='essex',
+                                                      postcode='rm4 1AA')
+        # register user interest in user2 event
+        user2_event.attendees.add(self.event['host_user'], through_defaults={'status': 'In'})
         new_form = EventsActivitiesForm(data=event)
         valid = new_form.is_valid()
         self.assertFalse(valid)
-        self.assertFormError(new_form, 'when', 'This date and time is in the past.')
-    
+        msg = '''You cannot host an event on this date, as you are currently interested in or attending the event (ID: 1) titled Paintballing on the same date.'''
+        self.assertFormError(new_form, 'when', msg)
+
+        # valid format and no event date clash test
+
+        # unregister user interest in user2 event
+        self.event['host_user'].engagement.get(status='In').delete()
+        new_form = EventsActivitiesForm(data=event)
+        valid = new_form.is_valid()
+        self.assertTrue(valid)
+
     def test_closing_date_field_validators(self):
         """
         Tests that the closing_date field validators are applied and expected errors added to the form context.

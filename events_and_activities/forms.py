@@ -1,8 +1,9 @@
 from django.forms.models import ModelForm
+from django.core.exceptions import ValidationError
 from django.forms.widgets import HiddenInput
 from django.forms.fields import DateTimeField
 from landing_page.forms import FormFieldMixin
-from .models import EventsActivities
+from .models import EventsActivities, Engagement
 from .validators import check_date_has_not_occured, compare_dates
 
 
@@ -49,6 +50,16 @@ class EventsActivitiesForm(ModelForm, FormFieldMixin):
         except KeyError:
             return self.cleaned_data
         return self.cleaned_data
+
+    def clean_when(self):
+        """
+        Checks that the user is not engaged in another event on the same day as the event they wish to host.
+        """
+        if Engagement.objects.filter(user=self.cleaned_data['host_user'], event__when__date=self.cleaned_data['when'].date()).exists():
+            clashed_event = Engagement.objects.get(user=self.cleaned_data['host_user'], event__when__date=self.cleaned_data['when'].date()).event
+            msg = f'''You cannot host an event on this date, as you are currently interested in or attending the event (ID: {clashed_event.id}) titled {clashed_event.title} on the same date.'''
+            raise ValidationError(msg, 'event date clash')
+        return self.cleaned_data['when']
 
     def post_clean_processing(self):
         """
