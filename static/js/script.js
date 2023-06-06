@@ -962,6 +962,9 @@ function refreshDomElementVariables() {
         refreshDomElementVariables();
         executeAllPageAddListenerFunctions();
         executeAllHomePageAddListenersFunctions();
+        editProfileModal.scrollTo({
+            top: 0
+        })
     }
     catch(error) {
         console.error(error);
@@ -1007,6 +1010,9 @@ function refreshDomElementVariables() {
         refreshDomElementVariables();
         executeAllPageAddListenerFunctions();
         executeAllHomePageAddListenersFunctions();
+        postEventModal.scrollTo({
+            top: 0
+        });
     }
     catch(error) {
         console.error(error);
