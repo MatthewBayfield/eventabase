@@ -10,8 +10,10 @@
         {% endblock %}
         <div class="modal_buttons_container">
             <button class='modal_button' type="button" name="{{button1_name}}">{{button1_name|title}}</button>
-            {% if button2_name and not first_login or modal != 'edit_profile_modal' %}
-                <button class="modal_button" type="button" name="{{button2_name}}">{{button2_name|title}}</button>
+            {% if button2_name %}
+                {% if not first_login or modal != 'edit_profile_modal'%}
+                    <button class="modal_button" type="button" name="{{button2_name}}">{{button2_name|title}}</button>
+                {% endif %}  
             {% endif %}
         </div>
     </div>
