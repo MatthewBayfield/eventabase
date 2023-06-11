@@ -13,6 +13,7 @@ let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcon
      postEventFormFetchHandler, postEventForm, refreshFormFetchHandler, updateEventFetchHandler,
      editAddressForm, editPersonalInfoForm, openModalButtons, deleteEventButtons, cancelEventButtons,
      withdrawButtons, withdrawFromEventFetchHandler} = require('../script.js');
+const { default: Swal } = require('sweetalert2');
 // sweetalert2 library import
 global.Swal = require('sweetalert2');
 // function from script.js, but redefined in this scope; needed to update references to updated DOM.
@@ -120,15 +121,18 @@ describe('test the ProfileFormView fetch POST request works', () => {
         expect(editProfileModal.parentElement.previousElementSibling.innerHTML).toBe(profile_content);
         // check success alert has been fired
         expect(swal_fire).toHaveBeenCalledTimes(1);
-        expect(swal_fire).toHaveBeenLastCalledWith({
+        expect(swal_fire.mock.lastCall[0].toString()).toEqual({
             title: 'Success',
             text: 'Your profile information has been successfully updated',
             icon: 'success',
             allowOutsideClick: false,
             confirmButtonText: 'Continue',
             confirmButtonAriaLabel: 'Continue',
-        })
-        // check modal is closed
+            //close edit profile modal
+            willClose: () => {closeModal(editProfileModal.firstElementChild.firstElementChild.firstElementChild)}
+        }.toString());
+        // check modal is closed after closing alert
+        Swal.getConfirmButton().click();
         expect(editProfileModal.parentElement.hasAttribute('style')).toBe(false);
     })
 
@@ -170,6 +174,8 @@ describe('test the ProfileFormView fetch POST request works', () => {
         expect(editProfileModal.lastElementChild.children.length < 2).toBe(true);
         // call handler with valid form response
         await editProfileFormFetchHandler();
+        // close success alert
+        Swal.getConfirmButton().click();
         // check cancel button exists, and close button is visible
         expect(editProfileModal.parentElement.hasAttribute('style')).toBe(false);
         expect(editProfileModal.lastElementChild.children.length < 2).toBe(false);
@@ -215,15 +221,17 @@ describe('test the post events form fetch POST request operates as expected', ()
         expect(postEventForm.innerHTML).toBe('form');
         // check success alert has been fired
         expect(swal_fire).toHaveBeenCalledTimes(1);
-        expect(swal_fire).toHaveBeenLastCalledWith({
+        expect(swal_fire.mock.lastCall[0].toString()).toEqual({
             title: 'Success',
             text: 'Your event/activity advert has been posted',
             icon: 'success',
             allowOutsideClick: false,
             confirmButtonText: 'Continue',
             confirmButtonAriaLabel: 'Continue',
-        })
-        // check modal has been closed
+            willClose: () => {closeModal(postEventModal.firstElementChild.firstElementChild.firstElementChild)}
+        }.toString())
+        // check modal has been closed after alert is closed
+        Swal.getConfirmButton().click();
         expect(postEventModal.parentElement.hasAttribute('style')).toBe(false);
     })
 

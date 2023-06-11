@@ -646,7 +646,7 @@ function slideshowHandler() {
 }
 
 /** 
- * @param {Object} input - eiher a dispatched event or cancel/close button element.
+ * @param {Object} input - either a dispatched event or cancel/close button element.
  * @summary Event handler/function for closing a modal form.
  */
 function closeModal(input) {
@@ -657,7 +657,7 @@ function closeModal(input) {
     else {
         target = input;
     }
-    
+
     let parentModalContainer;
     if (target.tagName === 'BUTTON') {
         parentModalContainer = target.parentElement.parentElement.parentElement;
@@ -665,14 +665,17 @@ function closeModal(input) {
     else {
         parentModalContainer = target.parentElement.parentElement.parentElement.parentElement;
     }
-            parentModalContainer.removeAttribute('style');
-            document.body.removeAttribute('style');
-            if (parentModalContainer.firstElementChild.id === 'edit_profile_modal') {
-                document.querySelector(".open_modal_button[aria-controls='edit_profile_modal']").focus();
-            }
-            if (parentModalContainer.firstElementChild.id === 'post_events_modal') {
-                document.querySelector(".open_modal_button[aria-controls='post_events_modal']").focus();
-            }
+    parentModalContainer.removeAttribute('style');
+    document.body.removeAttribute('style');
+    if (parentModalContainer.firstElementChild.id === 'edit_profile_modal') {
+        // delayed focus to prevent keyup event propagating to the focused element
+        setTimeout(() => {document.querySelector(".open_modal_button[aria-controls='edit_profile_modal']").focus()}, 100);
+        
+    }
+    if (parentModalContainer.firstElementChild.id === 'post_events_modal') {
+        // delayed focus to prevent keyup event propagating to the focused element
+        setTimeout(() => {document.querySelector(".open_modal_button[aria-controls='post_events_modal']").focus()}, 100);
+    }
 }
 
 /** Event handler for the radioInput event listeners.
@@ -952,11 +955,10 @@ function refreshDomElementVariables() {
                     allowOutsideClick: false,
                     confirmButtonText: 'Continue',
                     confirmButtonAriaLabel: 'Continue',
-                })
-                //close edit profile modal
-                closeModal(editProfileModal.firstElementChild.firstElementChild.firstElementChild);
+                    //close edit profile modal
+                    willClose: () => {closeModal(editProfileModal.firstElementChild.firstElementChild.firstElementChild)}
+                });
             }
-            
         }
         
         // update 'edit profile modal' forms
@@ -1022,10 +1024,9 @@ function refreshDomElementVariables() {
                 allowOutsideClick: false,
                 confirmButtonText: 'Continue',
                 confirmButtonAriaLabel: 'Continue',
+                //close modal
+                willClose: () => {closeModal(postEventModal.firstElementChild.firstElementChild.firstElementChild)}
             })
-            //close modal
-            closeModal(postEventModal.firstElementChild.firstElementChild.firstElementChild);
-
         }
         postEventForm.innerHTML = responseJSON.form;
         refreshDomElementVariables();
@@ -1050,7 +1051,6 @@ async function refreshFormFetchHandler(target) {
     try {
         // For aquiring the form csrf token
         const csrftoken = Cookies.get('csrftoken');
-        //console.log(target.outerHTML);
         let requestUrl;
         let buttonType;
         let modalContainer;
