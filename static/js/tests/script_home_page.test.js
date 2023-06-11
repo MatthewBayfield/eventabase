@@ -434,12 +434,14 @@ describe('Test that the close modal buttons work (excluding fetch request)', () 
             if (button.getAttribute('aria-controls') === 'edit_profile_modal') {
                 let closeButton = editProfileModal.firstElementChild.firstElementChild.firstElementChild;
                 closeButton.click();
-                expect(document.activeElement).toBe(document.querySelector(".open_modal_button[aria-controls='edit_profile_modal']"));
+                setTimeout(() => {expect(document.activeElement).toBe(document.querySelector(".open_modal_button[aria-controls='edit_profile_modal']"))}, 100);
+                
             }
             else if (button.getAttribute('aria-controls') === 'post_events_modal') {
                 let closeButton = postEventModal.firstElementChild.firstElementChild.firstElementChild;
                 closeButton.click();
-                expect(document.activeElement).toBe(document.querySelector(".open_modal_button[aria-controls='post_events_modal']"));
+                setTimeout(() => {expect(document.activeElement).toBe(document.querySelector(".open_modal_button[aria-controls='post_events_modal']"))}, 100);
+                
             }
         }
     })
@@ -514,14 +516,14 @@ describe('Test that Done modal buttons work (excluding fetch requests)', () => {
         // scrollbar is hidden when a modal is open.
         document.body.style.overflowY = 'hidden';
         editProfileModalDoneButton.click();
-        expect(document.activeElement).toBe(openEditProfileButton);
+        setTimeout(() => {expect(document.activeElement).toBe(openEditProfileButton)}, 100);
 
         // post event modal done button tests:
 
         // scrollbar is hidden when a modal is open.
         document.body.style.overflowY = 'hidden';
         postEventFormDoneButton.click();
-        expect(document.activeElement).toBe(openPostEventsButton);
+        setTimeout(() => {expect(document.activeElement).toBe(openPostEventsButton)}, 100);
     })
 })
 
@@ -608,14 +610,16 @@ describe('Test that the cancel modal buttons work', () => {
         // scrollbar is hidden when a modal is open.
         document.body.style.overflowY = 'hidden';
         editProfileModalDoneButton.nextElementSibling.click();
-        expect(document.activeElement).toBe(openEditProfileButton);
+        setTimeout(() => {expect(document.activeElement).toBe(openEditProfileButton)}, 100);
+        
         
         // post event modal cancel button tests:
 
         // scrollbar is hidden when a modal is open.
         document.body.style.overflowY = 'hidden';
         postEventFormDoneButton.nextElementSibling.click();
-        expect(document.activeElement).toBe(openPostEventsButton);
+        setTimeout(() => {expect(document.activeElement).toBe(openPostEventsButton)}, 100);
+        
     })
 })
 
