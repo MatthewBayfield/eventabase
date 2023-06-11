@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.test import Client
 from django.urls import reverse
 from django.core import mail
+from django.template.loader import render_to_string
 from eventabase.settings import EMAIL_HOST_USER
 from allauth.account.models import EmailAddress
 from landing_page.models import CustomUserModel
@@ -1409,3 +1410,270 @@ persists, please contact us.'''
         self.assertEqual(response.json(), {'successful': 'false', 'error_msg': msg, 'error_type': 'database'})
         # check user2 is not interested in event1
         self.assertFalse(EventsActivities.objects.get(id='1').engagement.filter(user=user2, status='In').exists())
+
+
+class TestRetrieveAttendeeContactInfoView(TestCase):
+    """
+    Tests for theRetrieveAttendeeContactInfoView.
+    """
+    data = {'email': 'tommypaul147@gmail.com',
+            'email2': 'tommypaul147@gmail.com',
+            'password1': 'holly!123',
+            'password2': 'holly!123',
+            'username': 'jimmy147'}
+
+    data2 = {'email': 'tommypaul1478@gmail.com',
+             'email2': 'tommypaul1478@gmail.com',
+             'password1': 'holly!1234',
+             'password2': 'holly!1234',
+             'username': 'jimmy1479'}
+
+    data3 = {'email': 'tommypaul146@gmail.com',
+             'email2': 'tommypaul146@gmail.com',
+             'password1': 'holly!157',
+             'password2': 'holly!157',
+             'username': 'jimmy146'}
+    
+    info = {'first_name': 'mark',
+            'last_name': 'taylor',
+            'date_of_birth': '19/11/1993',
+            'sex': 'male',
+            'bio': 'I like sports'}
+    address = {'address_line_one': '58 Stanley Avenue',
+               'city_or_town': 'GIdea Park',
+               'county': 'ESSEX',
+               'postcode': 'Rm26Bt'}
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Sign-up new users 
+        client = Client()
+        client.post('/accounts/signup/', cls.data)
+        client.post('/accounts/signup/', cls.data2)
+        client.post('/accounts/signup/', cls.data3)
+        # verify user emails
+        user_email = EmailAddress.objects.get(user='tommypaul147@gmail.com')
+        user_email.verified = True
+        user_email.save()
+        user_email2 = EmailAddress.objects.get(user='tommypaul1478@gmail.com')
+        user_email2.verified = True
+        user_email2.save()
+        user_email3 = EmailAddress.objects.get(user='tommypaul146@gmail.com')
+        user_email3.verified = True
+        user_email3.save()
+        # create profile for user
+        user = CustomUserModel.objects.get(email=user_email.email)
+        UserProfile.objects.create(user=user,
+                                   first_name='jimmy',
+                                   last_name='knighton',
+                                   date_of_birth='1926-03-25',
+                                   sex='male',
+                                   bio='I enjoy all outdoor activities.')
+        # create address for user
+        UserAddress.objects.create(user_profile=user.profile,
+                                   address_line_one='57 portland gardens',
+                                   city_or_town='chadwell heath',
+                                   county='essex',
+                                   postcode='rm65uh',
+                                   latitude=51.5791,
+                                   longitude=0.1355)
+    
+    def test_post_method_response_for_unauthenticated_user(self):
+        """
+        Tests the response when an unauthenticated user makes a POST request.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+    
+        # create event1
+        event1 = EventsActivities.objects.create(host_user=user,
+                                                 status="confirmed",
+                                                 title='event1',
+                                                 when="2032-10-30 12:00:00",
+                                                 closing_date="2022-10-15 12:00:00",
+                                                 max_attendees=20,
+                                                 keywords="outdoors,paintballing,competitive",
+                                                 description="Paintballing dayout, followed by lunch.",
+                                                 requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                                 address_line_one='mayhem paintball',
+                                                 city_or_town='adbridge',
+                                                 county='essex',
+                                                 postcode='rm4 1aa')
+        event1.attendees.add(user2, through_defaults={'status': 'Att'})
+        client = Client()
+        # get the event1 id
+        event_id = str(event1.id)
+        # set host parameter
+        host = 'no'
+        # Make post request
+        response = (client.
+                    post(reverse('events_and_activities:retrieve_contact_info'), data=json.dumps({'event_id': event_id,'host': host}), content_type='application/json', follow=True))
+        # check response
+        self.assertEqual(response.status_code, 200)
+        redirect_chain = response.redirect_chain
+        self.assertEqual(redirect_chain, [('/accounts/login/?next=/events_and_activities/retrieve_contact_info/', 302)])
+        self.assertTemplateUsed(response, 'account/login.html')
+
+    def test_post_method_for_successful_request_for_attendee_info(self):
+        """
+        Tests the POST method for a successful request for attendee contact info.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+        user3 = CustomUserModel.objects.get(username=self.data3['username'])
+        # create event that user1 is confirmed to host
+        event1 = EventsActivities.objects.create(host_user=user,
+                                                 status="confirmed",
+                                                 title='event1',
+                                                 when="2030-12-23 12:00:00",
+                                                 closing_date="2022-12-15 12:00:00",
+                                                 max_attendees=20,
+                                                 keywords="outdoors,paintballing,competitive",
+                                                 description="Paintballing dayout, followed by lunch.",
+                                                 requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                                 address_line_one='mayhem paintball',
+                                                 city_or_town='adbridge',
+                                                 county='essex',
+                                                 postcode='rm4 1aa')
+        # add user2 and user3 as confirmed attendees
+        event1.attendees.add(user2, through_defaults={'status': 'Att'})
+        event1.attendees.add(user3, through_defaults={'status': 'Att'})
+        client = Client()
+        # sign-in user
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        # get the event1 id
+        event_id = str(event1.id)
+        # set host parameter
+        host = 'no'
+        # Make post request
+        response = client.post(reverse('events_and_activities:retrieve_contact_info'), data=json.dumps({'event_id': event_id,'host': host}), content_type='application/json')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        context = {'contact_info': [(user2.username, user2.email), (user3.username, user3.email)], 'modal': 'attendee_contact_info', 'button1_name': 'close',
+                   'event_id': '1', 'event_title': 'event1'}
+        rendered_modal = render_to_string(request=response.request, context=context, template_name='events_and_activities/contact_info_modal.html')
+        self.assertEqual(response.json(), {'successful': 'true', 'rendered_modal': rendered_modal[rendered_modal.index('<div id="attendee_contact_info" class="modal"'):-6]})
+
+    def test_post_method_for_successful_request_for_host_info(self):
+        """
+        Tests the POST method for a successful request for host contact info.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+        user3 = CustomUserModel.objects.get(username=self.data3['username'])
+        # create event that user1 is confirmed to host
+        event1 = EventsActivities.objects.create(host_user=user,
+                                                 status="confirmed",
+                                                 title='event1',
+                                                 when="2030-12-23 12:00:00",
+                                                 closing_date="2022-12-15 12:00:00",
+                                                 max_attendees=20,
+                                                 keywords="outdoors,paintballing,competitive",
+                                                 description="Paintballing dayout, followed by lunch.",
+                                                 requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                                 address_line_one='mayhem paintball',
+                                                 city_or_town='adbridge',
+                                                 county='essex',
+                                                 postcode='rm4 1aa')
+        # add user2 and user3 as confirmed attendees
+        event1.attendees.add(user2, through_defaults={'status': 'Att'})
+        event1.attendees.add(user3, through_defaults={'status': 'Att'})
+        client = Client()
+        # sign-in user2
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        # get the event1 id
+        event_id = str(event1.id)
+        # set host parameter
+        host = 'yes'
+        # Make post request
+        response = client.post(reverse('events_and_activities:retrieve_contact_info'), data=json.dumps({'event_id': event_id,'host': host}), content_type='application/json')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        context = {'contact_info': [(user.username, user.email)], 'modal': 'host_contact_info', 'button1_name': 'close',
+                   'event_id': '1', 'event_title': 'event1'}
+        rendered_modal = render_to_string(request=response.request, context=context, template_name='events_and_activities/contact_info_modal.html')
+        self.assertEqual(response.json(), {'successful': 'true', 'rendered_modal': rendered_modal[rendered_modal.index('<div id="host_contact_info" class="modal"'):-6]})
+
+
+    def test_post_method_for_unsuccessful_request_for_attendee_info_due_to_exception(self):
+        """
+        Tests exception handling of POST method for request for attendee contact info, and the consequent response.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+        user3 = CustomUserModel.objects.get(username=self.data3['username'])
+        # create event that user1 is confirmed to host
+        event1 = EventsActivities.objects.create(host_user=user,
+                                                 status="confirmed",
+                                                 title='event1',
+                                                 when="2030-12-23 12:00:00",
+                                                 closing_date="2022-12-15 12:00:00",
+                                                 max_attendees=20,
+                                                 keywords="outdoors,paintballing,competitive",
+                                                 description="Paintballing dayout, followed by lunch.",
+                                                 requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                                 address_line_one='mayhem paintball',
+                                                 city_or_town='adbridge',
+                                                 county='essex',
+                                                 postcode='rm4 1aa')
+        # add user2 and user3 as confirmed attendees
+        event1.attendees.add(user2, through_defaults={'status': 'Att'})
+        event1.attendees.add(user3, through_defaults={'status': 'Att'})
+        client = Client()
+        # sign-in user
+        client.login(email=self.data['email'],
+                     password=self.data['password1'])
+        # Simulate database exception by using invalid event id
+        event_id = '10'
+        # set host parameter
+        host = 'no'
+        # Make post request
+        response = client.post(reverse('events_and_activities:retrieve_contact_info'), data=json.dumps({'event_id': event_id,'host': host}), content_type='application/json')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        msg = '''Unable to retrieve the contact information of the attendees of this event at this time. Please refresh the page and try again. If the problem
+persists, please contact us.''' 
+        self.assertEqual(response.json(), {'successful': 'false', 'error_msg': msg})
+    
+    def test_post_method_for_unsuccessful_request_for_host_info_due_to_exception(self):
+        """
+        Tests exception handling of POST method for request for host contact info, and the consequent response.
+        """
+        user = CustomUserModel.objects.get(username=self.data['username'])
+        user2 = CustomUserModel.objects.get(username=self.data2['username'])
+        user3 = CustomUserModel.objects.get(username=self.data3['username'])
+        # create event that user1 is confirmed to host
+        event1 = EventsActivities.objects.create(host_user=user,
+                                                 status="confirmed",
+                                                 title='event1',
+                                                 when="2030-12-23 12:00:00",
+                                                 closing_date="2022-12-15 12:00:00",
+                                                 max_attendees=20,
+                                                 keywords="outdoors,paintballing,competitive",
+                                                 description="Paintballing dayout, followed by lunch.",
+                                                 requirements="min £50 per person. wear suitable shoes. Need to be physically fit.",
+                                                 address_line_one='mayhem paintball',
+                                                 city_or_town='adbridge',
+                                                 county='essex',
+                                                 postcode='rm4 1aa')
+        # add user2 and user3 as confirmed attendees
+        event1.attendees.add(user2, through_defaults={'status': 'Att'})
+        event1.attendees.add(user3, through_defaults={'status': 'Att'})
+        client = Client()
+        # sign-in user2
+        client.login(email=self.data2['email'],
+                     password=self.data2['password1'])
+        # Simulate database exception by using invalid event id
+        event_id = '10'
+        # set host parameter
+        host = 'yes'
+        # Make post request
+        response = client.post(reverse('events_and_activities:retrieve_contact_info'), data=json.dumps({'event_id': event_id,'host': host}), content_type='application/json')
+        # check response
+        self.assertEqual(response.status_code, 200)
+        msg = '''Unable to retrieve the contact information of the host of this event at this time. Please refresh the page and try again. If the problem
+persists, please contact us.''' 
+        self.assertEqual(response.json(), {'successful': 'false', 'error_msg': msg})

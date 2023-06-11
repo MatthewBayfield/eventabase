@@ -1,3 +1,4 @@
+import json
 from django.db.models import Count, F
 from django.views.generic.edit import FormView, View
 from django.views.generic.base import TemplateView
@@ -393,3 +394,59 @@ class SearchAdvertsView(TemplateView):
             msg = '''Unable to register your interest in this event at this time. Please refresh the page and try again. If the problem
 persists, please contact us.''' 
             return JsonResponse({'successful': 'false', 'error_msg': msg, 'error_type': 'database'})
+
+
+@method_decorator([verified_email_required], name='dispatch')
+class RetrieveContactInfoView(TemplateView):
+    """
+    Responsible for retrieving and displaying the contact emails for the attendees or host of an event.
+
+    Attributes:
+        template_name (str): name of the template used to render the contact info modal.
+    """
+    template_name = 'events_and_activities/contact_info_modal.html'
+
+    def __init__(self, **kwargs):
+        """
+        Calls the TemplateView constructor. Sets initial context.
+        """
+        super().__init__(**kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """
+        Returns:
+            A JSON response indicating whether the request was successful with regard to retrieving the contact info, and possibly the rendered modal.
+        """
+        json_payload = json.loads(request.body)
+        event_id = json_payload['event_id']
+        host = json_payload['host']
+        print(json_payload)
+        if host == 'yes':
+            try:
+                event = EventsActivities.objects.get(id=int(event_id))
+                host_contact_info = [(event.host_user.username, event.host_user.email)]
+            except Exception as error:
+                print(error)
+                msg = '''Unable to retrieve the contact information of the host of this event at this time. Please refresh the page and try again. If the problem
+persists, please contact us.''' 
+                return JsonResponse({'successful': 'false', 'error_msg': msg})
+            context = {'contact_info': host_contact_info, 'modal': 'host_contact_info', 'button1_name': 'close', 'event_id': event_id, 'event_title': event.title}
+            rendered_modal = render_to_string(request=request, context=context, template_name=self.template_name)
+            # retrieving the inner html of the modal container
+            trimmed_rendered_modal_template = rendered_modal[rendered_modal.index('<div id="host_contact_info" class="modal"'):-6]
+            return JsonResponse({'successful': 'true', 'rendered_modal': trimmed_rendered_modal_template})
+        else:
+            try:
+                event = EventsActivities.objects.get(id=int(event_id))
+                attendees_contact_info = event.attendees.all().values_list('username', 'email')
+            except Exception as error:
+                print(error)
+                msg = '''Unable to retrieve the contact information of the attendees of this event at this time. Please refresh the page and try again. If the problem
+persists, please contact us.''' 
+                return JsonResponse({'successful': 'false', 'error_msg': msg})
+            context = {'contact_info': attendees_contact_info, 'modal': 'attendee_contact_info', 'button1_name': 'close', 'event_id': event_id, 'event_title': event.title}
+            rendered_modal = render_to_string(request=request, context=context, template_name=self.template_name)
+            # retrieving the inner html of the modal container
+            trimmed_rendered_modal_template = rendered_modal[rendered_modal.index('<div id="attendee_contact_info" class="modal"'):-6]
+            return JsonResponse({'successful': 'true', 'rendered_modal': trimmed_rendered_modal_template})
+        
