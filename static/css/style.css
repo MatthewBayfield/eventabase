@@ -83,9 +83,21 @@ a {
     cursor: default;
 }
 
+table {
+    border: solid 2px #d62839;
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+    border-collapse: collapse;
+}
+
+td, th {
+    padding: 0.5rem;
+    border: solid 2px #d62839;
+}
+
 input, textarea {
     border: 2px solid black;
-    width: 60%
+    width: 60%;
 }
 
 input[type = 'checkbox'] {

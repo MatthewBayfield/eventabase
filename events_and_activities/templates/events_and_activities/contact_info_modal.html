@@ -1,0 +1,28 @@
+{% extends 'base_modal.html' %}
+{% block modal_title%}Attendee Emails for Event (ID:{{event_id}}) titled {{event_title}}{% endblock %}
+{% block main %}
+    <p>Below are the email addresses of all attendees. If you wish or need to communicate with attendees about your upcoming event, feel free to do so.</p>
+    <p>You may wish to disclose your contact number with your event attendees via an email.</p>
+    {% if contact_info.size %}
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col" colspan="1" id="username">Username</th>
+                    <th scope="col" colspan="1" id="email">Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for username, email in contact_info %}
+                    <tr>
+                        <td headers="username">{{username}}</td>
+                        <td headers="email">{{email}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>There is currently no one attending this event/activity.</p>
+    {% endif %}
+
+    
+{% endblock %}
