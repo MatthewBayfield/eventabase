@@ -38,6 +38,12 @@ let withdrawButtons = [...document.getElementsByClassName('withdraw')];
 let searchAdvertsButton = document.getElementById('search_adverts_button');
 let gridContainers = [...document.getElementsByClassName('grid_container')];
 let registerInterestButtons = [...document.getElementsByClassName('register_interest')];
+let attendeeInfoButtons = [...document.getElementsByClassName('attendee_info')];
+let attendeeContactInfoModal = document.getElementById('attendee_contact_info');
+let attendeeContactInfoModalCloseButton = attendeeContactInfoModal ? document.querySelector(".modal_button[name = 'close']") : null;
+let hostInfoButtons = [...document.getElementsByClassName('host_info')];
+let hostContactInfoModal = document.getElementById('host_contact_info');
+let hostContactInfoModalCloseButton = hostContactInfoModal ? document.querySelector(".modal_button[name = 'close']") : null;
 
 // JS Section: Event listeners:
 
@@ -872,6 +878,12 @@ function refreshDomElementVariables() {
     searchAdvertsButton = document.getElementById('search_adverts_button');
     gridContainers = [...document.getElementsByClassName('grid_container')];
     registerInterestButtons = [...document.getElementsByClassName('register_interest')];
+    attendeeInfoButtons = [...document.getElementsByClassName('attendee_info')];
+    attendeeContactInfoModal = document.getElementById('attendee_contact_info');
+    attendeeContactInfoModalCloseButton = attendeeContactInfoModal ? document.querySelector(".modal_button[name = 'close']") : null;
+    hostInfoButtons = [...document.getElementsByClassName('host_info')];
+    hostContactInfoModal = document.getElementById('host_contact_info');
+    hostContactInfoModalCloseButton = hostContactInfoModal ? document.querySelector(".modal_button[name = 'close']") : null;
 }
 
 // JS Subsection: Fetch requests:
@@ -1351,6 +1363,81 @@ async function registerInterestFetchHandler(event) {
     }     
 }
 
+/** 
+ * @summary Fetch POST request handler for retrieving and displaying the attendee contact info of a host user's event.
+ */
+async function retrieveContactInfoFetchHandler(event) {
+    let target = event.currentTarget;
+    let requestUrl = '/events_and_activities/retrieve_contact_info/';
+    // Obtain event id
+    let eventID = target.parentElement.previousElementSibling.firstElementChild.lastElementChild.innerHTML.replace('.', '');
+    let host;
+    if (target.classList.contains('host_info')) {
+        host = 'yes';
+    }
+    else if (target.classList.contains('attendee_info')) {
+        host = 'no';
+    }
+
+    try {
+        // For aquiring the csrf token
+        const csrftoken = Cookies.get('csrftoken');
+        // make request and check response
+        let request = new Request(requestUrl,
+                                    {method: 'POST', headers: {'X-CSRFToken': csrftoken},
+                                    mode: 'same-origin',
+                                    body: JSON.stringify({event_id: eventID, host: host})});
+        let response = await fetch(request);
+        let responseJSON = await response.json();
+        if (responseJSON.successful === 'true') {
+            let rendered_modal = responseJSON.rendered_modal;
+            let new_modal_container = document.createElement('div');
+            
+            if (host === 'no') {
+                document.getElementById('post_events').firstElementChild.before(new_modal_container);
+            }
+            else {
+                document.getElementById('search_events').firstElementChild.before(new_modal_container);
+            }
+            new_modal_container.classList.add('modal_container');
+            new_modal_container.setAttribute('tabindex', '0');
+            new_modal_container.setAttribute('style', "display:block;")
+            new_modal_container.innerHTML = rendered_modal;
+            refreshDomElementVariables();
+            executeAllPageAddListenerFunctions();
+            executeAllHomePageAddListenersFunctions();
+            if (host === 'no') {
+                attendeeContactInfoModal.focus();
+                attendeeContactInfoModal.scrollTo({
+                    top: 0,
+                    behaviour: 'instant'
+                })
+            }
+            else {
+                hostContactInfoModal.focus();
+                hostContactInfoModal.scrollTo({
+                    top: 0,
+                    behaviour: 'instant'
+                })
+            }
+            document.body.style.overflowY = 'hidden';
+        }
+        if (responseJSON.successful === 'false') {
+            Swal.fire({
+                title: 'Something went wrong',
+                text: responseJSON.error_msg,
+                icon: 'error',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
+        }
+    }
+    catch(error) {
+        console.error(error);
+    }     
+}
+
 // JS Section: Page specific executed code
 
 // all pages:
@@ -1386,5 +1473,6 @@ if (document.getElementsByTagName('title')[0].textContent === 'Search event adve
 //     modalButtons, openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, postEventFormFetchHandler, postEventForm,
 //     refreshFormFetchHandler, closeModal, restoreForm, postEventFormDoneButton, updateEventFetchHandler,
 //     deleteEventButtons, cancelEventButtons, interestedEvents, attendingEvents, withdrawButtons, withdrawFromEventFetchHandler, openModalButtonHandler,
-//     searchAdvertsButton, gridContainers, registerInterestButtons, registerInterestFetchHandler
+//     searchAdvertsButton, gridContainers, registerInterestButtons, registerInterestFetchHandler, attendeeContactInfoModal, attendeeContactInfoModalCloseButton,
+//     attendeeInfoButtons, hostContactInfoModal, hostInfoButtons, hostContactInfoModalCloseButton, retrieveContactInfoFetchHandler
 // };
