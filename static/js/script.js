@@ -277,6 +277,26 @@ function registerInterestButtonListeners() {
     }
 }
 
+/** Adds click event listeners to
+ *  contact info buttons. Event
+ *  handler performs fetch POST request
+ *  in order to retrieve and display contact info of the attendees or host of an event.
+ *  @summary Adds click listeners to contact info buttons. Triggers fetch POST request.
+ */
+function InfoButtonListeners() {
+    // remove exisitng listeners to prevent duplication
+    for (let button of attendeeInfoButtons) {
+        button.removeEventListener('click', retrieveContactInfoFetchHandler);
+        // add new listeners
+        button.addEventListener('click', retrieveContactInfoFetchHandler);
+    }
+    for (let button of hostInfoButtons) {
+        button.removeEventListener('click', retrieveContactInfoFetchHandler);
+        // add new listeners
+        button.addEventListener('click', retrieveContactInfoFetchHandler);
+    }
+}
+
 // JS Subsection: form related event listeners 
 
 /** Adds mouseenter and mouseleave event listeners to 'help icon' elements, to
@@ -822,6 +842,7 @@ function executeAllHomePageAddListenersFunctions() {
     eventWithdrawalListeners();
     removeFeedbackListeners();
     searchAdvertsButtonEventListener();
+    InfoButtonListeners();
 }
 
 /**Recreates all the event listeners
