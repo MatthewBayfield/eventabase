@@ -1,9 +1,22 @@
 {% extends 'base_modal.html' %}
-{% block modal_title%}Attendee Emails for Event (ID:{{event_id}}) titled {{event_title}}{% endblock %}
+{% block modal_title%}
+    {% if modal == 'attendee_contact_info' %}
+        Attendee Emails for Event (ID:{{event_id}}) titled {{event_title}}
+    {% else %}
+        Host's Email for Event (ID:{{event_id}}) titled {{event_title}}
+    {% endif %}
+{% endblock %}
+
 {% block main %}
-    <p>Below are the email addresses of all attendees. If you wish or need to communicate with attendees about your upcoming event, feel free to do so.</p>
-    <p>You may wish to disclose your contact number with your event attendees via an email.</p>
-    {% if contact_info.size %}
+    {% if modal == 'attendee_contact_info' %}
+        <p>Below are the email addresses of all attendees. If you wish or need to communicate with attendees about your upcoming event, feel free to do so.</p>
+        <p>You may wish to disclose your contact number with your event attendees via an email.</p>
+    {% else %}
+        <p>Below is the email address of the host. If you wish or need to communicate with the host about their upcoming event, feel free to do so.</p>
+        <p>You may wish to disclose your contact number to the host via an email.</p>
+    {% endif %}
+
+    {% if contact_info|length %}
         <table>
             <thead>
                 <tr>
