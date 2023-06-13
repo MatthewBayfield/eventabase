@@ -671,6 +671,119 @@ If the problem persists, please report the issue to us.`;
             }
         })
     })
+
+    describe('test the fetch POST request of the retrieveContactInfoFetchHandler operates as expected', () => {
+        beforeEach(() => {
+            // grid container styling
+            get.mockClear();
+            Element.prototype.scrollTo.mockClear();
+        })
+        afterEach(() => {
+            Request.mockClear();
+            fetch.mockClear();
+            swal_fire.mockClear();
+        })
+    
+        test('check request and response/actions when a successful request for attendee contact info is submitted', async () => {
+            let rendered_modal = `<div id="attendee_contact_info" tabindex="0">rendered_modal_placeholder</div>`;
+            json_data = {'successful': 'true','rendered_modal': rendered_modal};
+            let attendeeContactInfoButton = attendeeInfoButtons[0];
+            let event = {currentTarget: attendeeContactInfoButton};
+            // call the handler to simulate opening modal
+            await retrieveContactInfoFetchHandler(event);
+            expect(Request).toHaveBeenCalledTimes(1);
+            expect(fetch).toHaveBeenCalledTimes(1);
+            expect(Request.mock.lastCall).toEqual(['/events_and_activities/retrieve_contact_info/', {method: 'POST', headers: {'X-CSRFToken': 'token'},
+            mode: 'same-origin', body: JSON.stringify({event_id: '5', host: 'no'})}]);
+            // check rendered modal is added to DOM
+            expect(document.getElementById('post_events').firstElementChild.outerHTML).toBe(`<div class="modal_container" tabindex="0" style="display:block;">${rendered_modal}</div>`);
+            // check modal has focus
+            expect(document.hasFocus(attendeeContactInfoModal)).toBe(true);
+            // check modal scrolled to top
+            expect(Element.prototype.scrollTo).toHaveBeenCalledTimes(1);
+            expect(Element.prototype.scrollTo).toHaveBeenLastCalledWith({
+                top: 0,
+                behaviour: 'instant'
+            });
+        })
+    
+        test('check request and response/actions when a successful request for host contact info is submitted', async () => {
+            let rendered_modal = `<div id="host_contact_info" tabindex="0">rendered_modal_placeholder</div>`;
+            json_data = {'successful': 'true','rendered_modal': rendered_modal};
+            let hostContactInfoButton = hostInfoButtons[0];
+            let event = {currentTarget: hostContactInfoButton};
+            // call the handler to simulate opening modal
+            await retrieveContactInfoFetchHandler(event);
+            expect(Request).toHaveBeenCalledTimes(1);
+            expect(fetch).toHaveBeenCalledTimes(1);
+            expect(Request.mock.lastCall).toEqual(['/events_and_activities/retrieve_contact_info/', {method: 'POST', headers: {'X-CSRFToken': 'token'},
+            mode: 'same-origin', body: JSON.stringify({event_id: '2', host: 'yes'})}]);
+            // check rendered modal is added to DOM
+            expect(document.getElementById('search_events').firstElementChild.outerHTML).toBe(`<div class="modal_container" tabindex="0" style="display:block;">${rendered_modal}</div>`);
+            // check modal has focus
+            expect(document.hasFocus(hostContactInfoModal)).toBe(true);
+            // check modal scrolled to top
+            expect(Element.prototype.scrollTo).toHaveBeenCalledTimes(1);
+            expect(Element.prototype.scrollTo).toHaveBeenLastCalledWith({
+                top: 0,
+                behaviour: 'instant'
+            });
+        })
+            
+        test('check request and response/actions when an unsuccessful request for attendee contact info is submitted', async () => {
+            let rendered_modal = `<div id="attendee_contact_info" tabindex="0">rendered_modal_placeholder</div>`;
+            msg = `Unable to retrieve the contact information of the attendees of this event at this time. Please refresh the page and try again. If the problem
+persists, please contact us.`
+            json_data = {'successful': 'false', 'error_msg': msg};
+            let attendeeContactInfoButton = attendeeInfoButtons[0];
+            let event = {currentTarget: attendeeContactInfoButton};
+            // call the handler to simulate opening modal
+            await retrieveContactInfoFetchHandler(event);
+            expect(Request).toHaveBeenCalledTimes(1);
+            expect(fetch).toHaveBeenCalledTimes(1);
+            expect(Request.mock.lastCall).toEqual(['/events_and_activities/retrieve_contact_info/', {method: 'POST', headers: {'X-CSRFToken': 'token'},
+            mode: 'same-origin', body: JSON.stringify({event_id: '5', host: 'no'})}]);
+            // check rendered modal has not been added to DOM
+            expect(document.getElementById('post_events').firstElementChild.outerHTML).not.toBe(`<div class="modal_container" tabindex="0" style="display:block;">${rendered_modal}</div>`);
+            // check alert displayed
+            expect(swal_fire).toHaveBeenCalledTimes(1);
+            expect(swal_fire).toHaveBeenLastCalledWith({
+                title: 'Something went wrong',
+                text: json_data.error_msg,
+                icon: 'error',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
+        })
+    
+        test('check request and response/actions when an unsuccessful request for host contact info is submitted', async () => {
+            let rendered_modal = `<div id="host_contact_info" tabindex="0">rendered_modal_placeholder</div>`;
+            msg = `Unable to retrieve the contact information of the host of this event at this time. Please refresh the page and try again. If the problem
+persists, please contact us.`
+            json_data = {'successful': 'false', 'error_msg': msg};
+            let hostContactInfoButton = hostInfoButtons[0];
+            let event = {currentTarget: hostContactInfoButton};
+            // call the handler to simulate opening modal
+            await retrieveContactInfoFetchHandler(event);
+            expect(Request).toHaveBeenCalledTimes(1);
+            expect(fetch).toHaveBeenCalledTimes(1);
+            expect(Request.mock.lastCall).toEqual(['/events_and_activities/retrieve_contact_info/', {method: 'POST', headers: {'X-CSRFToken': 'token'},
+            mode: 'same-origin', body: JSON.stringify({event_id: '2', host: 'yes'})}]);
+            // check rendered modal has not been added to DOM
+            expect(document.getElementById('search_events').firstElementChild.outerHTML).not.toBe(`<div class="modal_container" tabindex="0" style="display:block;">${rendered_modal}</div>`);
+            // check alert displayed
+            expect(swal_fire).toHaveBeenCalledTimes(1);
+            expect(swal_fire).toHaveBeenLastCalledWith({
+                title: 'Something went wrong',
+                text: json_data.error_msg,
+                icon: 'error',
+                allowOutsideClick: false,
+                confirmButtonText: 'Continue',
+                confirmButtonAriaLabel: 'Continue',
+            })
+        })
+    })
 })
     
     
