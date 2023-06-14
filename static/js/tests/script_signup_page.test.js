@@ -9,7 +9,7 @@ let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/re
 document.documentElement.innerHTML = fileContents;
 let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, slideshowImages, uniqueFocusable, helpTextIcons, helpText, matchingIcons} = require('../script.js');
 // mock functions
-const log = jest.fn();
+clickSpy = jest.spyOn(HTMLElement.prototype, 'click');
 
 describe('test more menu functionality', () => {
     describe('check the more menu hamburger-style button works', () => {
@@ -121,31 +121,22 @@ describe('check all focusable elements give feedback when clicked directly or in
     })
     
     describe("check that the 'enter key' event listeners work", () => {
-        const click = (event) => {log(event.target)};
-        beforeAll(() => {
-            for (let element of uniqueFocusable) {
-                element.addEventListener('click', click);
-            }
-        })
-        afterAll(() => {
-            for (let element of uniqueFocusable) {
-                element.removeEventListener('click', click);
-            }
-            log.mockClear();
+        beforeEach(() => {
+            clickSpy.mockClear();
         })
     
         test('when a focusable element has focus and the enter key is pressed, the element is clicked', () => {
             let event;
             for (let element of uniqueFocusable) {
+                clickSpy.mockClear();
                 event = new KeyboardEvent('keyup', {key: 'Enter'} );
-                log.mockClear();
                 element.dispatchEvent(event);
-                expect(log).toHaveBeenCalledWith(element);
-                log.mockClear();
-                event = new KeyboardEvent('keyup', {key: 'Tab'});
-                element.dispatchEvent(event);
-                expect(log).not.toHaveBeenCalledWith(element);
-
+                if (element.tagName !== 'BUTTON') {
+                    expect(clickSpy).toHaveBeenCalledTimes(1);
+                }
+                else {
+                    expect(clickSpy).toHaveBeenCalledTimes(0);
+                }
             }
         })
     

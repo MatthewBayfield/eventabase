@@ -447,7 +447,9 @@ var enterKeyKeyup = (event) => {
     let element = event.currentTarget;
     if (event.key === 'Enter') {
         element.classList.remove('clicked');
-        element.click();
+        if (element.tagName !== 'BUTTON') {
+            element.click();
+        }
     }
 };
 var menuItemHoverFeedbackMouseenter = (event) => {
