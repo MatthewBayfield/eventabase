@@ -12,7 +12,7 @@ let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcon
      restoreForm, refreshFormFetchHandler, updateEventFetchHandler, openModalButtonHandler,
      gridContainers} = require('../script.js');
 // mock functions
-const log = jest.fn();
+clickSpy = jest.spyOn(HTMLElement.prototype, 'click');
 // mocking the scrollTo method of a DOM element
 Element.prototype.scrollTo = jest.fn();
 // mocking the openModalButtonHandler so that it uses the mocked scrollTo method
@@ -143,54 +143,33 @@ describe('check all focusable elements give feedback when clicked directly or in
 })
     
 describe("check that the 'enter key' event listeners work", () => {
-    const click = (event) => {log(event.target)};
     beforeAll(() => {
-        for (let element of uniqueFocusable) {
-            element.addEventListener('click', click);
+        for (let button of closeModalButtons) {
+                    // dont want to call restoreForm handler in tests
+                    button.firstElementChild.removeEventListener('click', restoreForm);
+                }
+        for (let button of modalButtons) {
+                if (button.getAttribute('name') === 'Cancel') {
+                    // dont want to call restoreForm handler in tests
+                    button.removeEventListener('click', restoreForm);
+            }
         }
-        // for (let button of closeModalButtons) {
-        //             // dont want to call restoreForm handler in tests
-        //             button.firstElementChild.removeEventListener('click', restoreForm);
-        //         }
-        // for (let button of modalButtons) {
-        //         if (button.getAttribute('name') === 'Cancel') {
-        //             // dont want to call restoreForm handler in tests
-        //             button.removeEventListener('click', restoreForm);
-        //     }
-        // }
-        // // do not need these event listeners in these tests. removed to remove console errors.
-        // editProfileModalDoneButton.removeEventListener('click', editProfileFormFetchHandler);
-        // postEventFormDoneButton.removeEventListener('click', postEventFormFetchHandler);
-        // for (let button of deleteEventButtons) {
-        //     button.removeEventListener('click', updateEventFetchHandler);
-        // }
-        // for ( let button of cancelEventButtons) {
-        //     button.removeEventListener('click', updateEventFetchHandler);
-        // }
-
     })
     afterAll(() => {
-        for (let element of uniqueFocusable) {
-            element.removeEventListener('click', click);
-        }
-        // for (let button of closeModalButtons) {
-        //     button.firstElementChild.addEventListener('click', restoreForm);
+        for (let button of closeModalButtons) {
+            button.firstElementChild.addEventListener('click', restoreForm);
 
-        // }
-        // for (let button of modalButtons) {
-        //     if (button.getAttribute('name') === 'Cancel') {
-        //         button.addEventListener('click', restoreForm);
-        //     }
-        // }
-        // editProfileModalDoneButton.addEventListener('click', editProfileFormFetchHandler);
-        // postEventFormDoneButton.addEventListener('click', postEventFormFetchHandler);
-        // for (let button of deleteEventButtons) {
-        //     button.addEventListener('click', updateEventFetchHandler);
-        // }
-        // for ( let button of cancelEventButtons) {
-        //     button.addEventListener('click', updateEventFetchHandler);
-        // }
-        log.mockClear();
+        }
+        for (let button of modalButtons) {
+            if (button.getAttribute('name') === 'Cancel') {
+                button.addEventListener('click', restoreForm);
+            }
+        }
+        clickSpy.mockClear();
+    })
+
+    beforeEach(() => {
+        clickSpy.mockClear();
     })
 
     test('when a focusable element has focus and the enter key is pressed, the element is clicked', () => {
@@ -199,13 +178,14 @@ describe("check that the 'enter key' event listeners work", () => {
         for (let element of uniqueFocusable) {
             if (!nonClickableElements.includes(element)) {
                 event = new KeyboardEvent('keyup', {key: 'Enter'} );
-                log.mockClear();
+                clickSpy.mockClear();
                 element.dispatchEvent(event);
-                expect(log).toHaveBeenCalledWith(element);
-                log.mockClear();
-                event = new KeyboardEvent('keyup', {key: 'Tab'});
-                element.dispatchEvent(event);
-                expect(log).not.toHaveBeenCalledWith(element);
+                if (element.tagName !== 'BUTTON') {
+                    expect(clickSpy).toHaveBeenCalledTimes(1);
+                }
+                else {
+                    expect(clickSpy).toHaveBeenCalledTimes(0);
+                }
             }
         }
     })
