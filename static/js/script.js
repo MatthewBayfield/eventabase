@@ -359,10 +359,26 @@ function formFieldChangeListeners() {
  */
 function closeModalButtonListeners() {
     for (let button of closeModalButtons) {
-        button.firstElementChild.removeEventListener('click', closeModal);
-        button.firstElementChild.removeEventListener('click', restoreForm);
-        button.firstElementChild.addEventListener('click', closeModal);
-        button.firstElementChild.addEventListener('click', restoreForm);
+        // code for the 'X' close button of the attendee and host contact info modals only
+        if (button.parentElement.parentElement.id === 'attendee_contact_info' || button.parentElement.parentElement.id === 'host_contact_info' ) {
+            button.firstElementChild.removeEventListener('click', closeContactInfoModal);
+            button.firstElementChild.addEventListener('click', closeContactInfoModal);
+        }
+        else {
+            button.firstElementChild.removeEventListener('click', closeModal);
+            button.firstElementChild.removeEventListener('click', restoreForm);
+            button.firstElementChild.addEventListener('click', closeModal);
+            button.firstElementChild.addEventListener('click', restoreForm);
+        }        
+    }
+    // code for the bottom close button of the attendee and host contact info modals only
+    if (attendeeContactInfoModal) {
+        attendeeContactInfoModalCloseButton.removeEventListener('click', closeContactInfoModal);
+        attendeeContactInfoModalCloseButton.addEventListener('click', closeContactInfoModal);
+    }
+    if (hostContactInfoModal) {
+        hostContactInfoModalCloseButton.removeEventListener('click', closeContactInfoModal);
+        hostContactInfoModalCloseButton.addEventListener('click', closeContactInfoModal);
     }
 }
 
@@ -703,6 +719,66 @@ function closeModal(input) {
     if (parentModalContainer.firstElementChild.id === 'post_events_modal') {
         // delayed focus to prevent keyup event propagating to the focused element
         setTimeout(() => {document.querySelector(".open_modal_button[aria-controls='post_events_modal']").focus()}, 100);
+    }
+}
+
+/**
+ * @param {Object} event - a dispatched clickevent.
+ * @summary Event handler/function for closing an attendee contact info modal.
+ */
+function closeContactInfoModal(event) {
+    let button = event.currentTarget;
+    if (button.tagName === 'BUTTON') {
+        let modal_title = button.parentElement.parentElement.querySelector('h2').innerHTML;
+        let event_id = modal_title.slice(modal_title.indexOf('ID'), modal_title.indexOf(')') ).replace(')', '').slice(3);
+        button.parentElement.parentElement.parentElement.remove();
+        document.body.removeAttribute('style');
+        refreshDomElementVariables();
+        if (button.parentElement.parentElement.id === 'attendee_contact_info') {
+            radioInputs[3].click();
+            for (let i = 0; i < upcomingEvents.length; ++i) {
+                if (upcomingEvents[i].firstElementChild.firstElementChild.children[1].innerHTML.slice(0, -1) === event_id) {
+                    // delayed focus to prevent keyup event propagating to the focused element
+                    setTimeout(() => {upcomingEvents[i].querySelector('.attendee_info').focus()}, 100);
+                }
+            }
+        }
+        else {
+            radioInputs[1].click();
+            for (let i = 0; i < attendingEvents.length; ++i) {
+                if (attendingEvents[i].firstElementChild.firstElementChild.children[1].innerHTML.slice(0, -1) === event_id) {
+                    // delayed focus to prevent keyup event propagating to the focused element
+                    setTimeout(() => {attendingEvents[i].querySelector('.host_info').focus()}, 100);
+                }
+            }
+        }
+    }
+    else {
+        let modal_title = button.parentElement.parentElement.parentElement.querySelector('h2').innerHTML;
+        let event_id = modal_title.slice(modal_title.indexOf('ID'), modal_title.indexOf(')') ).replace(')', '').slice(3);
+        let modal = button.parentElement.parentElement.parentElement;
+        let modal_id = modal.id;
+        modal.parentElement.remove();
+        document.body.removeAttribute('style');
+        refreshDomElementVariables();
+        if (modal_id === 'attendee_contact_info') {
+            radioInputs[3].click();
+            for (let i = 0; i < upcomingEvents.length; ++i) {
+                if (upcomingEvents[i].firstElementChild.firstElementChild.children[1].innerHTML.slice(0, -1) === event_id) {
+                    // delayed focus to prevent keyup event propagating to the focused element
+                    setTimeout(() => {upcomingEvents[i].querySelector('.attendee_info').focus()}, 100);
+                }
+            }
+        }  
+        else {
+            radioInputs[1].click();
+            for (let i = 0; i < attendingEvents.length; ++i) {
+                if (attendingEvents[i].firstElementChild.firstElementChild.children[1].innerHTML.slice(0, -1) === event_id) {
+                    // delayed focus to prevent keyup event propagating to the focused element
+                    setTimeout(() => {attendingEvents[i].querySelector('.host_info').focus()}, 100);
+                }
+            }
+        }
     }
 }
 
@@ -1497,5 +1573,5 @@ if (document.getElementsByTagName('title')[0].textContent === 'Search event adve
 //     refreshFormFetchHandler, closeModal, restoreForm, postEventFormDoneButton, updateEventFetchHandler,
 //     deleteEventButtons, cancelEventButtons, interestedEvents, attendingEvents, withdrawButtons, withdrawFromEventFetchHandler, openModalButtonHandler,
 //     searchAdvertsButton, gridContainers, registerInterestButtons, registerInterestFetchHandler, attendeeContactInfoModal, attendeeContactInfoModalCloseButton,
-//     attendeeInfoButtons, hostContactInfoModal, hostInfoButtons, hostContactInfoModalCloseButton, retrieveContactInfoFetchHandler
+//     attendeeInfoButtons, hostContactInfoModal, hostInfoButtons, hostContactInfoModalCloseButton, retrieveContactInfoFetchHandler, closeContactInfoModal
 // };
