@@ -685,7 +685,11 @@ If the problem persists, please report the issue to us.`;
         })
     
         test('check request and response/actions when a successful request for attendee contact info is submitted', async () => {
-            let rendered_modal = `<div id="attendee_contact_info" tabindex="0">rendered_modal_placeholder</div>`;
+            let dummy_div = document.createElement('div');
+            let dummy_content = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_attendee_contact_info_modal.html', 'utf-8');
+            dummy_div.innerHTML = dummy_content;
+            let rendered_modal = dummy_div.firstElementChild.innerHTML;
+            dummy_div.remove();
             json_data = {'successful': 'true','rendered_modal': rendered_modal};
             let attendeeContactInfoButton = attendeeInfoButtons[0];
             let event = {currentTarget: attendeeContactInfoButton};
@@ -696,9 +700,10 @@ If the problem persists, please report the issue to us.`;
             expect(Request.mock.lastCall).toEqual(['/events_and_activities/retrieve_contact_info/', {method: 'POST', headers: {'X-CSRFToken': 'token'},
             mode: 'same-origin', body: JSON.stringify({event_id: '5', host: 'no'})}]);
             // check rendered modal is added to DOM
-            expect(document.getElementById('post_events').firstElementChild.outerHTML).toBe(`<div class="modal_container" tabindex="0" style="display:block;">${rendered_modal}</div>`);
+            expect(document.getElementById('post_events').firstElementChild.outerHTML).toBe(dummy_content);
             // check modal has focus
-            expect(document.hasFocus(attendeeContactInfoModal)).toBe(true);
+            attendeeContactInfoModal = document.getElementById('attendee_contact_info');
+            expect(document.activeElement).toBe(attendeeContactInfoModal);
             // check modal scrolled to top
             expect(Element.prototype.scrollTo).toHaveBeenCalledTimes(1);
             expect(Element.prototype.scrollTo).toHaveBeenLastCalledWith({
@@ -708,7 +713,11 @@ If the problem persists, please report the issue to us.`;
         })
     
         test('check request and response/actions when a successful request for host contact info is submitted', async () => {
-            let rendered_modal = `<div id="host_contact_info" tabindex="0">rendered_modal_placeholder</div>`;
+            let dummy_div = document.createElement('div');
+            let dummy_content = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_host_contact_info_modal.html', 'utf-8');
+            dummy_div.innerHTML = dummy_content;
+            let rendered_modal = dummy_div.firstElementChild.innerHTML;
+            dummy_div.remove();
             json_data = {'successful': 'true','rendered_modal': rendered_modal};
             let hostContactInfoButton = hostInfoButtons[0];
             let event = {currentTarget: hostContactInfoButton};
@@ -719,9 +728,10 @@ If the problem persists, please report the issue to us.`;
             expect(Request.mock.lastCall).toEqual(['/events_and_activities/retrieve_contact_info/', {method: 'POST', headers: {'X-CSRFToken': 'token'},
             mode: 'same-origin', body: JSON.stringify({event_id: '2', host: 'yes'})}]);
             // check rendered modal is added to DOM
-            expect(document.getElementById('search_events').firstElementChild.outerHTML).toBe(`<div class="modal_container" tabindex="0" style="display:block;">${rendered_modal}</div>`);
+            expect(document.getElementById('search_events').firstElementChild.outerHTML).toBe(dummy_content);
             // check modal has focus
-            expect(document.hasFocus(hostContactInfoModal)).toBe(true);
+            hostContactInfoModal = document.getElementById('host_contact_info');
+            expect(document.activeElement).toBe(hostContactInfoModal);
             // check modal scrolled to top
             expect(Element.prototype.scrollTo).toHaveBeenCalledTimes(1);
             expect(Element.prototype.scrollTo).toHaveBeenLastCalledWith({
@@ -731,7 +741,11 @@ If the problem persists, please report the issue to us.`;
         })
             
         test('check request and response/actions when an unsuccessful request for attendee contact info is submitted', async () => {
-            let rendered_modal = `<div id="attendee_contact_info" tabindex="0">rendered_modal_placeholder</div>`;
+            let dummy_div = document.createElement('div');
+            let dummy_content = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_attendee_contact_info_modal.html', 'utf-8');
+            dummy_div.innerHTML = dummy_content;
+            let rendered_modal = dummy_div.firstElementChild.innerHTML;
+            dummy_div.remove();
             msg = `Unable to retrieve the contact information of the attendees of this event at this time. Please refresh the page and try again. If the problem
 persists, please contact us.`
             json_data = {'successful': 'false', 'error_msg': msg};
@@ -744,7 +758,7 @@ persists, please contact us.`
             expect(Request.mock.lastCall).toEqual(['/events_and_activities/retrieve_contact_info/', {method: 'POST', headers: {'X-CSRFToken': 'token'},
             mode: 'same-origin', body: JSON.stringify({event_id: '5', host: 'no'})}]);
             // check rendered modal has not been added to DOM
-            expect(document.getElementById('post_events').firstElementChild.outerHTML).not.toBe(`<div class="modal_container" tabindex="0" style="display:block;">${rendered_modal}</div>`);
+            expect(document.getElementById('post_events').firstElementChild.outerHTML).not.toBe(dummy_content);
             // check alert displayed
             expect(swal_fire).toHaveBeenCalledTimes(1);
             expect(swal_fire).toHaveBeenLastCalledWith({
@@ -758,7 +772,11 @@ persists, please contact us.`
         })
     
         test('check request and response/actions when an unsuccessful request for host contact info is submitted', async () => {
-            let rendered_modal = `<div id="host_contact_info" tabindex="0">rendered_modal_placeholder</div>`;
+            let dummy_div = document.createElement('div');
+            let dummy_content = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_host_contact_info_modal.html', 'utf-8');
+            dummy_div.innerHTML = dummy_content;
+            let rendered_modal = dummy_div.firstElementChild.innerHTML;
+            dummy_div.remove();
             msg = `Unable to retrieve the contact information of the host of this event at this time. Please refresh the page and try again. If the problem
 persists, please contact us.`
             json_data = {'successful': 'false', 'error_msg': msg};
@@ -771,7 +789,7 @@ persists, please contact us.`
             expect(Request.mock.lastCall).toEqual(['/events_and_activities/retrieve_contact_info/', {method: 'POST', headers: {'X-CSRFToken': 'token'},
             mode: 'same-origin', body: JSON.stringify({event_id: '2', host: 'yes'})}]);
             // check rendered modal has not been added to DOM
-            expect(document.getElementById('search_events').firstElementChild.outerHTML).not.toBe(`<div class="modal_container" tabindex="0" style="display:block;">${rendered_modal}</div>`);
+            expect(document.getElementById('search_events').firstElementChild.outerHTML).not.toBe(dummy_content);
             // check alert displayed
             expect(swal_fire).toHaveBeenCalledTimes(1);
             expect(swal_fire).toHaveBeenLastCalledWith({
