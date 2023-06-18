@@ -131,7 +131,7 @@ describe('check all focusable elements give feedback when clicked directly or in
                 clickSpy.mockClear();
                 event = new KeyboardEvent('keyup', {key: 'Enter'} );
                 element.dispatchEvent(event);
-                if (element.tagName !== 'BUTTON') {
+                if (element.tagName !== 'BUTTON' && element.tagName !== 'A') {
                     expect(clickSpy).toHaveBeenCalledTimes(1);
                 }
                 else {
