@@ -798,6 +798,24 @@ describe('All tests', () => {
     })
     
     describe("Test that the 'trap focus within open modal' event listeners work", () => {
+        beforeEach(() => {
+            document.documentElement.innerHTML = fileContents;
+            // creating a contact info modal, so that its elements exist for the test
+            let infoModal = document.createElement('div');
+            let modalContent = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_attendee_contact_info_modal.html', 'utf-8');
+            document.body.appendChild(infoModal);
+            infoModal.innerHTML = modalContent;
+            jest.resetModules();
+            //refresh DOM variables
+            ({moreMenu, moreMenuContainer, focusable, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
+            modalContainers, modals, closeModalButtons, modalButtons, editProfileModalDoneButton, editProfileModal,
+            openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal, linksAndButtons,
+            restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler,
+            refreshFormFetchHandler, updateEventFetchHandler, deleteEventButtons, cancelEventButtons,
+            interestedEvents, attendingEvents, openModalButtonHandler, searchAdvertsButton,
+            attendeeInfoButtons, attendeeContactInfoModal, hostInfoButtons, hostContactInfoModal, closeContactInfoModal} = require('../script.js'));
+        })
+
         test('the modal is given focus when its last button loses focus', () => {
            for (let modal of modals) {
             let modalId = modal.id;
