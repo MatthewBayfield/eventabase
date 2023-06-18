@@ -460,10 +460,11 @@ var enterKeyKeydown = (event) => {
     }
 };
 var enterKeyKeyup = (event) => {
+    event.stopPropagation();
     let element = event.currentTarget;
     if (event.key === 'Enter') {
         element.classList.remove('clicked');
-        if (element.tagName !== 'BUTTON') {
+        if (element.tagName !== 'BUTTON' && element.tagName !== 'A') {
             element.click();
         }
     }
@@ -1564,7 +1565,7 @@ if (document.getElementsByTagName('title')[0].textContent === 'Search event adve
 
 //uncommented during testing
 // module.exports = {
-//     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable,
+//     moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, focusable, linksAndButtons,
 //     slideshowImages, openMenu, closeMenu, imageFadeIn, imageFadeOut, helpTextIcons,
 //     helpText, matchingIcons, signupButton, signinButton, expandIcons, modalContainers, modals,
 //     closeModalButtons, editProfileModal, editPersonalInfoForm, editAddressForm,
