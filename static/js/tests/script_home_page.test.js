@@ -1,15 +1,14 @@
 /**
 * @jest-environment jsdom
 */
-
 jest.useFakeTimers();
 // Adds rendered home_page template HTML content to the JSDOM
 let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_home_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
-let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
+let {moreMenu, moreMenuContainer, focusable, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
      modalContainers, modals, closeModalButtons, modalButtons, editProfileModalDoneButton, editProfileModal,
-     openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal,
+     openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal, linksAndButtons,
      restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler,
      refreshFormFetchHandler, updateEventFetchHandler, deleteEventButtons, cancelEventButtons,
      interestedEvents, attendingEvents, openModalButtonHandler, searchAdvertsButton,
@@ -46,13 +45,13 @@ describe('All tests', () => {
         fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_home_page.html', 'utf-8');
         document.documentElement.innerHTML = fileContents;
         //refresh DOM variables
-        ({moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
-          modalContainers, modals, closeModalButtons, modalButtons, editProfileModalDoneButton, editProfileModal,
-          openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal,
-          restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler,
-          refreshFormFetchHandler, updateEventFetchHandler, deleteEventButtons, cancelEventButtons,
-          interestedEvents, attendingEvents, openModalButtonHandler, searchAdvertsButton,
-          attendeeInfoButtons, attendeeContactInfoModal, hostInfoButtons, hostContactInfoModal, closeContactInfoModal} = require('../script.js'));
+        ({moreMenu, moreMenuContainer, focusable, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
+         modalContainers, modals, closeModalButtons, modalButtons, editProfileModalDoneButton, editProfileModal,
+         openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal, linksAndButtons,
+         restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler,
+         refreshFormFetchHandler, updateEventFetchHandler, deleteEventButtons, cancelEventButtons,
+         interestedEvents, attendingEvents, openModalButtonHandler, searchAdvertsButton,
+         attendeeInfoButtons, attendeeContactInfoModal, hostInfoButtons, hostContactInfoModal, closeContactInfoModal} = require('../script.js'));
     })
 
     describe('test more menu functionality', () => {
@@ -152,6 +151,23 @@ describe('All tests', () => {
     })
     
     describe('check all focusable elements give feedback when clicked directly or indirectly', () => {
+        beforeEach(() => {
+            document.documentElement.innerHTML = fileContents;
+            // creating a contact info modal, so that its elements exist for the test
+            let infoModal = document.createElement('div');
+            document.body.appendChild(infoModal);
+            let modalContent = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_attendee_contact_info_modal.html', 'utf-8');
+            infoModal.innerHTML = modalContent;
+            jest.resetModules();
+            //refresh DOM variables
+            ({moreMenu, moreMenuContainer, focusable, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
+            modalContainers, modals, closeModalButtons, modalButtons, editProfileModalDoneButton, editProfileModal,
+            openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal, linksAndButtons,
+            restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler,
+            refreshFormFetchHandler, updateEventFetchHandler, deleteEventButtons, cancelEventButtons,
+            interestedEvents, attendingEvents, openModalButtonHandler, searchAdvertsButton,
+            attendeeInfoButtons, attendeeContactInfoModal, hostInfoButtons, hostContactInfoModal, closeContactInfoModal} = require('../script.js'));
+        })
         test('check all focusable elements give feedback when clicked', () => {
             let nonClickableElements = [...document.getElementsByClassName('event_container')];
             for (let element of uniqueFocusable) {
@@ -169,7 +185,22 @@ describe('All tests', () => {
     })
         
     describe("check that the 'enter key' event listeners work", () => {
-        beforeAll(() => {
+        beforeEach(() => {
+            document.documentElement.innerHTML = fileContents;
+            // creating a contact info modal, so that its elements exist for the test
+            let infoModal = document.createElement('div');
+            let modalContent = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_attendee_contact_info_modal.html', 'utf-8');
+            document.body.appendChild(infoModal);
+            infoModal.innerHTML = modalContent;
+            jest.resetModules();
+            //refresh DOM variables
+            ({moreMenu, moreMenuContainer, focusable, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
+            modalContainers, modals, closeModalButtons, modalButtons, editProfileModalDoneButton, editProfileModal,
+            openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal, linksAndButtons,
+            restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler,
+            refreshFormFetchHandler, updateEventFetchHandler, deleteEventButtons, cancelEventButtons,
+            interestedEvents, attendingEvents, openModalButtonHandler, searchAdvertsButton,
+            attendeeInfoButtons, attendeeContactInfoModal, hostInfoButtons, hostContactInfoModal, closeContactInfoModal} = require('../script.js'));
             for (let button of closeModalButtons) {
                         // dont want to call restoreForm handler in tests
                         button.firstElementChild.removeEventListener('click', restoreForm);
@@ -189,8 +220,14 @@ describe('All tests', () => {
             for ( let button of cancelEventButtons) {
                 button.removeEventListener('click', updateEventFetchHandler);
             }
+
+            // remove relevant event listeners for contact info modal elements, to keep modal existing in DOM, so all its elements exist for the test.
+            document.querySelector('#attendee_contact_info span').removeEventListener('click', closeContactInfoModal);
+            document.querySelector('#attendee_contact_info button').removeEventListener('click', closeContactInfoModal);
+
+            clickSpy.mockClear();
         })
-        afterAll(() => {
+        afterEach(() => {
             for (let button of closeModalButtons) {
                 button.firstElementChild.addEventListener('click', restoreForm);
     
@@ -210,20 +247,16 @@ describe('All tests', () => {
             }
             clickSpy.mockClear();
         })
-    
-        beforeEach(() => {
-            clickSpy.mockClear();
-        })
-    
+
         test('when a focusable element has focus and the enter key is pressed, the element is clicked', () => {
             let event;
             let nonClickableElements = [...document.getElementsByClassName('event_container')];
             for (let element of uniqueFocusable) {
                 if (!nonClickableElements.includes(element)) {
-                    event = new KeyboardEvent('keyup', {key: 'Enter'} );
+                    event = new KeyboardEvent('keyup', {key: 'Enter', bubbles: true} );
                     clickSpy.mockClear();
                     element.dispatchEvent(event);
-                    if (element.tagName !== 'BUTTON') {
+                    if (element.tagName !== 'BUTTON' && element.tagName !== 'A') {
                         expect(clickSpy).toHaveBeenCalledTimes(1);
                     }
                     else {
