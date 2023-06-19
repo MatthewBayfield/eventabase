@@ -1039,8 +1039,15 @@ function refreshDomElementVariables() {
             let fourthResponseJson = await fourthResponse.json();
             if (fourthResponseJson.hasOwnProperty('error')) {
                 let errMsg = `There was a problem processing your submitted address, please check that the address information you entered
-    is valid and try again; If the address is valid, try another address; if the problem persists, try again later.`;
-                alert(errMsg);
+    is valid and try again; If the address is valid, try another address; if the problem persists, try again later. Alternatively email us for assistance`;
+                Swal.fire({
+                    title: 'Something went wrong',
+                    text: errMsg,
+                    icon: 'error',
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Continue',
+                    confirmButtonAriaLabel: 'Continue'
+                });
                 issue = true;
             }
             editPersonalInfoForm.innerHTML = firstResponseJson.form;

@@ -57,7 +57,6 @@ describe('All tests', () => {
         afterEach(() => {
             Request.mockClear();
             fetch.mockClear();
-            alert.mockClear();
             swal_fire.mockClear();
         })
     
@@ -116,11 +115,17 @@ describe('All tests', () => {
             await editProfileFormFetchHandler();
             expect(Request).toHaveBeenCalledTimes(4);
             expect(fetch).toHaveBeenCalledTimes(4);
-            expect(alert).toHaveBeenCalledTimes(1);
+            expect(swal_fire).toHaveBeenCalledTimes(1);
             errMsg = `There was a problem processing your submitted address, please check that the address information you entered
-    is valid and try again; If the address is valid, try another address; if the problem persists, try again later.`;
-            expect(alert).toHaveBeenCalledWith(errMsg);
-            
+    is valid and try again; If the address is valid, try another address; if the problem persists, try again later. Alternatively email us for assistance`;
+            expect(swal_fire).toHaveBeenLastCalledWith({
+                    title: 'Something went wrong',
+                    text: errMsg,
+                    icon: 'error',
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Continue',
+                    confirmButtonAriaLabel: 'Continue'
+                });
         })        
     
         test('that the profile is updated when the error occurs', async () => {
