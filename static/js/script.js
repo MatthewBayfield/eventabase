@@ -1102,6 +1102,16 @@ function refreshDomElementVariables() {
     }
     catch(error) {
         console.error(error);
+        let errMsg = `There was a problem completing your last request, please try again, if the error persists, please email us for assistance.`;
+                Swal.fire({
+                    title: 'Something went wrong',
+                    html: `<p>${errMsg}</p>
+                           <p>(${error})</p>`,
+                    icon: 'error',
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Continue',
+                    confirmButtonAriaLabel: 'Continue'
+                });
     }
 }
 
@@ -1157,6 +1167,16 @@ function refreshDomElementVariables() {
     }
     catch(error) {
         console.error(error);
+        let errMsg = `There was a problem completing your last request, please try again, if the error persists, please email us for assistance.`;
+                Swal.fire({
+                    title: 'Something went wrong',
+                    html: `<p>${errMsg}</p>
+                           <p>(${error})</p>`,
+                    icon: 'error',
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Continue',
+                    confirmButtonAriaLabel: 'Continue'
+                });
     }     
 }
 
@@ -1212,6 +1232,16 @@ async function refreshFormFetchHandler(target) {
     }
     catch(error) {
         console.error(error);
+        let errMsg = `There was a problem completing your last request, please try again, if the error persists, please email us for assistance.`;
+                Swal.fire({
+                    title: 'Something went wrong',
+                    html: `<p>${errMsg}</p>
+                           <p>(${error})</p>`,
+                    icon: 'error',
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Continue',
+                    confirmButtonAriaLabel: 'Continue'
+                });
     }
 }
 
@@ -1310,6 +1340,16 @@ If the problem persists, please report the issue to us.`;
     }
     catch(error) {
         console.error(error);
+        let errMsg = `There was a problem completing your last request, please try again, if the error persists, please email us for assistance.`;
+                Swal.fire({
+                    title: 'Something went wrong',
+                    html: `<p>${errMsg}</p>
+                           <p>(${error})</p>`,
+                    icon: 'error',
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Continue',
+                    confirmButtonAriaLabel: 'Continue'
+                });
     }     
 }
 
@@ -1385,6 +1425,16 @@ If the problem persists, please report the issue to us.`;
     }
     catch(error) {
         console.error(error);
+        let errMsg = `There was a problem completing your last request, please try again, if the error persists, please email us for assistance.`;
+                Swal.fire({
+                    title: 'Something went wrong',
+                    html: `<p>${errMsg}</p>
+                           <p>(${error})</p>`,
+                    icon: 'error',
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Continue',
+                    confirmButtonAriaLabel: 'Continue'
+                });
     }     
 }
 
@@ -1467,6 +1517,16 @@ async function registerInterestFetchHandler(event) {
     }
     catch(error) {
         console.error(error);
+        let errMsg = `There was a problem completing your last request, please try again, if the error persists, please email us for assistance.`;
+                Swal.fire({
+                    title: 'Something went wrong',
+                    html: `<p>${errMsg}</p>
+                           <p>(${error})</p>`,
+                    icon: 'error',
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Continue',
+                    confirmButtonAriaLabel: 'Continue'
+                });
     }     
 }
 
@@ -1542,6 +1602,16 @@ async function retrieveContactInfoFetchHandler(event) {
     }
     catch(error) {
         console.error(error);
+        let errMsg = `There was a problem completing your last request, please try again, if the error persists, please email us for assistance.`;
+                Swal.fire({
+                    title: 'Something went wrong',
+                    html: `<p>${errMsg}</p>
+                           <p>(${error})</p>`,
+                    icon: 'error',
+                    allowOutsideClick: false,
+                    confirmButtonText: 'Continue',
+                    confirmButtonAriaLabel: 'Continue'
+                });
     }     
 }
 
