@@ -62,6 +62,10 @@ footer p {
     margin-left: 0;
 }
 
+#back_to_top {
+    cursor: pointer;
+}
+
 h1 {
     font-family: 'Staatliches', cursive;
     width: fit-content;
