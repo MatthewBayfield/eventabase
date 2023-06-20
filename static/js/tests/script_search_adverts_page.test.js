@@ -9,7 +9,7 @@ let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/re
 document.documentElement.innerHTML = fileContents;
 let {moreMenu, moreMenuContainer, moreMenuButtons, uniqueFocusable, helpTextIcons, helpText, expandIcons,
      modalContainers, modals, closeModalButtons, modalButtons, openModalButtons, advertisedEvents, closeModal,
-     restoreForm, refreshFormFetchHandler, updateEventFetchHandler, openModalButtonHandler,
+     restoreForm, refreshFormFetchHandler, updateEventFetchHandler, openModalButtonHandler, backToTopButton,
      gridContainers} = require('../script.js');
 // mock functions
 clickSpy = jest.spyOn(HTMLElement.prototype, 'click');
@@ -123,6 +123,14 @@ describe('test more menu functionality', () => {
             expect(document.activeElement).toBe(moreMenu);
         })
     })    
+})
+
+test('the backToTop button works', () => {
+    backToTopButton.click();
+    expect(Element.prototype.scrollTo).toHaveBeenLastCalledWith({
+        top: 0,
+        behaviour: 'smooth'
+    })
 })
 
 describe('check all focusable elements give feedback when clicked directly or indirectly', () => {

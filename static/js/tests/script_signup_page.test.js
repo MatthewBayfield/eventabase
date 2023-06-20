@@ -7,9 +7,13 @@ jest.useFakeTimers();
 let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_signup_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
-let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, slideshowImages, uniqueFocusable, helpTextIcons, helpText, matchingIcons} = require('../script.js');
+let {moreMenu, moreMenuContainer, moreMenuButtons, openMenu, closeMenu, slideshowImages, uniqueFocusable, helpTextIcons, helpText, matchingIcons,
+     backToTopButton} = require('../script.js');
 // mock functions
 clickSpy = jest.spyOn(HTMLElement.prototype, 'click');
+// mocking the scrollTo method of a DOM element
+Element.prototype.scrollTo = jest.fn();
+
 
 describe('test more menu functionality', () => {
     describe('check the more menu hamburger-style button works', () => {
@@ -105,6 +109,14 @@ describe('test more menu functionality', () => {
             expect(document.activeElement).toBe(moreMenu);
         })
     })    
+})
+
+test('the backToTop button works', () => {
+    backToTopButton.click();
+    expect(Element.prototype.scrollTo).toHaveBeenLastCalledWith({
+        top: 0,
+        behaviour: 'smooth'
+    })
 })
 
 describe('check all focusable elements give feedback when clicked directly or indirectly', () => {
