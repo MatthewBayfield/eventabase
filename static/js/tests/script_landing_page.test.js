@@ -8,11 +8,13 @@ let fs = require('fs');
 let fileContents = fs.readFileSync('static/js/tests/html_content_for_js_tests/rendered_landing_page.html', 'utf-8');
 document.documentElement.innerHTML = fileContents;
 // A consequence of importing this module is some 'not implemented' console errors for some window.location methods. These can be ignored.
-let {moreMenu, moreMenuContainer, moreMenuButtons, slideshowImages, uniqueFocusable, signupButton, signinButton} = require('../script.js');
+let {moreMenu, moreMenuContainer, moreMenuButtons, slideshowImages, uniqueFocusable, signupButton, signinButton, backToTopButton} = require('../script.js');
 // needed to restore window.location after mocking. 
 const originalLocation = window.location;
 // mock functions
 clickSpy = jest.spyOn(HTMLElement.prototype, 'click');
+// mocking the scrollTo method of a DOM element
+Element.prototype.scrollTo = jest.fn();
 
 describe('test more menu functionality', () => {
     describe('check the more menu hamburger-style button works', () => {
@@ -108,6 +110,14 @@ describe('test more menu functionality', () => {
             expect(document.activeElement).toBe(moreMenu);
         })
     })    
+})
+
+test('the backToTop button works', () => {
+    backToTopButton.click();
+    expect(Element.prototype.scrollTo).toHaveBeenLastCalledWith({
+        top: 0,
+        behaviour: 'smooth'
+    })
 })
 
 describe('check all focusable elements give feedback when clicked directly or indirectly', () => {

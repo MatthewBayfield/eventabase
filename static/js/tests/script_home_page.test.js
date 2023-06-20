@@ -11,7 +11,7 @@ let {moreMenu, moreMenuContainer, focusable, moreMenuButtons, uniqueFocusable, h
      openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal, linksAndButtons,
      restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler,
      refreshFormFetchHandler, updateEventFetchHandler, deleteEventButtons, cancelEventButtons,
-     interestedEvents, attendingEvents, openModalButtonHandler, searchAdvertsButton,
+     interestedEvents, attendingEvents, openModalButtonHandler, searchAdvertsButton, backToTopButton,
      attendeeInfoButtons, attendeeContactInfoModal, hostInfoButtons, hostContactInfoModal, closeContactInfoModal} = require('../script.js');
 // mock functions
 clickSpy = jest.spyOn(HTMLElement.prototype, 'click');
@@ -50,7 +50,7 @@ describe('All tests', () => {
          openModalButtons, postEventModal, radioInputs, advertisedEvents, upcomingEvents, closeModal, linksAndButtons,
          restoreForm, postEventFormDoneButton, editProfileFormFetchHandler, postEventFormFetchHandler,
          refreshFormFetchHandler, updateEventFetchHandler, deleteEventButtons, cancelEventButtons,
-         interestedEvents, attendingEvents, openModalButtonHandler, searchAdvertsButton,
+         interestedEvents, attendingEvents, openModalButtonHandler, searchAdvertsButton, backToTopButton,
          attendeeInfoButtons, attendeeContactInfoModal, hostInfoButtons, hostContactInfoModal, closeContactInfoModal} = require('../script.js'));
     })
 
@@ -148,6 +148,14 @@ describe('All tests', () => {
                 expect(document.activeElement).toBe(moreMenu);
             })
         })    
+    })
+
+    test('the backToTop button works', () => {
+        backToTopButton.click();
+        expect(Element.prototype.scrollTo).toHaveBeenLastCalledWith({
+            top: 0,
+            behaviour: 'smooth'
+        })
     })
     
     describe('check all focusable elements give feedback when clicked directly or indirectly', () => {
