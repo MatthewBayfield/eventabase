@@ -44,6 +44,7 @@ let attendeeContactInfoModalCloseButton = attendeeContactInfoModal ? document.qu
 let hostInfoButtons = [...document.getElementsByClassName('host_info')];
 let hostContactInfoModal = document.getElementById('host_contact_info');
 let hostContactInfoModalCloseButton = hostContactInfoModal ? document.querySelector(".modal_button[name = 'close']") : null;
+let backToTopButton = document.getElementById('back_to_top');
 
 // JS Section: Event listeners:
 
@@ -83,6 +84,13 @@ function createMoreMenuContainerListener() {
         item.addEventListener('mouseenter', menuItemHoverFeedbackMouseenter); 
         item.addEventListener('mouseleave', menuItemHoverFeedbackMouseleave);
     }
+}
+
+function addBackToTopListener() {
+    // remove existing listeners to prevent duplication
+    backToTopButton.removeEventListener('click', scrollToElementTop)
+    // add new listener
+    backToTopButton.addEventListener('click', scrollToElementTop)
 }
 
 /** Adds click event listeners to certain elements to provide clicked/pressed feedback. Feedback
@@ -577,6 +585,13 @@ var searchAdvertsButtonHandler = () => {
     window.location.assign(next_location);
 };
 
+var scrollToElementTop = () => {
+    document.body.scrollTo({
+        top: 0,
+        behaviour: 'smooth'
+    })
+}
+
 /** An event handler that performs the DOM manipulations necessary
  *  to open the more menu, when the more menu hamburger button is
  *  clicked.
@@ -890,6 +905,7 @@ function executeAllPageAddListenerFunctions() {
     helpTextIconsListeners();
     formFieldChangeListeners();
     removeFeedbackListeners();
+    addBackToTopListener();
 }
 
 /**Recreates all the event listeners
@@ -984,6 +1000,7 @@ function refreshDomElementVariables() {
     hostInfoButtons = [...document.getElementsByClassName('host_info')];
     hostContactInfoModal = document.getElementById('host_contact_info');
     hostContactInfoModalCloseButton = hostContactInfoModal ? document.querySelector(".modal_button[name = 'close']") : null;
+    backToTopButton = document.getElementById('back_to_top');
 }
 
 // JS Subsection: Fetch requests:
@@ -1651,5 +1668,6 @@ if (document.getElementsByTagName('title')[0].textContent === 'Search event adve
 //     refreshFormFetchHandler, closeModal, restoreForm, postEventFormDoneButton, updateEventFetchHandler,
 //     deleteEventButtons, cancelEventButtons, interestedEvents, attendingEvents, withdrawButtons, withdrawFromEventFetchHandler, openModalButtonHandler,
 //     searchAdvertsButton, gridContainers, registerInterestButtons, registerInterestFetchHandler, attendeeContactInfoModal, attendeeContactInfoModalCloseButton,
-//     attendeeInfoButtons, hostContactInfoModal, hostInfoButtons, hostContactInfoModalCloseButton, retrieveContactInfoFetchHandler, closeContactInfoModal
+//     attendeeInfoButtons, hostContactInfoModal, hostInfoButtons, hostContactInfoModalCloseButton, retrieveContactInfoFetchHandler, closeContactInfoModal,
+//     backToTopButton
 // };
