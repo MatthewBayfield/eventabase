@@ -11,12 +11,17 @@
 
 html {
     font-size: 0.7rem;
+    height: 100%;
+    overflow-y: hidden;
 }
 
 body {
     scroll-behavior: smooth;
     overflow-y: scroll;
     font-family: 'Josefin Slab', serif;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 /*Make header sticky*/
@@ -25,6 +30,36 @@ header {
     top: 0;
     z-index: 1;
     background-color: #ffffff;
+    flex: 0 1 auto;
+}
+
+main {
+    flex: 1 1 auto;
+}
+
+/*Make footer sticky*/
+footer {
+    display: flex;
+    flex-wrap: nowrap;
+    color: #ffffff;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    background-color: #d62839;
+    flex: 0 1 auto;
+}
+
+footer > div {
+    flex-basis: 50%;
+    border: 2px solid #fcfc62;
+    padding-left: 0.3rem;
+    padding-bottom: 0.3rem;
+    
+}
+
+footer p {
+    width: fit-content;
+    margin-left: 0;
 }
 
 h1 {
