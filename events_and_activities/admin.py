@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import EventsActivities
+from .models import EventsActivities, Engagement
 
 # Register your models here.
 
@@ -7,4 +7,8 @@ from .models import EventsActivities
 class EventsActivitiesAdmin(admin.ModelAdmin):
     """
     """
-    pass
+
+@admin.register(Engagement)
+class EngagementAdmin(admin.ModelAdmin):
+    """
+    """
