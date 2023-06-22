@@ -216,6 +216,7 @@ class TestPostEventsView(TestCase):
         """
         Tests the POST method of the PostEventsView, that is responsible for handling the post events form submission.
         """
+        self.maxDiff = None
         event = {'status': 'advertised',
                  'title': 'paintballing',
                  'when': '13:30, 19/01/30',
@@ -242,7 +243,7 @@ class TestPostEventsView(TestCase):
                                      <span>58 Stanley Avenue.</span></div><div class="details_display">
                                      <span>City/Town :</span><span>Gidea Park.</span></div><div class="details_display">
                                      <span>County :</span><span>Essex.</span></div><div class="details_display"><span>Postcode :</span>
-                                     <span>rm26bt.</span></div><h5 aria-label="number of users attending so far">No. of users attending so far: 0.</h5>
+                                     <span>rm26bt.</span></div><strong>No. of users attending so far: 0.</strong>
                                      <button class='delete_advert'>Delete Advert</button></div></div>'''
         # test for valid form:
 
