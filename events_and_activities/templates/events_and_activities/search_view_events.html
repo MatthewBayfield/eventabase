@@ -9,7 +9,7 @@
         <button  id="search_adverts_button">Search Adverts</button>
     </div>
     <div class="both_columns bottom_row">
-        <h4>Your Interested and Upcoming Events or Activities</h4>
+        <h3>Your Interested and Upcoming Events or Activities</h3>
         <input id='interested' name='type_of_event' type="radio" value="interested" checked >
         <label for="interested">Interested</label>
         <input id='upcoming' name='type_of_event' type="radio" value="attending">
@@ -35,7 +35,7 @@
                             </div>
                         {% endif%}
                     {% endfor %}
-                    <h5 aria-label = 'number of users attending so far'>No. of users attending so far: {{event_count}}.</h5>
+                    <strong>No. of users attending so far: {{event_count}}.</strong>
                     <button class="withdraw">Withdraw Interest</button>
                 </div>
             </div>
@@ -65,7 +65,7 @@
                             </div>
                         {% endif%}
                     {% endfor %}
-                    <h5 aria-label = 'number of users attending'>No. of users attending: {{event_count}}.</h5>
+                    <strong>No. of users attending: {{event_count}}.</strong>
                     <button class="withdraw">Withdraw</button>
                     <button class="host_info">Host Contact Info</button>
                 </div>

@@ -4,7 +4,7 @@
 {{ errors }}
 {% for field, errors in fields %}
     {% if forloop.counter0 == 7 %}
-        <h4>Event or Activity location:</h4>
+        <h3>Event or Activity location:</h3>
     {% endif %}
     <div class="field_flex_container">
         <div{% with classes=field.css_classes %}{% if classes %} class="{{ classes }}"{% endif %}{% endwith %}>

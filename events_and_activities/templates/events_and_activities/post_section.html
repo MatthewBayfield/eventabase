@@ -13,7 +13,7 @@
         {% endwith %}
     </div>
     <div class="both_columns bottom_row">
-        <h4>Your Advertised and Upcoming Events or Activities</h4>
+        <h3>Your Advertised and Upcoming Events or Activities</h3>
         <input id='advertised' name='event_type' type="radio" value="advertised" checked >
         <label for="advertised">Advertised</label>
         <input id='upcoming' name='event_type' type="radio" value="upcoming">
@@ -39,13 +39,13 @@
                             </div>
                         {% endif%}
                     {% endfor %}
-                    <h5 aria-label = 'number of users attending so far'>No. of users attending so far: 
+                    <strong>No. of users attending so far: 
                         {% if event_count > 0 %}
                             {{event_count}}.
                         {% else %} 
                             0.
                         {% endif %}
-                    </h5>
+                    </strong>
                     <button class="delete_advert">Delete Advert</button>
                 </div>
             </div>
@@ -75,13 +75,13 @@
                             </div>
                         {% endif%}
                     {% endfor %}
-                    <h5 aria-label = 'number of users attending'>No. of users attending: 
+                    <strong>No. of users attending: 
                         {% if event_count > 0 %}
                             {{event_count}}.
                         {% else %} 
                             0.
                         {% endif %}
-                    </h5>
+                    </strong>
                     <button class="cancel_event">Cancel</button>
                     <button class='attendee_info'>attendee contact info</button>
                 </div>

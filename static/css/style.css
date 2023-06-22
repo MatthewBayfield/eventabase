@@ -527,9 +527,10 @@ span.more_menu_button {
     margin: 0.5rem 1rem 1.5rem 1rem;  
 }
 
-#post_events h5, #search_events h5, #search_event_adverts h5 {
+.event_container strong {
     font-family: 'Josefin Slab', serif;
     margin: 0.5rem;
+    display: block;
 }
 
 /* CSS Subsection: Media queries: */
