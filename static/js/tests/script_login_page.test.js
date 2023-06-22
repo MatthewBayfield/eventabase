@@ -116,6 +116,7 @@ test('the backToTop button works', () => {
         top: 0,
         behaviour: 'smooth'
     })
+    expect(document.activeElement).toBe(document.body);
 })
 
 describe('check all focusable elements give feedback when clicked directly or indirectly', () => {

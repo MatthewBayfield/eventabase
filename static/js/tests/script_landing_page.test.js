@@ -113,11 +113,13 @@ describe('test more menu functionality', () => {
 })
 
 test('the backToTop button works', () => {
+    Element.prototype.scrollTo.mockClear();
     backToTopButton.click();
     expect(Element.prototype.scrollTo).toHaveBeenLastCalledWith({
         top: 0,
         behaviour: 'smooth'
     })
+    expect(document.activeElement).toBe(document.body);
 })
 
 describe('check all focusable elements give feedback when clicked directly or indirectly', () => {

@@ -86,6 +86,10 @@ function createMoreMenuContainerListener() {
     }
 }
 
+/** Adds click event listener to the backToTop button. Handler scrolls
+ * to the top of the body and focuses the body.
+ * @summary Adds click listener to backToTop button.
+ */
 function addBackToTopListener() {
     // remove existing listeners to prevent duplication
     backToTopButton.removeEventListener('click', scrollToElementTop)
@@ -590,6 +594,8 @@ var scrollToElementTop = () => {
         top: 0,
         behaviour: 'smooth'
     })
+    document.activeElement.blur();
+    document.body.focus();
 }
 
 /** An event handler that performs the DOM manipulations necessary
