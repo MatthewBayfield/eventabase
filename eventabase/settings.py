@@ -32,10 +32,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = development
 
 if development:
-    ALLOWED_HOSTS = ['localhost']
-    CSRF_TRUSTED_ORIGINS = ['https://8000-matthewbayfi-eventabase-lxfe72ybebg.ws-eu86.gitpod.io']
+    # ALLOWED_HOSTS = ['localhost']
+    ALLOWED_HOSTS = ['8000-matthewbayfi-eventabase-ncwdxuve7fn.ws-eu100.gitpod.io']
+    CSRF_TRUSTED_ORIGINS = ['https://8000-matthewbayfi-eventabase-ncwdxuve7fn.ws-eu100.gitpod.io']
     # Email settings
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_HOST_USER = 'host'
+    EMAIL_HOST_PASSWORD = 'password'
 else:
     ALLOWED_HOSTS = [os.environ.get('HEROKU_HOSTNAME')]
     CSRF_TRUSTED_ORIGINS = ['https://eventabase.herokuapp.com/']
@@ -182,3 +185,5 @@ ACCOUNT_FORMS = {
     'signup': 'landing_page.forms.Signup',
     'login': 'landing_page.forms.Login'
 }
+# Uncommented during testing, to stop rate_limits being applied during testing
+# ACCOUNT_RATE_LIMITS = {}
