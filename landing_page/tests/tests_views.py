@@ -82,6 +82,7 @@ class TestLandingPageView(TestCase):
 
 class TestTermsPoliciesView(TestCase):
     """
+    Tests for the TermsPoliciesView.
     """
     data = {'email': 'tommypaul147@gmail.com',
             'email2': 'tommypaul147@gmail.com',
