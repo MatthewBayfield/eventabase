@@ -420,7 +420,6 @@ class RetrieveContactInfoView(TemplateView):
         json_payload = json.loads(request.body)
         event_id = json_payload['event_id']
         host = json_payload['host']
-        print(json_payload)
         if host == 'yes':
             try:
                 event = EventsActivities.objects.get(id=int(event_id))
