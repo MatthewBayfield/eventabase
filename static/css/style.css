@@ -37,13 +37,10 @@ main {
     flex: 1 1 auto;
 }
 
-/*Make footer sticky*/
 footer {
     display: flex;
     flex-wrap: nowrap;
     color: #ffffff;
-    position: sticky;
-    bottom: 0;
     width: 100%;
     background-color: #d62839;
     flex: 0 1 auto;
