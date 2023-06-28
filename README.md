@@ -536,12 +536,13 @@ is dynamically updated in real time without the need to refresh the page.
 
 <img src='docs/screenshots/user_profile_section.png' alt="screenshot of a user's homepage profile section" width=50% height=50%>
 
-##### Post Event section
-The post events section displays the user's current event adverts, as well as the details of upcoming events that the user is confirmed to host.
+##### Host Event section
+The host events section displays the user's current event adverts, as well as the details of upcoming events that the user is confirmed to host.
 The user can toggle between viewing each set of events using the event type radio inputs. Each event advert can be deleted using the 'delete advert' button,
-whilst the upcoming events can be cancelled using the cancel buttons for each event. Upcoming events whose occurrence dates have passed are automatically,
-after refresh, deleted and no longer displayed. Similarly event adverts whose closing dates have passed, are automatically, after refresh, moved into
-the user's upcoming events.
+whilst the upcoming events can be cancelled using the cancel buttons for each event. The upcoming events also have an attendee info button, that when clicked retrieves
+the contact details of the attendees of the event, displayed in a contact info modal.
+
+Upcoming events whose occurrence dates have passed are automatically, after refresh, deleted and no longer displayed. Similarly event adverts whose closing dates have passed, are automatically, after refresh, moved into the user's upcoming events. 
 
 The section also contains the post event button, that when clicked opens the post events modal form, and thus allows the user to post new event adverts that
 they wish to host.
@@ -554,7 +555,7 @@ The post events modal form allows users to post new event adverts. Like all moda
 are help icons for certain fields. The various fields allow a user to specify what the event or activity involves, when and where it will occur,
 any requirements, the number of people that can attend, and finally when the advert closes. The modal can be closed in an identical manner to the
 edit profile modal, with the form being refreshed again. The user can submit the form using the done button at the bottom of the modal.
-Successful form submissions result in the event advert being added to the user's viewable advertised events, without refresh.
+Successful form submissions result in the event advert being added to the user's viewable advertised events, without refresh. A user is prevented from posting an advert for an event whose date of occurrence clashes with an event they are attending or are interested in.
 
 <img src='docs/screenshots/post_events_modal_pt1.png' alt='screenshot of the post events modal form' width=48% height=50%><img src='docs/screenshots/post_events_modal_pt2.png' alt='screenshot of the post events modal form' width=48% height=50%>
 
