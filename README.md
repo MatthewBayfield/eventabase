@@ -427,6 +427,11 @@ sign-up and sign-in buttons allow a user to sign-up or sign-in to an account. On
 Also on the navigation bar is the more button, that when clicked triggers the opening of a closable more menu. It features further links to other site pages. At the moment the only link present is the terms and conditions link, allowing a user to view the site terms and policies. The menu is closable by either clicking the close button or by
 clicking anywhere outside the menu. The navigation bar remains fixed to the top of the viewport with scrolling, enabling easy access at all times.
 
+#### Footer
+<img src='docs/screenshots/footer.png' alt='screenshot of the footer' width=100% height=100%>
+
+The footer like the navigation bar is common to all pages, and features a 'site navigation' and 'contact us' section. The site navigation section currently contains a back to top button, whilst the 'contact us' section displays the email address for users to use to contact the site administrators.
+
 #### Landing page features/content
 
 ##### Header
