@@ -568,6 +568,13 @@ Successful form submissions result in the event advert being added to the user's
 
 <img src='docs/screenshots/post_events_modal_pt1.png' alt='screenshot of the post events modal form' width=48% height=50%><img src='docs/screenshots/post_events_modal_pt2.png' alt='screenshot of the post events modal form' width=48% height=50%>
 
+##### Contact info modals
+As referenced in the host events and view events sections, a user can view the contact details of either the attendees of an event they are hosting, or the contact details of the
+host of an event they are attending, using the respective buttons. The contact details are displayed in a table within a modal, which can be closed by the user. Screenshots
+of the two possible types of contact info modals are displayed below:
+
+<img src='docs/screenshots/host_contact_info_modal.png' alt='screenshot of the host contact info modal' width=48% height=50%><img src='docs/screenshots/attendee_contact_info_modal.png' alt='screenshot of the attendee contact info modal' width=48% height=50%>
+
 #### Terms and conditions page features/content
 
 ##### Header
