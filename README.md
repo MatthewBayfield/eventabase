@@ -528,13 +528,22 @@ Screenshot showing the unexpanded sections, with the expand-more icons visible.
 <img src='docs/screenshots/expand_icons.png' alt="screenshot of unexpanded homepage sections with expand more icons" width=50% height=50%>
 
 ##### User Profile section
-The main body of the homepage currently consists of two sections (eventually 3-4): the user profile section and the post events section. 
+The main body of the homepage currently consists of three sections (eventually 4): the user profile section, the search and view events section, and the post events section. 
 
 The user profile section displays the user's user profile information. It also contains the edit profile button, that when clicked opens
 the edit profile modal form, allowing the user to edit their profile. When an edit profile modal form is successfully submitted, the profile section
 is dynamically updated in real time without the need to refresh the page.
 
 <img src='docs/screenshots/user_profile_section.png' alt="screenshot of a user's homepage profile section" width=50% height=50%>
+
+##### Search and View Events section
+This homepage section allows a user to view the events for which they have registered their interest, as well as events that they have upcoming as a confirmed attendee. Which of these types of event are displayed is controlled by clicking one of the event type radio inputs. When viewing a user's interested events, the user has the ability to withdraw their interest using the withdraw interest button. Likewise when viewing a user's upcoming events they can withdraw from an event, as well view the contact details of the host
+of the event using the corresponding buttons. The number of attendees for an event is also displayed to the user.
+
+Also in this section is the search adverts button that will take the user to the search event adverts page, where they can view all the current event adverts.
+
+<img src='docs/screenshots/view_event_section_pt1.png' alt='screenshot of the view event section' width=48% height=50%><img src='docs/screenshots/view_event_section_pt2.png' alt='screenshot of the view event section' width=48% height=50%>
+<img src='docs/screenshots/view_event_section_pt3.png' alt='screenshot of the view event section' width=48% height=50%>
 
 ##### Host Event section
 The host events section displays the user's current event adverts, as well as the details of upcoming events that the user is confirmed to host.
