@@ -12,17 +12,9 @@ It facilitates people in finding something to do in their local area, in making 
 ---
 
 ## Current Site Status
-The site is still very much a work in progress with regard to achieving its full originally intended functionality,
-and there is still some functionality needed in order to reach an MVP. As it stands a user can create/edit an account,
-a profile, as well post new event adverts. They can also view the events they are currently advertising to host;
-view the confirmed events they are hosting that are upcoming. The user can also delete adverts,
-and cancel their upcoming events.
+The site now essentially exists in its MVP form. There is still many features that are yet to be implemented in order to obtain its full originally intended functionality. As it stands a user can create/edit an account, a profile, as well post new event adverts. They can also search the event adverts posted by other users, and register their interest in those events. They can view the events they are currently interested in, as well as the events they are confirmed to attend; they have the ability to withdraw their interest from an event. Additionally they can view the events they are currently advertising to host, and view the confirmed events they are hosting that are upcoming. The user can also delete their adverts, and cancel their upcoming events. Finally a user as an attendee can obtain the contact details of the event host, whilst the host of an event can obtain the contact details of the attendees --- thus facilitating communication between users.
 
-The minimal functionality required to search for advertised events and activities, in order to register to attend
-is currently being implemented. As well as this the communication between users is also currently being developed.
-Once both of these aspects have been implemented, an MVP will be achieved. Much of the more advanced/higher performance
-functionality and features as originally intended (see [UX Design process](https://github.com/MatthewBayfield/eventabase#ux-design-process))
-can then be added sequentially; for example search filters, event shortlists, notifications, automated site maintenance, and event calendars.
+Much of the more advanced/higher performance functionality and features as originally intended (see [UX Design process](https://github.com/MatthewBayfield/eventabase#ux-design-process)) --- for example search filters, event shortlists, notifications, automated site maintenance, and event calendars --- will be implemented sequentially when possible.
 
 ---
 
