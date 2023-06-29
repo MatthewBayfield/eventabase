@@ -92,9 +92,9 @@ function createMoreMenuContainerListener() {
  */
 function addBackToTopListener() {
     // remove existing listeners to prevent duplication
-    backToTopButton.removeEventListener('click', scrollToElementTop)
+    backToTopButton.removeEventListener('click', scrollToElementTop);
     // add new listener
-    backToTopButton.addEventListener('click', scrollToElementTop)
+    backToTopButton.addEventListener('click', scrollToElementTop);
 }
 
 /** Adds click event listeners to certain elements to provide clicked/pressed feedback. Feedback
@@ -463,7 +463,7 @@ var clickedFeedbackMousedown = (event) => {
 };
 var clickedFeedbackMouseup = (event) => {
     let element = event.currentTarget;
-    setTimeout(() => element.classList.remove('clicked'), 100)
+    setTimeout(() => element.classList.remove('clicked'), 100);
 };
 var enterKeyKeydown = (event) => {
     let element = event.currentTarget;
@@ -520,7 +520,7 @@ var openModalButtonHandler = (event) => {
         modals[i].scrollTo({
             top: 0,
             behaviour: 'instant'
-        })
+        });
         document.body.style.overflowY = 'hidden';
     }
 };
@@ -593,10 +593,10 @@ var scrollToElementTop = () => {
     document.body.scrollTo({
         top: 0,
         behaviour: 'smooth'
-    })
+    });
     document.activeElement.blur();
     document.body.focus();
-}
+};
 
 /** An event handler that performs the DOM manipulations necessary
  *  to open the more menu, when the more menu hamburger button is
@@ -735,12 +735,12 @@ function closeModal(input) {
     document.body.removeAttribute('style');
     if (parentModalContainer.firstElementChild.id === 'edit_profile_modal') {
         // delayed focus to prevent keyup event propagating to the focused element
-        setTimeout(() => {document.querySelector(".open_modal_button[aria-controls='edit_profile_modal']").focus()}, 100);
+        setTimeout(() => {document.querySelector(".open_modal_button[aria-controls='edit_profile_modal']").focus();}, 100);
         
     }
     if (parentModalContainer.firstElementChild.id === 'post_events_modal') {
         // delayed focus to prevent keyup event propagating to the focused element
-        setTimeout(() => {document.querySelector(".open_modal_button[aria-controls='post_events_modal']").focus()}, 100);
+        setTimeout(() => {document.querySelector(".open_modal_button[aria-controls='post_events_modal']").focus();}, 100);
     }
 }
 
@@ -761,7 +761,7 @@ function closeContactInfoModal(event) {
             for (let i = 0; i < upcomingEvents.length; ++i) {
                 if (upcomingEvents[i].firstElementChild.firstElementChild.children[1].innerHTML.slice(0, -1) === event_id) {
                     // delayed focus to prevent keyup event propagating to the focused element
-                    setTimeout(() => {upcomingEvents[i].querySelector('.attendee_info').focus()}, 100);
+                    setTimeout(() => {upcomingEvents[i].querySelector('.attendee_info').focus();}, 100);
                 }
             }
         }
@@ -770,7 +770,7 @@ function closeContactInfoModal(event) {
             for (let i = 0; i < attendingEvents.length; ++i) {
                 if (attendingEvents[i].firstElementChild.firstElementChild.children[1].innerHTML.slice(0, -1) === event_id) {
                     // delayed focus to prevent keyup event propagating to the focused element
-                    setTimeout(() => {attendingEvents[i].querySelector('.host_info').focus()}, 100);
+                    setTimeout(() => {attendingEvents[i].querySelector('.host_info').focus();}, 100);
                 }
             }
         }
@@ -788,7 +788,7 @@ function closeContactInfoModal(event) {
             for (let i = 0; i < upcomingEvents.length; ++i) {
                 if (upcomingEvents[i].firstElementChild.firstElementChild.children[1].innerHTML.slice(0, -1) === event_id) {
                     // delayed focus to prevent keyup event propagating to the focused element
-                    setTimeout(() => {upcomingEvents[i].querySelector('.attendee_info').focus()}, 100);
+                    setTimeout(() => {upcomingEvents[i].querySelector('.attendee_info').focus();}, 100);
                 }
             }
         }  
@@ -797,7 +797,7 @@ function closeContactInfoModal(event) {
             for (let i = 0; i < attendingEvents.length; ++i) {
                 if (attendingEvents[i].firstElementChild.firstElementChild.children[1].innerHTML.slice(0, -1) === event_id) {
                     // delayed focus to prevent keyup event propagating to the focused element
-                    setTimeout(() => {attendingEvents[i].querySelector('.host_info').focus()}, 100);
+                    setTimeout(() => {attendingEvents[i].querySelector('.host_info').focus();}, 100);
                 }
             }
         }
@@ -1098,7 +1098,7 @@ function refreshDomElementVariables() {
                     confirmButtonText: 'Continue',
                     confirmButtonAriaLabel: 'Continue',
                     //close edit profile modal
-                    willClose: () => {closeModal(editProfileModal.firstElementChild.firstElementChild.firstElementChild)}
+                    willClose: () => {closeModal(editProfileModal.firstElementChild.firstElementChild.firstElementChild);}
                 });
             }
         }
@@ -1177,8 +1177,8 @@ function refreshDomElementVariables() {
                 confirmButtonText: 'Continue',
                 confirmButtonAriaLabel: 'Continue',
                 //close modal
-                willClose: () => {closeModal(postEventModal.firstElementChild.firstElementChild.firstElementChild)}
-            })
+                willClose: () => {closeModal(postEventModal.firstElementChild.firstElementChild.firstElementChild);}
+            });
         }
         postEventForm.innerHTML = responseJSON.form;
         refreshDomElementVariables();
@@ -1336,7 +1336,7 @@ async function updateEventFetchHandler(event) {
                 allowOutsideClick: false,
                 confirmButtonText: 'Continue',
                 confirmButtonAriaLabel: 'Continue',
-            })
+            });
             refreshDomElementVariables();
             executeAllPageAddListenerFunctions();
             executeAllHomePageAddListenersFunctions();
@@ -1358,7 +1358,7 @@ If the problem persists, please report the issue to us.`;
                 allowOutsideClick: false,
                 confirmButtonText: 'Continue',
                 confirmButtonAriaLabel: 'Continue',
-            })
+            });
         }
     }
     catch(error) {
@@ -1428,7 +1428,7 @@ async function withdrawFromEventFetchHandler(event) {
                 allowOutsideClick: false,
                 confirmButtonText: 'Continue',
                 confirmButtonAriaLabel: 'Continue',
-            })
+            });
             refreshDomElementVariables();
             executeAllPageAddListenerFunctions();
             executeAllHomePageAddListenersFunctions();
@@ -1443,7 +1443,7 @@ If the problem persists, please report the issue to us.`;
                 allowOutsideClick: false,
                 confirmButtonText: 'Continue',
                 confirmButtonAriaLabel: 'Continue',
-            })
+            });
         }
     }
     catch(error) {
@@ -1505,7 +1505,7 @@ async function registerInterestFetchHandler(event) {
                 allowOutsideClick: false,
                 confirmButtonText: 'Continue',
                 confirmButtonAriaLabel: 'Continue',
-            })
+            });
         }
         if (responseJSON.successful === 'false' && responseJSON.error_type === 'clash') {
             Swal.fire({
@@ -1515,7 +1515,7 @@ async function registerInterestFetchHandler(event) {
                 allowOutsideClick: false,
                 confirmButtonText: 'Continue',
                 confirmButtonAriaLabel: 'Continue',
-            })
+            });
         }
         if (responseJSON.successful === 'false' && responseJSON.error_type === 'max_people') {
             Swal.fire({
@@ -1525,7 +1525,7 @@ async function registerInterestFetchHandler(event) {
                 allowOutsideClick: false,
                 confirmButtonText: 'Continue',
                 confirmButtonAriaLabel: 'Continue',
-            })
+            });
         }
         if (responseJSON.successful === 'false' && responseJSON.error_type === 'database') {
             Swal.fire({
@@ -1535,7 +1535,7 @@ async function registerInterestFetchHandler(event) {
                 allowOutsideClick: false,
                 confirmButtonText: 'Continue',
                 confirmButtonAriaLabel: 'Continue',
-            })
+            });
         }
     }
     catch(error) {
@@ -1591,7 +1591,7 @@ async function retrieveContactInfoFetchHandler(event) {
             }
             new_modal_container.classList.add('modal_container');
             new_modal_container.setAttribute('tabindex', '0');
-            new_modal_container.setAttribute('style', "display:block;")
+            new_modal_container.setAttribute('style', "display:block;");
             new_modal_container.innerHTML = rendered_modal;
             refreshDomElementVariables();
             executeAllPageAddListenerFunctions();
@@ -1601,14 +1601,14 @@ async function retrieveContactInfoFetchHandler(event) {
                 attendeeContactInfoModal.scrollTo({
                     top: 0,
                     behaviour: 'instant'
-                })
+                });
             }
             else {
                 hostContactInfoModal.focus();
                 hostContactInfoModal.scrollTo({
                     top: 0,
                     behaviour: 'instant'
-                })
+                });
             }
             document.body.style.overflowY = 'hidden';
         }
@@ -1620,7 +1620,7 @@ async function retrieveContactInfoFetchHandler(event) {
                 allowOutsideClick: false,
                 confirmButtonText: 'Continue',
                 confirmButtonAriaLabel: 'Continue',
-            })
+            });
         }
     }
     catch(error) {
