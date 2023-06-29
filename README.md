@@ -580,11 +580,30 @@ Through the use of fetch requests, updates to the homepage content, necessary af
 
 ##### Alerts, feedback, and email notifications
 Every time a user successfully completes an action --- for example posting a new event advert, updating their profile, withdrawing from an event --- feedback is provided to the user in the form of a success response modal; additionally an error/information response modal is displayed when an action is unsuccessful, notifying a user
-of this, and possibly why the action was unsuccessful. Finally email notifications are sent to the host of an event when a confirmed/interested attendee withdraws, as well as to the confirmed/interested attendees of an event, when that event/advert is cancelled/deleted by the host.
+of this, and possibly why the action was unsuccessful. Finally email notifications are sent to the host of an event when a confirmed attendee withdraws, as well as to the confirmed/interested attendees of an event, when that event/advert is cancelled/deleted by the host.
 
 Some examples of the response modals to user actions are visible in the screenshots below:
 
 <img src='docs/screenshots/success_modal_edit_profile.png' alt='screenshot of a success response modal' width=48% height=50%><img src='docs/screenshots/error_modal_event_withdrawal.png' alt='screenshot of a error response modal' width=48% height=50%>
+
+#### Search Adverts page features/content
+
+##### Header
+A clearly visible header indicates to the user the purpose of the page.
+
+<img src='docs/screenshots/search_adverts_page_header.png' alt="screenshot of the search adverts page header" width=100% height=100%>
+
+##### Current Adverts section
+All currently available event adverts are displayed to a user in this section. Adverts for events whose occurrence dates clash with a user's other events they are hosting or potentially attending, are filtered out. Likewise expired adverts, or adverts for which the maximum number of attendees are now attending, are filtered out. Additionally if an event advert is deleted, or the number of attendees changes after the advert has been loaded, then the user is still prevented from registering their interest, if they attempt to do so. A user registers their interest in an event using the register interest button for the relevant event advert.
+
+<img src='docs/screenshots/current_adverts_section.png' alt='screenshot of the current adverts section' width=48% height=50%>
+
+##### Alerts and Feedback
+Similarly as was the case for a user's homepage, user actions both unsuccessful and successful are followed by a feedback response modal --- including for actions such as registering interest in an event.
+
+Some examples of the response modals to user actions are visible in the screenshots below:
+
+<img src='docs/screenshots/success_modal_register_interest.png' alt='screenshot of a success response modal' width=48% height=50%><img src='docs/screenshots/event_clash_modal_response.png' alt='screenshot of a event date clash response modal' width=48% height=50%>
 
 #### Terms and conditions page features/content
 
