@@ -7,6 +7,8 @@ A core principle of eventabase is that it is user-driven as indicated by its slo
 the site serves as a medium by which ordinary people can organise and advertise their own activities with people from all across the UK.
 It facilitates people in finding something to do in their local area, in making new friends, and trying something new.
 
+The latest version of the site can be viewed [here](https://eventabase.herokuapp.com/).
+
 <img src='docs/screenshots/am_i_responsive.png' alt='am I responsive screenshot' width=100% height=100%>
 
 ---
