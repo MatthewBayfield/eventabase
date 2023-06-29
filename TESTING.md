@@ -17,7 +17,22 @@ With regard to code coverage the percentage of code tested is indicated in the f
 
 <img src='docs/screenshots/js_test_coverage.png' alt='screenshot showing the coverage percentages for the JS tests' width=100% height=100%>
 
-As it can be seen from the screenshot 100% of functions have been tested, 98% + of all statements, and 91% + of all branches. The uncovered branches correspond to a few implicit, but irrelevant else branches, and two uncovered if branches within the same function, which will shortly be tested.
+As it can be seen from the screenshot 98% of functions have been tested, 96% + of all statements, and 92% + of all branches. The uncovered branches correspond to a few implicit, but irrelevant else branches, an if branch whose code is tested indirectly, and two uncovered if branches within the same function which will shortly be tested. The only function that has not been covered (restoreForm) is trivial with respect to its functionality --- it is an intermediate handler which calls another handler. Also there are several identical catch branches that have not been tested, but there are manual tests for these below.
+
+## Manual tests of JS code
+As aforementioned, manual tests were written for a commonly used catch block, that deals with fetch request errors. As part of this block, an alert is triggered indicating the user action failed. Note fetch requests were made to fail by stopping the Django development server after loading the required page content.
+
+| GIVEN | WHEN | THEN | RESULT |
+| --- | --- | --- | --- |
+| A logged in registered user, and there is an issue with all fetch requests. | They click the done/cancel/close button of the edit profile modal. | The expected closable error response modal appears. | PASS |
+| A logged in registered user, and there is an issue with all fetch requests. | They click the done/cancel/close button of the post event modal. | The expected closable error response modal appears. | PASS |
+| A logged in registered user, and there is an issue with all fetch requests. | They click a cancel event button. | The expected closable error response modal appears. | PASS |
+| A logged in registered user, and there is an issue with all fetch requests. | They click a delete event advert button. | The expected closable error response modal appears. | PASS |
+| A logged in registered user, and there is an issue with all fetch requests. | They click an attendee contact info button. | The expected closable error response modal appears. | PASS |
+| A logged in registered user, and there is an issue with all fetch requests. | They click a host contact info button. | The expected closable error response modal appears. | PASS |
+| A logged in registered user, and there is an issue with all fetch requests. | They click a withdraw interest button. | The expected closable error response modal appears. | PASS |
+| A logged in registered user, and there is an issue with all fetch requests. | They click a withdraw button. | The expected closable error response modal appears. | PASS |
+| A logged in registered user, and there is an issue with all fetch requests. | They click a register interest button. | The expected closable error response modal appears. | PASS |
 
 ## Python testing using Django testing tools and classes
 The python test scripts can be found in the tests folder of each eventabase app, as can be found in the repository.
