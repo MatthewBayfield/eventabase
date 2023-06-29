@@ -615,7 +615,8 @@ A clearly visible title in the header informs the user they are on the terms and
 <img src='docs/screenshots/terms_and_policies_header.png' alt="screenshot of the terms and conditions page header" width=30% height=30%>
 
 #### Administrator page
-A very basic administrator page exists, where a site administrator can view/delete/edit/add registered users, user profiles, user email addresses, and events and activities. They can also create further administrator accounts, and verify email addresses.
+A very basic administrator page exists, where a site administrator can view/delete/edit/add registered users, user profiles, user email addresses, events and activities,
+and event engagements. They can also create further administrator accounts, and verify email addresses.
 
 In its current form, an administrator should be careful when deleting/creating model instances of some of the aforementioned user and event objects. For example if an
 administrator deletes/adds a user address, they must also delete/add a user profile to prevent database errors. Eventually Django signals will be used to ensure
