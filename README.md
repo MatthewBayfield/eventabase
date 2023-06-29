@@ -687,6 +687,7 @@ the deployment method.
 - dj3-cloudinary - to aid uploading static files to cloudinary during development.
 - Geoapify API - for obtaining latitudes and longitudes for addresses.
 - ElepantSQL - to host the database
+- SweetAlert2 - for feedback alerts
 
 ### Content 
  - All slideshow images were downloaded from pexels.com
