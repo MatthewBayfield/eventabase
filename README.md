@@ -626,8 +626,8 @@ related models not automatically updated, are so.
 ---
 
 ### Current Data model
-The existing data model includes only a fraction of the models/tables and relationships planned for the finished site. Namely there are currently only database tables for
-users, user profiles, user addresses, user email addresses, and event/activity details. Future tables for user reviews will be added, as well as relationships such as a many-to-many relationship via a custom through-table between the user table and event table, in order to track user engagement with an event.
+The existing data model includes the models/tables and relationships in the MVP form of the site. Namely there are currently database tables for
+users, user profiles, user addresses, user email addresses, and event/activity details. There is also a through-table for event engagements, facilitating a many-to-many relationship between the user table and event table --- in order to track user engagement with an event. In later versions of the site, future tables for user reviews will be added, as well as other tables necessary to implement future planned features.
 
 The current database scheme can be seen in the following screenshot:
 
