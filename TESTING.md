@@ -89,6 +89,16 @@ desktop:
 
 <img src='docs/screenshots/lighthouse_desktop_homepage.png' alt='screenshot of lighthouse score for homepage desktop' width=30% height=30%>
 
+search adverts page scores
+
+mobile:
+
+<img src='docs/screenshots/lighthouse_mobile_adverts_page.png' alt='screenshot of lighthouse score for search adverts page mobile' width=30% height=30%>
+
+desktop:
+
+<img src='docs/screenshots/lighthouse_desktop_adverts_page.png' alt='screenshot of lighthouse score for search adverts page desktop' width=30% height=30%>
+
 ## Validators and Linters
 
 ### HTML validator
