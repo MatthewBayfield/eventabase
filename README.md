@@ -575,6 +575,17 @@ of the two possible types of contact info modals are displayed below:
 
 <img src='docs/screenshots/host_contact_info_modal.png' alt='screenshot of the host contact info modal' width=48% height=50%><img src='docs/screenshots/attendee_contact_info_modal.png' alt='screenshot of the attendee contact info modal' width=48% height=50%>
 
+##### Dynamic page updates
+Through the use of fetch requests, updates to the homepage content, necessary after a user action is performed, are performed without the need to refresh the page, thus improving the user experience. 
+
+##### Alerts, feedback, and email notifications
+Every time a user successfully completes an action --- for example posting a new event advert, updating their profile, withdrawing from an event --- feedback is provided to the user in the form of a success response modal; additionally an error/information response modal is displayed when an action is unsuccessful, notifying a user
+of this, and possibly why the action was unsuccessful. Finally email notifications are sent to the host of an event when a confirmed/interested attendee withdraws, as well as to the confirmed/interested attendees of an event, when that event/advert is cancelled/deleted by the host.
+
+Some examples of the response modals to user actions are visible in the screenshots below:
+
+<img src='docs/screenshots/success_modal_edit_profile.png' alt='screenshot of a success response modal' width=48% height=50%><img src='docs/screenshots/error_modal_event_withdrawal.png' alt='screenshot of a error response modal' width=48% height=50%>
+
 #### Terms and conditions page features/content
 
 ##### Header
